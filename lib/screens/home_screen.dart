@@ -11,6 +11,7 @@ import '../services/location_service.dart';
 import '../widgets/common.dart';
 import 'panchanga_screen.dart';
 import 'settings_screen.dart';
+import 'calendar_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -122,7 +123,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: SafeArea(
-          child: _navIndex == 0 ? _buildHome() : _buildSettings(),
+          child: _navIndex == 0
+            ? _buildHome()
+            : _navIndex == 1
+              ? const CalendarScreen()
+              : _buildSettings(),
         ),
       ),
       bottomNavigationBar: Container(
@@ -134,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: (i) => setState(() => _navIndex = i),
           items: [
             BottomNavigationBarItem(icon: const Icon(Icons.home_rounded), label: AppLocale.t('home')),
+            BottomNavigationBarItem(icon: const Icon(Icons.calendar_month_rounded), label: 'Calendar'),
             BottomNavigationBarItem(icon: const Icon(Icons.settings_rounded), label: AppLocale.t('settings')),
           ],
         ),
@@ -325,6 +331,67 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
+          // ── Ghati-Vighati ──
+          AppCard(
+            child: Column(
+              children: [
+                const SectionHeader(icon: Icons.timer_outlined, title: 'ಘಟಿ-ವಿಘಟಿ (Ghati-Vighati)'),
+                const SizedBox(height: 8),
+                // Udayadi Ghati
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: kGold.withAlpha(15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('ಉದಯಾದಿ ಘಟಿ: ', style: TextStyle(fontSize: 11, color: kMuted)),
+                      Text(d.udayadiGhati, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                    ],
+                  ),
+                ),
+                // Table header
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Row(
+                    children: [
+                      const Expanded(flex: 3, child: Text('', style: TextStyle(fontSize: 9))),
+                      Expanded(flex: 2, child: Text('ಗತ (Gata)', style: TextStyle(fontSize: 9, color: kMuted, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+                      Expanded(flex: 2, child: Text('ಶೇಷ (Shesha)', style: TextStyle(fontSize: 9, color: kMuted, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+                      Expanded(flex: 2, child: Text('ಪರಮ (Parama)', style: TextStyle(fontSize: 9, color: kMuted, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                _ghatiRow(AppLocale.t('tithi'), d.tithiGata, d.tithiShesha, d.tithiParama),
+                _ghatiRow(AppLocale.t('nakshatra'), d.nakGata, d.nakShesha, d.nakParama),
+                _ghatiRow(AppLocale.t('yoga'), d.yogaGata, d.yogaShesha, d.yogaParama),
+                _ghatiRow(AppLocale.t('karana'), d.karanaGata, d.karanaShesha, d.karanaParama),
+                const SizedBox(height: 8),
+                // Visha & Amruta Praghati
+                Row(
+                  children: [
+                    Expanded(child: _ghatiChip('☠️ ${AppLocale.t("vishaPraghati")}', d.vishaPraghati, kAshubha)),
+                    const SizedBox(width: 8),
+                    Expanded(child: _ghatiChip('🍯 ${AppLocale.t("amrutaPraghati")}', d.amrutaPraghati, kShubha)),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                // Agni Vasa
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('🔥 ${AppLocale.t("agniVasa")}: ', style: const TextStyle(fontSize: 11, color: kMuted)),
+                    Text(d.agniVasa, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kText)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
           // ── Moon & Sun details ──
           AppCard(
             child: Column(
@@ -378,6 +445,38 @@ class _HomeScreenState extends State<HomeScreen> {
         Text(label, style: const TextStyle(fontSize: 10, color: kMuted)),
         Text(time, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: kGold)),
       ],
+    );
+  }
+
+  Widget _ghatiRow(String label, String gata, String shesha, String parama) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+      child: Row(
+        children: [
+          Expanded(flex: 3, child: Text(label, style: const TextStyle(fontSize: 11, color: kText))),
+          Expanded(flex: 2, child: Text(gata, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold), textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: Text(shesha, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kTeal), textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: Text(parama, style: const TextStyle(fontSize: 12, color: kMuted), textAlign: TextAlign.center)),
+        ],
+      ),
+    );
+  }
+
+  Widget _ghatiChip(String label, String value, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withAlpha(20),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withAlpha(76)),
+      ),
+      child: Column(
+        children: [
+          Text(label, style: TextStyle(fontSize: 9, color: color)),
+          const SizedBox(height: 2),
+          Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: color)),
+        ],
+      ),
     );
   }
 
