@@ -266,15 +266,49 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [
-          // ── Sunrise/Sunset banner ──
+          // ── Sunrise/Sunset + Moon rise/set banner ──
           AppCard(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Column(
               children: [
-                _sunTimeWidget('🌅', AppLocale.t('sunrise'), d.sunrise),
-                Container(width: 1, height: 36, color: kBorder),
-                _sunTimeWidget('🌇', AppLocale.t('sunset'), d.sunset),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _sunTimeWidget('🌅', AppLocale.t('sunrise'), d.sunrise),
+                    Container(width: 1, height: 36, color: kBorder),
+                    _sunTimeWidget('🌇', AppLocale.t('sunset'), d.sunset),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Container(height: 1, color: kBorder.withAlpha(76)),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _sunTimeWidget('🌙', 'ಚಂದ್ರೋದಯ', d.chandraUdaya),
+                    Container(width: 1, height: 36, color: kBorder),
+                    _sunTimeWidget('🌑', 'ಚಂದ್ರಾಸ್ತ', d.chandraAsta),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          // ── Samvatsara / Shaka / Calendar ──
+          AppCard(
+            child: Column(
+              children: [
+                const SectionHeader(icon: Icons.calendar_today_rounded, title: 'ಸಂವತ್ಸರ / ಪಂಚಾಂಗ ವಿವರ'),
+                const SizedBox(height: 8),
+                InfoRow(label: 'ಶಕ ವರ್ಷ (Shaka)', value: '${d.shakaVarsha}'),
+                InfoRow(label: AppLocale.t('samvatsara'), value: AppLocale.t(d.samvatsara)),
+                InfoRow(label: 'ಪಕ್ಷ (Paksha)', value: d.paksha == 'shukla' ? 'ಶುಕ್ಲ ಪಕ್ಷ' : 'ಕೃಷ್ಣ ಪಕ್ಷ'),
+                InfoRow(label: 'ಚಂದ್ರ ಮಾಸ (Amanta)', value: AppLocale.t(d.amantaMasa)),
+                InfoRow(label: 'ಚಂದ್ರ ಮಾಸ (Pournimanta)', value: AppLocale.t(d.pournimantaMasa)),
+                InfoRow(label: AppLocale.t('souraMasa'), value: AppLocale.t(d.souraMasa)),
+                InfoRow(label: 'ಸೌರ ಮಾಸ ಗತ ದಿನ', value: '${d.souraMasaGataDina} ದಿನ'),
+                InfoRow(label: AppLocale.t('rutu'), value: AppLocale.t(d.rutu)),
+                InfoRow(label: AppLocale.t('ayana'), value: AppLocale.t(d.ayana)),
               ],
             ),
           ),

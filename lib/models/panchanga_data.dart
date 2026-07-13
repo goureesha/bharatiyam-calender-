@@ -67,6 +67,12 @@ class PanchangaData {
   final String amrutaPraghati;
   final String agniVasa;
 
+  // Extra details
+  final int shakaVarsha;
+  final String paksha;
+  final String chandraUdaya;
+  final String chandraAsta;
+
   // Raw JDs for timing calculations
   final double sunriseJd;
   final double sunsetJd;
@@ -122,6 +128,10 @@ class PanchangaData {
     required this.vishaPraghati,
     required this.amrutaPraghati,
     required this.agniVasa,
+    required this.shakaVarsha,
+    required this.paksha,
+    required this.chandraUdaya,
+    required this.chandraAsta,
     required this.sunriseJd,
     required this.sunsetJd,
   });

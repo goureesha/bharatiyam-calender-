@@ -45,6 +45,61 @@ class Ephemeris {
     return asin(sinAlt.clamp(-1.0, 1.0)) * 180 / pi;
   }
 
+  /// Get Moon altitude at a given JD, lat, lon
+  static double getMoonAltitude(double jd, double lat, double lon) {
+    final res = Sweph.swe_calc_ut(
+      jd, HeavenlyBody.SE_MOON,
+      SwephFlag.SEFLG_EQUATORIAL | SwephFlag.SEFLG_SWIEPH,
+    );
+    final ra = res.longitude;
+    final dec = res.latitude;
+    final gmst = Sweph.swe_sidtime(jd);
+    final lst = gmst + (lon / 15.0);
+    double haDeg = ((lst * 15.0) - ra + 360) % 360;
+    if (haDeg > 180) haDeg -= 360;
+    final haRad = haDeg * pi / 180;
+    final latRad = lat * pi / 180;
+    final decRad = dec * pi / 180;
+    final sinAlt = sin(latRad) * sin(decRad) + cos(latRad) * cos(decRad) * cos(haRad);
+    return asin(sinAlt.clamp(-1.0, 1.0)) * 180 / pi;
+  }
+
+  /// Find moonrise and moonset JDs for a given date
+  static List<double?> findMoonriseSet(int y, int m, int d, double lat, double lon, double tzOffset) {
+    final jdStart = Sweph.swe_julday(y, m, d, 0, CalendarType.SE_GREG_CAL) - (tzOffset / 24.0) - (2.0 / 24.0);
+    final horizonAlt = -0.5667;
+    final step = 0.5 / 24.0; // 30 min steps
+    double? riseTime, setTime;
+
+    for (int i = 0; i < 60; i++) {
+      final t1 = jdStart + i * step;
+      final t2 = t1 + step;
+      final a1 = getMoonAltitude(t1, lat, lon);
+      final a2 = getMoonAltitude(t2, lat, lon);
+
+      // Rising
+      if (riseTime == null && a1 < horizonAlt && a2 >= horizonAlt) {
+        double lo = t1, hi = t2;
+        for (int j = 0; j < 15; j++) {
+          final mid = (lo + hi) / 2;
+          if (getMoonAltitude(mid, lat, lon) < horizonAlt) lo = mid; else hi = mid;
+        }
+        riseTime = (lo + hi) / 2;
+      }
+      // Setting
+      if (setTime == null && a1 > horizonAlt && a2 <= horizonAlt) {
+        double lo = t1, hi = t2;
+        for (int j = 0; j < 15; j++) {
+          final mid = (lo + hi) / 2;
+          if (getMoonAltitude(mid, lat, lon) > horizonAlt) lo = mid; else hi = mid;
+        }
+        setTime = (lo + hi) / 2;
+      }
+      if (riseTime != null && setTime != null) break;
+    }
+    return [riseTime, setTime];
+  }
+
   /// Find sunrise and sunset JDs for a given date using binary search on solar altitude.
   /// tzOffset provided: -0.5667° horizon (mid-limb with refraction)
   /// tzOffset null: 0.0° horizon (true geocentric — for Mandi calc)

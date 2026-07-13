@@ -116,6 +116,22 @@ class PanchangaCalculator {
       }
     }
 
+    // 17. Shaka Varsha
+    int shakaYear = year - 78;
+    if (month < 4) shakaYear -= 1;
+
+    // 18. Paksha
+    final paksha = tithiIndex < 15 ? 'shukla' : 'krishna';
+
+    // 19. Moonrise / Moonset
+    final moonTimes = Ephemeris.findMoonriseSet(year, month, day, lat, lon, tzOffset);
+    final chandraUdaya = moonTimes[0] != null
+        ? Ephemeris.formatTimeFromJd(moonTimes[0]!, tzOffset: tzOffset)
+        : '--:--';
+    final chandraAsta = moonTimes[1] != null
+        ? Ephemeris.formatTimeFromJd(moonTimes[1]!, tzOffset: tzOffset)
+        : '--:--';
+
     return PanchangaData(
       tithi: 't$tithiIndex',
       vara: 'v$varaIndex',
@@ -167,6 +183,10 @@ class PanchangaCalculator {
       vishaPraghati: '', // Filled by GhatiCalculator
       amrutaPraghati: '', // Filled by GhatiCalculator
       agniVasa: agniVasa,
+      shakaVarsha: shakaYear,
+      paksha: paksha,
+      chandraUdaya: chandraUdaya,
+      chandraAsta: chandraAsta,
       sunriseJd: sunriseJd,
       sunsetJd: sunsetJd,
     );
