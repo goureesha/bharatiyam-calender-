@@ -69,7 +69,7 @@ class PanchangaCalculator {
     // 11. Compute ghati details
     final tithiGhati = _computeGhati(sunriseJd, tithiEnd['startJd']!, tithiEnd['endJd']!);
     final nakGhati = _computeGhati(sunriseJd, nakEnd['startJd']!, nakEnd['endJd']!);
-    final yogaGhati = _computeGhati(sunriseJd, yogEnd['startJd']!, yogEnd['endJd']!);
+    final yogaGhati = _computeGhati(sunriseJd, yogaEnd['startJd']!, yogaEnd['endJd']!);
     final karanaGhati = _computeGhati(sunriseJd, karanaEnd['startJd']!, karanaEnd['endJd']!);
 
     // 12. Udayadi Ghati

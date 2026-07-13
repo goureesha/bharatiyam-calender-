@@ -121,14 +121,14 @@ class Ephemeris {
 
     for (final entry in bodies.entries) {
       final res = Sweph.swe_calc_ut(jd, entry.value, flags);
-      result[entry.key] = [res.longitude, res.longitudeSpeed];
+      result[entry.key] = [res.longitude, res.speedInLongitude];
     }
 
     // Rahu (node)
     final rahuBody = trueNode ? HeavenlyBody.SE_TRUE_NODE : HeavenlyBody.SE_MEAN_NODE;
     final rahuRes = Sweph.swe_calc_ut(jd, rahuBody, flags);
-    result['Rahu'] = [rahuRes.longitude, rahuRes.longitudeSpeed];
-    result['Ketu'] = [(rahuRes.longitude + 180) % 360, rahuRes.longitudeSpeed];
+    result['Rahu'] = [rahuRes.longitude, rahuRes.speedInLongitude];
+    result['Ketu'] = [(rahuRes.longitude + 180) % 360, rahuRes.speedInLongitude];
 
     return result;
   }
