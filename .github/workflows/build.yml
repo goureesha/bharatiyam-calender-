@@ -33,6 +33,13 @@ jobs:
           # Set app label
           sed -i 's/android:label="bharatiyam_panchanga"/android:label="ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ"/' android/app/src/main/AndroidManifest.xml
 
+      - name: Fix Android compileSdk for sweph
+        run: |
+          # sweph AAR requires compileSdk 34+, bump to 35
+          sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 35/' android/app/build.gradle.kts
+          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/' android/app/build.gradle.kts
+          sed -i 's/targetSdk = flutter.targetSdkVersion/targetSdk = 35/' android/app/build.gradle.kts
+
       - name: Get dependencies
         run: flutter pub get
 
