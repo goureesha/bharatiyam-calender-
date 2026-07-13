@@ -24,32 +24,34 @@ jobs:
           flutter create --project-name bharatiyam_panchanga --org com.bharatiyam --platforms=android,web .
           rm -f test/widget_test.dart
 
-      - name: Setup Android permissions
+      - name: Setup Android
         run: |
           sed -i '/<application/i\    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.INTERNET" />' android/app/src/main/AndroidManifest.xml
           sed -i 's/android:label="bharatiyam_panchanga"/android:label="ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ"/' android/app/src/main/AndroidManifest.xml
-
-      - name: Fix compileSdk for app module
-        run: |
           sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
           sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/' android/app/build.gradle.kts
           sed -i 's/targetSdk = flutter.targetSdkVersion/targetSdk = 36/' android/app/build.gradle.kts
 
-      - name: Force compileSdk 36 on all subprojects
-        run: |
-          printf '\nsubprojects {\n    afterEvaluate {\n        tasks.withType<JavaCompile>().configureEach {\n            sourceCompatibility = JavaVersion.VERSION_17.toString()\n            targetCompatibility = JavaVersion.VERSION_17.toString()\n        }\n    }\n}\n' >> android/build.gradle.kts
-
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Patch sweph plugin compileSdk
+      - name: Patch all plugins to compileSdk 36
         run: |
-          echo "=== Finding sweph build.gradle ==="
-          find ~/.pub-cache -path "*/sweph*/android/build.gradle" -type f 2>/dev/null | head -5
-          find ~/.pub-cache -path "*/sweph*/android/build.gradle" -type f -exec sed -i 's/compileSdkVersion 31/compileSdkVersion 36/g' {} \;
-          find ~/.pub-cache -path "*/sweph*/android/build.gradle" -type f -exec sed -i 's/compileSdk 31/compileSdk 36/g' {} \;
-          find ~/.pub-cache -path "*/sweph*/android/build.gradle" -type f -exec sed -i "s/compileSdk = 31/compileSdk = 36/g" {} \;
-          find ~/.pub-cache -path "*/sweph*/android/build.gradle*" -type f -exec cat {} \;
+          echo "=== Patching all Flutter plugin build.gradle files ==="
+          find ~/.pub-cache -name "build.gradle" -path "*/android/*" -type f | while read f; do
+            sed -i 's/compileSdkVersion 31/compileSdkVersion 36/g' "$f"
+            sed -i 's/compileSdkVersion 33/compileSdkVersion 36/g' "$f"
+            sed -i 's/compileSdkVersion 34/compileSdkVersion 36/g' "$f"
+            sed -i 's/compileSdk 31/compileSdk 36/g' "$f"
+            sed -i 's/compileSdk 33/compileSdk 36/g' "$f"
+            sed -i 's/compileSdk 34/compileSdk 36/g' "$f"
+            sed -i 's/compileSdk = 31/compileSdk = 36/g' "$f"
+            sed -i 's/compileSdk = 33/compileSdk = 36/g' "$f"
+            sed -i 's/compileSdk = 34/compileSdk = 36/g' "$f"
+          done
+          echo "=== Verifying sweph ==="
+          find ~/.pub-cache -path "*/sweph*" -name "build.gradle" -exec grep -l "compileSdk" {} \;
+          find ~/.pub-cache -path "*/sweph*" -name "build.gradle" -exec grep "compileSdk" {} \;
 
       - name: Build APK (split per ABI)
         run: flutter build apk --split-per-abi --release
