@@ -6,11 +6,41 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-web:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Generate platform files
+        run: |
+          flutter create --project-name bharatiyam_panchanga --org com.bharatiyam --platforms=android,web .
+          rm -f test/widget_test.dart
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Web
+        run: flutter build web --release --base-href /bharatiyam-calender-/
+
+      - name: Deploy Web to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/web
+
+  build-apk:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +67,6 @@ jobs:
 
       - name: Patch all plugins to compileSdk 36
         run: |
-          echo "=== Patching all Flutter plugin build.gradle files ==="
           find ~/.pub-cache -name "build.gradle" -path "*/android/*" -type f | while read f; do
             sed -i 's/compileSdkVersion 31/compileSdkVersion 36/g' "$f"
             sed -i 's/compileSdkVersion 33/compileSdkVersion 36/g' "$f"
@@ -50,14 +79,10 @@ jobs:
             sed -i 's/compileSdk = 34/compileSdk = 36/g' "$f"
           done
           echo "=== Verifying sweph ==="
-          find ~/.pub-cache -path "*/sweph*" -name "build.gradle" -exec grep -l "compileSdk" {} \;
           find ~/.pub-cache -path "*/sweph*" -name "build.gradle" -exec grep "compileSdk" {} \;
 
       - name: Build APK (split per ABI)
         run: flutter build apk --split-per-abi --release
-
-      - name: Build Web
-        run: flutter build web --release --base-href /bharatiyam-calender-/
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
@@ -65,10 +90,3 @@ jobs:
           name: bharatiyam-panchanga-apk
           path: build/app/outputs/flutter-apk/
           retention-days: 30
-
-      - name: Deploy Web to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/web
