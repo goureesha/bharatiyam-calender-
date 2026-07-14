@@ -361,35 +361,55 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // ── 5 Limbs (Panchangam) ──
+          // ── 5 Limbs (Panchangam) with Ghati-Vighati ──
           AppCard(
             child: Column(
               children: [
                 SectionHeader(icon: Icons.auto_awesome, title: AppLocale.t('panchanga')),
                 const SizedBox(height: 8),
-                InfoRow(
+                _limbWithGhati(
                   label: AppLocale.t('tithi'),
                   value: AppLocale.t(d.tithi),
-                  endTime: '${AppLocale.t("endLabel")}: ${d.tithiEndTime}',
+                  endTime: d.tithiEndTime,
                   endsNextDay: d.tithiEndsNextDay,
+                  gata: d.tithiGata, shesha: d.tithiShesha, parama: d.tithiParama,
                 ),
-                InfoRow(
+                _limbWithGhati(
                   label: AppLocale.t('nakshatra'),
                   value: '${AppLocale.t(d.nakshatra)} (${AppLocale.t("pada")} ${d.chandraPada})',
-                  endTime: '${AppLocale.t("endLabel")}: ${d.nakEndTime}',
+                  endTime: d.nakEndTime,
                   endsNextDay: d.nakEndsNextDay,
+                  gata: d.nakGata, shesha: d.nakShesha, parama: d.nakParama,
                 ),
-                InfoRow(
+                _limbWithGhati(
                   label: AppLocale.t('yoga'),
                   value: AppLocale.t(d.yoga),
-                  endTime: '${AppLocale.t("endLabel")}: ${d.yogaEndTime}',
+                  endTime: d.yogaEndTime,
                   endsNextDay: d.yogaEndsNextDay,
+                  gata: d.yogaGata, shesha: d.yogaShesha, parama: d.yogaParama,
                 ),
-                InfoRow(
+                _limbWithGhati(
                   label: AppLocale.t('karana'),
                   value: AppLocale.t(d.karana),
-                  endTime: '${AppLocale.t("endLabel")}: ${d.karanaEndTime}',
+                  endTime: d.karanaEndTime,
                   endsNextDay: d.karanaEndsNextDay,
+                  gata: d.karanaGata, shesha: d.karanaShesha, parama: d.karanaParama,
+                ),
+                const SizedBox(height: 6),
+                // Udayadi Ghati
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: kGold.withAlpha(15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('ಉದಯಾದಿ ಘಟಿ: ', style: TextStyle(fontSize: 11, color: kMuted)),
+                      Text(d.udayadiGhati, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -413,66 +433,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-          // ── Ghati-Vighati ──
-          AppCard(
-            child: Column(
-              children: [
-                const SectionHeader(icon: Icons.timer_outlined, title: 'ಘಟಿ-ವಿಘಟಿ (Ghati-Vighati)'),
-                const SizedBox(height: 8),
-                // Udayadi Ghati
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    color: kGold.withAlpha(15),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('ಉದಯಾದಿ ಘಟಿ: ', style: TextStyle(fontSize: 11, color: kMuted)),
-                      Text(d.udayadiGhati, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
-                    ],
-                  ),
-                ),
-                // Table header
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Row(
-                    children: [
-                      const Expanded(flex: 3, child: Text('', style: TextStyle(fontSize: 9))),
-                      Expanded(flex: 2, child: Text('ಗತ (Gata)', style: TextStyle(fontSize: 9, color: kMuted, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-                      Expanded(flex: 2, child: Text('ಶೇಷ (Shesha)', style: TextStyle(fontSize: 9, color: kMuted, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-                      Expanded(flex: 2, child: Text('ಪರಮ (Parama)', style: TextStyle(fontSize: 9, color: kMuted, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                _ghatiRow(AppLocale.t('tithi'), d.tithiGata, d.tithiShesha, d.tithiParama),
-                _ghatiRow(AppLocale.t('nakshatra'), d.nakGata, d.nakShesha, d.nakParama),
-                _ghatiRow(AppLocale.t('yoga'), d.yogaGata, d.yogaShesha, d.yogaParama),
-                _ghatiRow(AppLocale.t('karana'), d.karanaGata, d.karanaShesha, d.karanaParama),
-                const SizedBox(height: 8),
-                // Visha & Amruta Praghati
-                Row(
-                  children: [
-                    Expanded(child: _ghatiChip('☠️ ${AppLocale.t("vishaPraghati")}', d.vishaPraghati, kAshubha)),
-                    const SizedBox(width: 8),
-                    Expanded(child: _ghatiChip('🍯 ${AppLocale.t("amrutaPraghati")}', d.amrutaPraghati, kShubha)),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                // Agni Vasa
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('🔥 ${AppLocale.t("agniVasa")}: ', style: const TextStyle(fontSize: 11, color: kMuted)),
-                    Text(d.agniVasa, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kText)),
-                  ],
-                ),
-              ],
-            ),
-          ),
+
 
           // ── Moon & Sun details ──
           AppCard(
@@ -530,33 +491,72 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _ghatiRow(String label, String gata, String shesha, String parama) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-      child: Row(
+  Widget _limbWithGhati({
+    required String label,
+    required String value,
+    required String endTime,
+    required bool endsNextDay,
+    required String gata,
+    required String shesha,
+    required String parama,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: kBg.withAlpha(127),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: kBorder.withAlpha(51)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 3, child: Text(label, style: const TextStyle(fontSize: 11, color: kText))),
-          Expanded(flex: 2, child: Text(gata, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold), textAlign: TextAlign.center)),
-          Expanded(flex: 2, child: Text(shesha, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kTeal), textAlign: TextAlign.center)),
-          Expanded(flex: 2, child: Text(parama, style: const TextStyle(fontSize: 12, color: kMuted), textAlign: TextAlign.center)),
+          // Name & Value
+          Row(
+            children: [
+              Text(label, style: const TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.bold)),
+              const Spacer(),
+              Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText)),
+            ],
+          ),
+          const SizedBox(height: 4),
+          // End time + next day flag
+          Row(
+            children: [
+              Text('${AppLocale.t("endLabel")}: ', style: const TextStyle(fontSize: 10, color: kMuted)),
+              Text(endTime, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold)),
+              if (endsNextDay)
+                const Text(' (+1)', style: TextStyle(fontSize: 9, color: kAshubha)),
+            ],
+          ),
+          const SizedBox(height: 4),
+          // Ghati row: Gata | Shesha | Parama
+          Row(
+            children: [
+              _ghatiTag('ಗತ', gata, kGold),
+              const SizedBox(width: 8),
+              _ghatiTag('ಶೇಷ', shesha, kTeal),
+              const SizedBox(width: 8),
+              _ghatiTag('ಪರಮ', parama, kMuted),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _ghatiChip(String label, String value, Color color) {
+  Widget _ghatiTag(String label, String value, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withAlpha(20),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withAlpha(76)),
+        color: color.withAlpha(15),
+        borderRadius: BorderRadius.circular(4),
       ),
-      child: Column(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: TextStyle(fontSize: 9, color: color)),
-          const SizedBox(height: 2),
-          Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: color)),
+          Text('$label ', style: TextStyle(fontSize: 8, color: color)),
+          Text(value, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: color)),
         ],
       ),
     );
