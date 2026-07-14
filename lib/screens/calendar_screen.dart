@@ -292,7 +292,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildDayDetail(PanchangaData d) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 260),
+      constraints: const BoxConstraints(maxHeight: 380),
       child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       padding: const EdgeInsets.all(12),
@@ -348,18 +348,39 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: const Color(0xFFFF9800).withAlpha(76)),
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('🪔 ', style: TextStyle(fontSize: 14)),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(e.name, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFFF9800))),
-                        Text(e.description, style: const TextStyle(fontSize: 9, color: kMuted)),
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      const Text('🪔 ', style: TextStyle(fontSize: 14)),
+                      Expanded(
+                        child: Text(e.name, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFFF9800))),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 3),
+                  Text(e.description, style: const TextStyle(fontSize: 9, color: kMuted)),
+                  if (e.shloka.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: kBg.withAlpha(127),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        e.shloka.replaceAll('\\\\n', '\n'),
+                        style: const TextStyle(fontSize: 9, color: kGold, fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                  ],
+                  if (e.meaning.isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Text(e.meaning, style: const TextStyle(fontSize: 9, color: kTeal)),
+                  ],
+                  const SizedBox(height: 2),
+                  Text('— ${e.source}', style: TextStyle(fontSize: 8, color: kMuted.withAlpha(127))),
                 ],
               ),
             )),
