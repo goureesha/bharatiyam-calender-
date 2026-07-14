@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/ephemeris.dart';
 import '../core/panchanga_calculator.dart';
 import '../core/kala_calculator.dart';
+import '../core/ghati_calculator.dart';
 import '../core/masa_calculator.dart';
 import '../core/samvatsara.dart';
 import '../models/panchanga_data.dart';
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _loading = true);
 
     try {
-      final data = PanchangaCalculator.calculate(
+      var data = PanchangaCalculator.calculate(
         year: _selectedDate.year,
         month: _selectedDate.month,
         day: _selectedDate.day,
@@ -64,6 +65,53 @@ class _HomeScreenState extends State<HomeScreen> {
         lon: LocationService.lon,
         tzOffset: LocationService.tzOffset,
       );
+
+      // Fill Samvatsara & Rutu
+      final samData = SamvatsaraCalculator.calculate(_selectedDate.year, _selectedDate.month);
+      final sunPlanets = Ephemeris.calcAll(data.sunriseJd, 'lahiri', true);
+      final sunDeg = sunPlanets['Sun']![0];
+      final rutu = SamvatsaraCalculator.calculateRutu(sunDeg);
+
+      // Fill Amanta & Pournimanta Masa
+      final amanta = MasaCalculator.calculateAmanta(
+        jdSunrise: data.sunriseJd, lat: LocationService.lat, lon: LocationService.lon,
+        tzOffset: LocationService.tzOffset,
+      );
+      final pournimanta = MasaCalculator.calculatePournimanta(
+        jdSunrise: data.sunriseJd, lat: LocationService.lat, lon: LocationService.lon,
+        tzOffset: LocationService.tzOffset,
+      );
+
+      String amantaName = amanta['masa'] as String;
+      if (amanta['isAdhika'] == true) amantaName = 'adhika_$amantaName';
+      String pourniName = pournimanta['masa'] as String;
+      if (pournimanta['isAdhika'] == true) pourniName = 'adhika_$pourniName';
+
+      // Fill Ghati (Visha/Amruta)
+      final vishaData = GhatiCalculator.calculateVishaGhati(
+        nakshatraIndex: data.nakshatraIndex,
+        sunriseJd: data.sunriseJd,
+        nakStartJd: data.sunriseJd - 0.5,
+        nakEndJd: data.sunriseJd + 0.5,
+        tzOffset: LocationService.tzOffset,
+      );
+      final amrutaData = GhatiCalculator.calculateAmrutaGhati(
+        nakshatraIndex: data.nakshatraIndex,
+        sunriseJd: data.sunriseJd,
+        nakStartJd: data.sunriseJd - 0.5,
+        nakEndJd: data.sunriseJd + 0.5,
+        tzOffset: LocationService.tzOffset,
+      );
+
+      data = data.copyWith(
+        samvatsara: samData['samvatsara'] as String,
+        rutu: rutu,
+        amantaMasa: amantaName,
+        pournimantaMasa: pourniName,
+        vishaPraghati: '${vishaData['start'] ?? ''} - ${vishaData['end'] ?? ''}',
+        amrutaPraghati: '${amrutaData['start'] ?? ''} - ${amrutaData['end'] ?? ''}',
+      );
+
       final kalas = KalaCalculator.calculate(
         sunriseJd: data.sunriseJd,
         sunsetJd: data.sunsetJd,

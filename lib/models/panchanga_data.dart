@@ -135,6 +135,43 @@ class PanchangaData {
     required this.sunriseJd,
     required this.sunsetJd,
   });
+
+  PanchangaData copyWith({
+    String? amantaMasa,
+    String? pournimantaMasa,
+    String? samvatsara,
+    String? rutu,
+    String? vishaPraghati,
+    String? amrutaPraghati,
+  }) => PanchangaData(
+    tithi: tithi, vara: vara, nakshatra: nakshatra, yoga: yoga, karana: karana,
+    tithiIndex: tithiIndex, nakshatraIndex: nakshatraIndex, yogaIndex: yogaIndex,
+    karanaIndex: karanaIndex, varaIndex: varaIndex,
+    tithiEndTime: tithiEndTime, nakEndTime: nakEndTime, yogaEndTime: yogaEndTime,
+    karanaEndTime: karanaEndTime,
+    tithiEndsNextDay: tithiEndsNextDay, nakEndsNextDay: nakEndsNextDay,
+    yogaEndsNextDay: yogaEndsNextDay, karanaEndsNextDay: karanaEndsNextDay,
+    tithiGata: tithiGata, tithiShesha: tithiShesha, tithiParama: tithiParama,
+    nakGata: nakGata, nakShesha: nakShesha, nakParama: nakParama,
+    yogaGata: yogaGata, yogaShesha: yogaShesha, yogaParama: yogaParama,
+    karanaGata: karanaGata, karanaShesha: karanaShesha, karanaParama: karanaParama,
+    udayadiGhati: udayadiGhati,
+    sunrise: sunrise, sunset: sunset,
+    chandraRashi: chandraRashi, chandraPada: chandraPada,
+    suryaNakshatra: suryaNakshatra, suryaPada: suryaPada, nakPercent: nakPercent,
+    amantaMasa: amantaMasa ?? this.amantaMasa,
+    pournimantaMasa: pournimantaMasa ?? this.pournimantaMasa,
+    souraMasa: souraMasa, souraMasaGataDina: souraMasaGataDina,
+    samvatsara: samvatsara ?? this.samvatsara,
+    rutu: rutu ?? this.rutu,
+    ayana: ayana, divamana: divamana, ratrimana: ratrimana,
+    vishaPraghati: vishaPraghati ?? this.vishaPraghati,
+    amrutaPraghati: amrutaPraghati ?? this.amrutaPraghati,
+    agniVasa: agniVasa,
+    shakaVarsha: shakaVarsha, paksha: paksha,
+    chandraUdaya: chandraUdaya, chandraAsta: chandraAsta,
+    sunriseJd: sunriseJd, sunsetJd: sunsetJd,
+  );
 }
 
 /// Lagna transit timing (when a rashi rises/sets)
