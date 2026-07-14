@@ -128,7 +128,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     _currentMonth = DateTime(picked.year, picked.month, 1);
                     _selectedDay = picked.day;
                   });
-                  _computeMonth();
+                  _loadMonth();
                 }
               },
               child: Text(

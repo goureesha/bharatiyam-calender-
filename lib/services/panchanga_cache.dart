@@ -1,15 +1,10 @@
 /// Panchanga Cache — Pre-computes and caches 3 years of panchanga + events data.
 /// Runs computation in a background isolate for non-blocking UI.
-import 'dart:convert';
-import 'dart:isolate';
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../core/ephemeris.dart';
+import 'package:flutter/material.dart';
 import '../core/panchanga_calculator.dart';
 import '../core/masa_calculator.dart';
 import '../core/events.dart';
 import '../models/panchanga_data.dart';
-import '../services/location_service.dart';
 
 class _DayCache {
   final PanchangaData data;
