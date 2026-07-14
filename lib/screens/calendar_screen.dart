@@ -1,9 +1,12 @@
 /// Calendar Screen — Monthly grid view with panchanga summary per day.
 import 'package:flutter/material.dart';
+import '../core/panchanga_calculator.dart';
+import '../core/masa_calculator.dart';
 import '../core/events.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
 import '../services/panchanga_cache.dart';
+import '../services/location_service.dart';
 import '../widgets/common.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -31,14 +34,53 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   void _loadMonth() {
     final cache = PanchangaCache();
-    if (!cache.isInitialized) {
-      // Cache not ready yet, show loading
-      setState(() => _loading = true);
-      return;
+    if (cache.isInitialized) {
+      // Use cached data — instant!
+      setState(() {
+        _monthData = cache.getMonthData(_currentMonth.year, _currentMonth.month);
+        _monthEvents = cache.getMonthEvents(_currentMonth.year, _currentMonth.month);
+        _loading = false;
+      });
+    } else {
+      // Cache not ready, compute directly
+      _computeMonthDirect();
     }
+  }
+
+  Future<void> _computeMonthDirect() async {
+    setState(() => _loading = true);
+    final data = <int, PanchangaData>{};
+    final events = <int, List<AstroEvent>>{};
+    final daysInMonth = DateUtils.getDaysInMonth(_currentMonth.year, _currentMonth.month);
+
+    for (int d = 1; d <= daysInMonth; d++) {
+      try {
+        final p = PanchangaCalculator.calculate(
+          year: _currentMonth.year, month: _currentMonth.month, day: d,
+          lat: LocationService.lat, lon: LocationService.lon,
+          tzOffset: LocationService.tzOffset,
+        );
+        data[d] = p;
+        try {
+          final amanta = MasaCalculator.calculateAmanta(
+            jdSunrise: p.sunriseJd, lat: LocationService.lat,
+            lon: LocationService.lon, tzOffset: LocationService.tzOffset,
+          );
+          final masaName = EventCalculator.masaKeyToKannada(amanta['masa'] as String);
+          final ev = EventCalculator.getEvents(
+            masa: masaName, tIdx: p.tithiIndex,
+            isAdhika: amanta['isAdhika'] as bool,
+          );
+          if (ev.isNotEmpty) events[d] = ev;
+        } catch (_) {}
+      } catch (_) {}
+      // Yield every 5 days
+      if (d % 5 == 0) await Future.delayed(Duration.zero);
+    }
+
     setState(() {
-      _monthData = cache.getMonthData(_currentMonth.year, _currentMonth.month);
-      _monthEvents = cache.getMonthEvents(_currentMonth.year, _currentMonth.month);
+      _monthData = data;
+      _monthEvents = events;
       _loading = false;
     });
   }
