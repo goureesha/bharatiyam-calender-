@@ -74,6 +74,63 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
 
+        // ── Theme ──
+        AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SectionHeader(icon: Icons.palette_rounded, title: 'Theme'),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: ThemeService.allThemes.map((t) {
+                  final isSelected = ThemeService.themeNotifier.value == t.id;
+                  return GestureDetector(
+                    onTap: () {
+                      ThemeService.setTheme(t.id);
+                      setState(() {});
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isSelected ? t.primary.withAlpha(30) : Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: isSelected ? t.primary : kBorder,
+                          width: isSelected ? 2 : 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 16, height: 16,
+                            decoration: BoxDecoration(
+                              color: t.primary,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: t.bg, width: 2),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(t.name,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: isSelected ? kGold : kText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+
         // ── Location ──
         AppCard(
           child: Column(

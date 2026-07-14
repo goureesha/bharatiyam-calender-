@@ -1,78 +1,180 @@
 /// Design system and common widgets for Bharatiyam Panchanga.
-/// Clean white & orange modern minimalist theme.
+/// Multi-theme support with 5 color presets.
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// ─── COLOR CONSTANTS ───
+// ─── THEME PRESET ───
 
-const Color kBg = Color(0xFFF8F6F2);           // Warm off-white
-const Color kCard = Color(0xFFFFFFFF);           // Pure white cards
-const Color kGold = Color(0xFFE65100);           // Deep orange (primary)
-const Color kTeal = Color(0xFF00897B);           // Teal accent
-const Color kPurple = Color(0xFF5C6BC0);         // Indigo accent
-const Color kText = Color(0xFF212121);           // Near-black text
-const Color kMuted = Color(0xFF9E9E9E);          // Grey muted
-const Color kShubha = Color(0xFF2E7D32);         // Green for shubha
-const Color kAshubha = Color(0xFFD32F2F);        // Red for ashubha
-const Color kMadhyama = Color(0xFFEF6C00);       // Orange for madhyama
-const Color kBorder = Color(0x1AE65100);         // Orange at 10%
-const Color kCardBorder = Color(0x1A000000);     // Black at 10%
+class AppThemePreset {
+  final String id;
+  final String name;
+  final String emoji;
+  final Color bg;
+  final Color card;
+  final Color primary;
+  final Color accent;
+  final Color text;
+  final Color muted;
+  final Color shubha;
+  final Color ashubha;
+  final Color madhyama;
+  final Brightness brightness;
+  final List<Color> gradientColors;
 
-// ─── THEME ───
+  const AppThemePreset({
+    required this.id, required this.name, required this.emoji,
+    required this.bg, required this.card, required this.primary,
+    required this.accent, required this.text, required this.muted,
+    required this.shubha, required this.ashubha, required this.madhyama,
+    required this.brightness, required this.gradientColors,
+  });
 
-ThemeData appTheme() => ThemeData(
-  brightness: Brightness.light,
-  scaffoldBackgroundColor: kBg,
-  primaryColor: kGold,
-  colorScheme: const ColorScheme.light(
-    primary: kGold,
-    secondary: kTeal,
-    surface: kCard,
-    onPrimary: Colors.white,
-    onSecondary: Colors.white,
-    onSurface: kText,
+  Color get border => primary.withAlpha(26);
+  Color get cardBorder => brightness == Brightness.dark
+      ? primary.withAlpha(51) : Colors.black.withAlpha(26);
+}
+
+// ─── 5 THEME PRESETS ───
+
+const _themes = <AppThemePreset>[
+  // 1. Saffron Light
+  AppThemePreset(
+    id: 'saffron', name: 'Saffron Light', emoji: '🟠',
+    bg: Color(0xFFF8F6F2), card: Color(0xFFFFFFFF),
+    primary: Color(0xFFE65100), accent: Color(0xFF00897B),
+    text: Color(0xFF212121), muted: Color(0xFF9E9E9E),
+    shubha: Color(0xFF2E7D32), ashubha: Color(0xFFD32F2F), madhyama: Color(0xFFEF6C00),
+    brightness: Brightness.light,
+    gradientColors: [Color(0xFFFFF3E0), Color(0xFFF8F6F2), Color(0xFFF5F0E8)],
   ),
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Colors.transparent,
-    elevation: 0,
-    centerTitle: true,
-    titleTextStyle: TextStyle(
-      fontFamily: 'NotoSansKannada',
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      color: kGold,
+  // 2. Royal Purple Dark
+  AppThemePreset(
+    id: 'purple', name: 'Royal Purple', emoji: '🟣',
+    bg: Color(0xFF0D0221), card: Color(0xFF1A0533),
+    primary: Color(0xFFD4A639), accent: Color(0xFF00BFA5),
+    text: Color(0xFFF5F0E8), muted: Color(0xFF8B7FA3),
+    shubha: Color(0xFF00C853), ashubha: Color(0xFFFF1744), madhyama: Color(0xFFFFB300),
+    brightness: Brightness.dark,
+    gradientColors: [Color(0xFF1A0533), Color(0xFF0D0221), Color(0xFF0A0118)],
+  ),
+  // 3. Ocean Blue Dark
+  AppThemePreset(
+    id: 'ocean', name: 'Ocean Blue', emoji: '🔵',
+    bg: Color(0xFF0A1628), card: Color(0xFF132240),
+    primary: Color(0xFF42A5F5), accent: Color(0xFF80CBC4),
+    text: Color(0xFFE8EAF0), muted: Color(0xFF7B8DA0),
+    shubha: Color(0xFF66BB6A), ashubha: Color(0xFFEF5350), madhyama: Color(0xFFFFCA28),
+    brightness: Brightness.dark,
+    gradientColors: [Color(0xFF132240), Color(0xFF0A1628), Color(0xFF061020)],
+  ),
+  // 4. Earthy Green Light
+  AppThemePreset(
+    id: 'earth', name: 'Earthy Green', emoji: '🟢',
+    bg: Color(0xFFF5F2EB), card: Color(0xFFFFFFFF),
+    primary: Color(0xFF2E7D32), accent: Color(0xFF8D6E63),
+    text: Color(0xFF263238), muted: Color(0xFF90A4AE),
+    shubha: Color(0xFF388E3C), ashubha: Color(0xFFC62828), madhyama: Color(0xFFF57F17),
+    brightness: Brightness.light,
+    gradientColors: [Color(0xFFE8F5E9), Color(0xFFF5F2EB), Color(0xFFF1EDE4)],
+  ),
+  // 5. Maroon Temple
+  AppThemePreset(
+    id: 'temple', name: 'Temple Maroon', emoji: '🔴',
+    bg: Color(0xFF1A0A0A), card: Color(0xFF2D1515),
+    primary: Color(0xFFFF8A65), accent: Color(0xFFFFD54F),
+    text: Color(0xFFFBE9E7), muted: Color(0xFFA1887F),
+    shubha: Color(0xFF81C784), ashubha: Color(0xFFE57373), madhyama: Color(0xFFFFB74D),
+    brightness: Brightness.dark,
+    gradientColors: [Color(0xFF2D1515), Color(0xFF1A0A0A), Color(0xFF120808)],
+  ),
+];
+
+// ─── THEME SERVICE ───
+
+class ThemeService {
+  static final ThemeService _instance = ThemeService._();
+  factory ThemeService() => _instance;
+  ThemeService._();
+
+  static final ValueNotifier<String> themeNotifier = ValueNotifier('saffron');
+
+  static AppThemePreset get current =>
+      _themes.firstWhere((t) => t.id == themeNotifier.value, orElse: () => _themes[0]);
+
+  static List<AppThemePreset> get allThemes => _themes;
+
+  static Future<void> loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    themeNotifier.value = prefs.getString('app_theme') ?? 'saffron';
+  }
+
+  static Future<void> setTheme(String id) async {
+    themeNotifier.value = id;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('app_theme', id);
+  }
+}
+
+// ─── DYNAMIC COLOR GETTERS ───
+
+Color get kBg => ThemeService.current.bg;
+Color get kCard => ThemeService.current.card;
+Color get kGold => ThemeService.current.primary;
+Color get kTeal => ThemeService.current.accent;
+Color get kPurple => const Color(0xFF5C6BC0);
+Color get kText => ThemeService.current.text;
+Color get kMuted => ThemeService.current.muted;
+Color get kShubha => ThemeService.current.shubha;
+Color get kAshubha => ThemeService.current.ashubha;
+Color get kMadhyama => ThemeService.current.madhyama;
+Color get kBorder => ThemeService.current.border;
+Color get kCardBorder => ThemeService.current.cardBorder;
+
+// ─── THEME BUILDER ───
+
+ThemeData appTheme() {
+  final t = ThemeService.current;
+  final isDark = t.brightness == Brightness.dark;
+  return ThemeData(
+    brightness: t.brightness,
+    scaffoldBackgroundColor: t.bg,
+    primaryColor: t.primary,
+    colorScheme: isDark ? ColorScheme.dark(
+      primary: t.primary, secondary: t.accent,
+      surface: t.card, onPrimary: t.bg, onSecondary: t.bg, onSurface: t.text,
+    ) : ColorScheme.light(
+      primary: t.primary, secondary: t.accent,
+      surface: t.card, onPrimary: Colors.white, onSecondary: Colors.white, onSurface: t.text,
     ),
-    iconTheme: IconThemeData(color: kGold),
-  ),
-  cardTheme: CardThemeData(
-    color: kCard,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
-      side: const BorderSide(color: kCardBorder, width: 1),
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.transparent, elevation: 0, centerTitle: true,
+      titleTextStyle: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 20, fontWeight: FontWeight.bold, color: t.primary),
+      iconTheme: IconThemeData(color: t.primary),
     ),
-    elevation: 2,
-    shadowColor: Colors.black12,
-  ),
-  textTheme: const TextTheme(
-    headlineMedium: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 20, fontWeight: FontWeight.bold, color: kGold),
-    titleLarge: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 16, fontWeight: FontWeight.bold, color: kGold),
-    titleMedium: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 14, fontWeight: FontWeight.w600, color: kText),
-    bodyLarge: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 14, color: kText),
-    bodyMedium: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 13, color: kText),
-    bodySmall: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 11, color: kMuted),
-  ),
-  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    backgroundColor: kCard,
-    selectedItemColor: kGold,
-    unselectedItemColor: kMuted,
-    type: BottomNavigationBarType.fixed,
-    elevation: 8,
-  ),
-  tabBarTheme: const TabBarThemeData(
-    labelColor: kGold,
-    unselectedLabelColor: kMuted,
-    indicatorColor: kGold,
-  ),
-);
+    cardTheme: CardThemeData(
+      color: t.card,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: t.cardBorder, width: 1)),
+      elevation: isDark ? 8 : 2,
+      shadowColor: isDark ? Colors.black54 : Colors.black12,
+    ),
+    textTheme: TextTheme(
+      headlineMedium: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 20, fontWeight: FontWeight.bold, color: t.primary),
+      titleLarge: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 16, fontWeight: FontWeight.bold, color: t.primary),
+      titleMedium: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 14, fontWeight: FontWeight.w600, color: t.text),
+      bodyLarge: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 14, color: t.text),
+      bodyMedium: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 13, color: t.text),
+      bodySmall: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 11, color: t.muted),
+    ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: t.card, selectedItemColor: t.primary,
+      unselectedItemColor: t.muted, type: BottomNavigationBarType.fixed, elevation: 8,
+    ),
+    tabBarTheme: TabBarThemeData(labelColor: t.primary, unselectedLabelColor: t.muted, indicatorColor: t.primary),
+  );
+}
+
+/// Get gradient colors for the current theme
+List<Color> get appGradientColors => ThemeService.current.gradientColors;
 
 // ─── GLASSMORPHISM CARD ───
 

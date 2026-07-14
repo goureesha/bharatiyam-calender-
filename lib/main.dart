@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/home_screen.dart';
 import 'widgets/common.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await ThemeService.loadTheme();
   runApp(const BharatiyamPanchangaApp());
 }
 
@@ -13,11 +13,16 @@ class BharatiyamPanchangaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ',
-      debugShowCheckedModeBanner: false,
-      theme: appTheme(),
-      home: const HomeScreen(),
+    return ValueListenableBuilder<String>(
+      valueListenable: ThemeService.themeNotifier,
+      builder: (context, themeId, _) {
+        return MaterialApp(
+          title: 'ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ',
+          debugShowCheckedModeBanner: false,
+          theme: appTheme(),
+          home: const HomeScreen(),
+        );
+      },
     );
   }
 }
