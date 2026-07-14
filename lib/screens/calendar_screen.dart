@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import '../core/ephemeris.dart';
 import '../core/panchanga_calculator.dart';
+import '../core/masa_calculator.dart';
+import '../core/events.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
@@ -17,6 +19,7 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   late DateTime _currentMonth;
   final Map<int, PanchangaData> _monthData = {};
+  final Map<int, List<AstroEvent>> _monthEvents = {};
   bool _loading = false;
   int? _selectedDay;
 
@@ -32,6 +35,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Future<void> _computeMonth() async {
     setState(() => _loading = true);
     _monthData.clear();
+    _monthEvents.clear();
 
     final daysInMonth = DateUtils.getDaysInMonth(_currentMonth.year, _currentMonth.month);
 
@@ -46,6 +50,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
           tzOffset: LocationService.tzOffset,
         );
         _monthData[d] = data;
+
+        // Compute events for this day
+        try {
+          final amanta = MasaCalculator.calculateAmanta(
+            jdSunrise: data.sunriseJd,
+            lat: LocationService.lat,
+            lon: LocationService.lon,
+            tzOffset: LocationService.tzOffset,
+          );
+          final masaKey = amanta['masa'] as String;
+          final isAdhika = amanta['isAdhika'] as bool;
+          final masaName = EventCalculator.masaKeyToKannada(masaKey);
+          final events = EventCalculator.getEvents(
+            masa: masaName,
+            tIdx: data.tithiIndex,
+            isAdhika: isAdhika,
+          );
+          if (events.isNotEmpty) _monthEvents[d] = events;
+        } catch (_) {}
       } catch (e) {
         // Skip days that fail
       }
@@ -234,8 +257,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       color: isSelected ? kGold.withAlpha(178) : kMuted,
                     ),
                   ),
-                // Nakshatra short
-                if (data != null)
+                // Event dot
+                if (_monthEvents.containsKey(d))
+                  Container(
+                    width: 5, height: 5,
+                    margin: const EdgeInsets.only(top: 1),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFF9800),
+                      shape: BoxShape.circle,
+                    ),
+                  )
+                else if (data != null)
                   Text(
                     _nakShort(data.nakshatraIndex),
                     style: TextStyle(
@@ -259,7 +291,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildDayDetail(PanchangaData d) {
-    return Container(
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 260),
+      child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -267,7 +301,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: kGold.withAlpha(51)),
       ),
-      child: Column(
+      child: SingleChildScrollView(child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Date & Vara
@@ -304,7 +338,33 @@ class _CalendarScreenState extends State<CalendarScreen> {
               Expanded(child: _miniInfo(AppLocale.t('chandraRashi'), AppLocale.t(d.chandraRashi))),
             ],
           ),
+          // Events
+          if (_selectedDay != null && _monthEvents.containsKey(_selectedDay))
+            ..._monthEvents[_selectedDay]!.map((e) => Container(
+              margin: const EdgeInsets.only(top: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF9800).withAlpha(20),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFF9800).withAlpha(76)),
+              ),
+              child: Row(
+                children: [
+                  const Text('🪔 ', style: TextStyle(fontSize: 14)),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(e.name, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFFF9800))),
+                        Text(e.description, style: const TextStyle(fontSize: 9, color: kMuted)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )),
         ],
+      )),
       ),
     );
   }
