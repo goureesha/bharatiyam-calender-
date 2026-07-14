@@ -373,6 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   endTime: d.tithiEndTime,
                   endsNextDay: d.tithiEndsNextDay,
                   gata: d.tithiGata, shesha: d.tithiShesha, parama: d.tithiParama,
+                  gataNow: d.tithiGataNow, sheshaNow: d.tithiSheshaNow,
                 ),
                 _limbWithGhati(
                   label: AppLocale.t('nakshatra'),
@@ -380,6 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   endTime: d.nakEndTime,
                   endsNextDay: d.nakEndsNextDay,
                   gata: d.nakGata, shesha: d.nakShesha, parama: d.nakParama,
+                  gataNow: d.nakGataNow, sheshaNow: d.nakSheshaNow,
                 ),
                 _limbWithGhati(
                   label: AppLocale.t('yoga'),
@@ -387,6 +389,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   endTime: d.yogaEndTime,
                   endsNextDay: d.yogaEndsNextDay,
                   gata: d.yogaGata, shesha: d.yogaShesha, parama: d.yogaParama,
+                  gataNow: d.yogaGataNow, sheshaNow: d.yogaSheshaNow,
                 ),
                 _limbWithGhati(
                   label: AppLocale.t('karana'),
@@ -394,6 +397,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   endTime: d.karanaEndTime,
                   endsNextDay: d.karanaEndsNextDay,
                   gata: d.karanaGata, shesha: d.karanaShesha, parama: d.karanaParama,
+                  gataNow: d.karanaGataNow, sheshaNow: d.karanaSheshaNow,
                 ),
                 const SizedBox(height: 6),
                 // Udayadi Ghati
@@ -499,6 +503,8 @@ class _HomeScreenState extends State<HomeScreen> {
     required String gata,
     required String shesha,
     required String parama,
+    required String gataNow,
+    required String sheshaNow,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -530,14 +536,25 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           const SizedBox(height: 4),
-          // Ghati row: Gata | Shesha | Parama
+          // Sunrise Ghati row
           Row(
             children: [
+              const Text('☀ ', style: TextStyle(fontSize: 10)),
               _ghatiTag('ಗತ', gata, kGold),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               _ghatiTag('ಶೇಷ', shesha, kTeal),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               _ghatiTag('ಪರಮ', parama, kMuted),
+            ],
+          ),
+          const SizedBox(height: 3),
+          // Current time Ghati row
+          Row(
+            children: [
+              const Text('⏱ ', style: TextStyle(fontSize: 10)),
+              _ghatiTag('ಗತ', gataNow, const Color(0xFFFF9800)),
+              const SizedBox(width: 6),
+              _ghatiTag('ಶೇಷ', sheshaNow, const Color(0xFF4CAF50)),
             ],
           ),
         ],

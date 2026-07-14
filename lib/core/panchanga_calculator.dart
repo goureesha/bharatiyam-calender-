@@ -66,15 +66,23 @@ class PanchangaCalculator {
     final yogaEnd = _findYogaLimit(sunriseJd, yogaIndex, lat, lon, ayanamsaMode, trueNode);
     final karanaEnd = _findKaranaLimit(sunriseJd, karanaRawIdx, lat, lon, ayanamsaMode, trueNode);
 
-    // 11. Compute ghati details
+    // 11. Compute ghati details (at sunrise)
     final tithiGhati = _computeGhati(sunriseJd, tithiEnd['startJd']!, tithiEnd['endJd']!);
     final nakGhati = _computeGhati(sunriseJd, nakEnd['startJd']!, nakEnd['endJd']!);
     final yogaGhati = _computeGhati(sunriseJd, yogaEnd['startJd']!, yogaEnd['endJd']!);
     final karanaGhati = _computeGhati(sunriseJd, karanaEnd['startJd']!, karanaEnd['endJd']!);
 
+    // 11b. Compute ghati at current time (live)
+    final nowDt = DateTime.now();
+    final nowJd = Ephemeris.julday(nowDt.year, nowDt.month, nowDt.day,
+        nowDt.hour + nowDt.minute / 60.0 + nowDt.second / 3600.0 - tzOffset);
+    final tithiGhatiNow = _computeGhati(nowJd, tithiEnd['startJd']!, tithiEnd['endJd']!);
+    final nakGhatiNow = _computeGhati(nowJd, nakEnd['startJd']!, nakEnd['endJd']!);
+    final yogaGhatiNow = _computeGhati(nowJd, yogaEnd['startJd']!, yogaEnd['endJd']!);
+    final karanaGhatiNow = _computeGhati(nowJd, karanaEnd['startJd']!, karanaEnd['endJd']!);
+
     // 12. Udayadi Ghati
-    final now = Ephemeris.julday(year, month, day, 12.0 - tzOffset);
-    final udayadiGhatis = (now - sunriseJd) * 60; // JD diff * 60 = ghatis
+    final udayadiGhatis = (nowJd - sunriseJd) * 60; // JD diff * 60 = ghatis
 
     // 13. Next day flags
     final nextDayJd = sunriseJd + 1.0;
@@ -164,6 +172,14 @@ class PanchangaCalculator {
       karanaShesha: Ephemeris.formatGhati(karanaGhati['shesha']!),
       karanaParama: Ephemeris.formatGhati(karanaGhati['parama']!),
       udayadiGhati: Ephemeris.formatGhati(udayadiGhatis),
+      tithiGataNow: Ephemeris.formatGhati(tithiGhatiNow['gata']!),
+      tithiSheshaNow: Ephemeris.formatGhati(tithiGhatiNow['shesha']!),
+      nakGataNow: Ephemeris.formatGhati(nakGhatiNow['gata']!),
+      nakSheshaNow: Ephemeris.formatGhati(nakGhatiNow['shesha']!),
+      yogaGataNow: Ephemeris.formatGhati(yogaGhatiNow['gata']!),
+      yogaSheshaNow: Ephemeris.formatGhati(yogaGhatiNow['shesha']!),
+      karanaGataNow: Ephemeris.formatGhati(karanaGhatiNow['gata']!),
+      karanaSheshaNow: Ephemeris.formatGhati(karanaGhatiNow['shesha']!),
       sunrise: Ephemeris.formatTimeFromJd(sunriseJd, tzOffset: tzOffset),
       sunset: Ephemeris.formatTimeFromJd(sunsetJd, tzOffset: tzOffset),
       chandraRashi: 'r$chandraRashiIdx',

@@ -42,6 +42,16 @@ class PanchangaData {
   final String karanaParama;
   final String udayadiGhati;
 
+  // Current-time Gata/Shesha
+  final String tithiGataNow;
+  final String tithiSheshaNow;
+  final String nakGataNow;
+  final String nakSheshaNow;
+  final String yogaGataNow;
+  final String yogaSheshaNow;
+  final String karanaGataNow;
+  final String karanaSheshaNow;
+
   // Sun & Moon
   final String sunrise;
   final String sunset;
@@ -109,6 +119,14 @@ class PanchangaData {
     required this.karanaShesha,
     required this.karanaParama,
     required this.udayadiGhati,
+    this.tithiGataNow = '',
+    this.tithiSheshaNow = '',
+    this.nakGataNow = '',
+    this.nakSheshaNow = '',
+    this.yogaGataNow = '',
+    this.yogaSheshaNow = '',
+    this.karanaGataNow = '',
+    this.karanaSheshaNow = '',
     required this.sunrise,
     required this.sunset,
     required this.chandraRashi,
@@ -143,6 +161,14 @@ class PanchangaData {
     String? rutu,
     String? vishaPraghati,
     String? amrutaPraghati,
+    String? tithiGataNow,
+    String? tithiSheshaNow,
+    String? nakGataNow,
+    String? nakSheshaNow,
+    String? yogaGataNow,
+    String? yogaSheshaNow,
+    String? karanaGataNow,
+    String? karanaSheshaNow,
   }) => PanchangaData(
     tithi: tithi, vara: vara, nakshatra: nakshatra, yoga: yoga, karana: karana,
     tithiIndex: tithiIndex, nakshatraIndex: nakshatraIndex, yogaIndex: yogaIndex,
@@ -156,6 +182,14 @@ class PanchangaData {
     yogaGata: yogaGata, yogaShesha: yogaShesha, yogaParama: yogaParama,
     karanaGata: karanaGata, karanaShesha: karanaShesha, karanaParama: karanaParama,
     udayadiGhati: udayadiGhati,
+    tithiGataNow: tithiGataNow ?? this.tithiGataNow,
+    tithiSheshaNow: tithiSheshaNow ?? this.tithiSheshaNow,
+    nakGataNow: nakGataNow ?? this.nakGataNow,
+    nakSheshaNow: nakSheshaNow ?? this.nakSheshaNow,
+    yogaGataNow: yogaGataNow ?? this.yogaGataNow,
+    yogaSheshaNow: yogaSheshaNow ?? this.yogaSheshaNow,
+    karanaGataNow: karanaGataNow ?? this.karanaGataNow,
+    karanaSheshaNow: karanaSheshaNow ?? this.karanaSheshaNow,
     sunrise: sunrise, sunset: sunset,
     chandraRashi: chandraRashi, chandraPada: chandraPada,
     suryaNakshatra: suryaNakshatra, suryaPada: suryaPada, nakPercent: nakPercent,
