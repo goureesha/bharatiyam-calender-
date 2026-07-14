@@ -1,12 +1,9 @@
 /// Calendar Screen — Monthly grid view with panchanga summary per day.
 import 'package:flutter/material.dart';
-import '../core/ephemeris.dart';
-import '../core/panchanga_calculator.dart';
-import '../core/masa_calculator.dart';
 import '../core/events.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
-import '../services/location_service.dart';
+import '../services/panchanga_cache.dart';
 import '../widgets/common.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -18,8 +15,8 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   late DateTime _currentMonth;
-  final Map<int, PanchangaData> _monthData = {};
-  final Map<int, List<AstroEvent>> _monthEvents = {};
+  Map<int, PanchangaData> _monthData = {};
+  Map<int, List<AstroEvent>> _monthEvents = {};
   bool _loading = false;
   int? _selectedDay;
 
@@ -29,52 +26,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final now = DateTime.now();
     _currentMonth = DateTime(now.year, now.month, 1);
     _selectedDay = now.day;
-    _computeMonth();
+    _loadMonth();
   }
 
-  Future<void> _computeMonth() async {
-    setState(() => _loading = true);
-    _monthData.clear();
-    _monthEvents.clear();
-
-    final daysInMonth = DateUtils.getDaysInMonth(_currentMonth.year, _currentMonth.month);
-
-    for (int d = 1; d <= daysInMonth; d++) {
-      try {
-        final data = PanchangaCalculator.calculate(
-          year: _currentMonth.year,
-          month: _currentMonth.month,
-          day: d,
-          lat: LocationService.lat,
-          lon: LocationService.lon,
-          tzOffset: LocationService.tzOffset,
-        );
-        _monthData[d] = data;
-
-        // Compute events for this day
-        try {
-          final amanta = MasaCalculator.calculateAmanta(
-            jdSunrise: data.sunriseJd,
-            lat: LocationService.lat,
-            lon: LocationService.lon,
-            tzOffset: LocationService.tzOffset,
-          );
-          final masaKey = amanta['masa'] as String;
-          final isAdhika = amanta['isAdhika'] as bool;
-          final masaName = EventCalculator.masaKeyToKannada(masaKey);
-          final events = EventCalculator.getEvents(
-            masa: masaName,
-            tIdx: data.tithiIndex,
-            isAdhika: isAdhika,
-          );
-          if (events.isNotEmpty) _monthEvents[d] = events;
-        } catch (_) {}
-      } catch (e) {
-        // Skip days that fail
-      }
+  void _loadMonth() {
+    final cache = PanchangaCache();
+    if (!cache.isInitialized) {
+      // Cache not ready yet, show loading
+      setState(() => _loading = true);
+      return;
     }
-
-    setState(() => _loading = false);
+    setState(() {
+      _monthData = cache.getMonthData(_currentMonth.year, _currentMonth.month);
+      _monthEvents = cache.getMonthEvents(_currentMonth.year, _currentMonth.month);
+      _loading = false;
+    });
   }
 
   void _changeMonth(int delta) {
@@ -82,7 +48,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
       _currentMonth = DateTime(_currentMonth.year, _currentMonth.month + delta, 1);
       _selectedDay = null;
     });
-    _computeMonth();
+    _loadMonth();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload when cache becomes ready
+    if (_loading && PanchangaCache().isInitialized) {
+      _loadMonth();
+    }
   }
 
   @override
