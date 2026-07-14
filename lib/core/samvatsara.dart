@@ -24,11 +24,12 @@ class SamvatsaraCalculator {
     // Shaka year changes at Chaitra Shukla Pratipada (Ugadi)
     // Approximate: if before April, use previous year
     int shakaYear = year - 78;
-    if (month < 4) shakaYear -= 1; // Before Ugadi
+    if (month < 4) shakaYear -= 1;
 
     // Samvatsara index in the 60-year cycle
-    // Jupiter takes ~12 years per cycle, 5 cycles = 60 years
-    final samIdx = ((shakaYear - 1) % 60 + 60) % 60;
+    // South Indian tradition: Prabhava(0) started at a specific Shaka year
+    // Offset +11 aligns with the traditional mapping
+    final samIdx = ((shakaYear + 11) % 60 + 60) % 60;
 
     return {
       'samvatsara': samvatsaraKeys[samIdx],
