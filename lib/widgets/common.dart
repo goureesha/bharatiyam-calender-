@@ -1,34 +1,34 @@
 /// Design system and common widgets for Bharatiyam Panchanga.
-/// Premium dark theme with gold accents and glassmorphism.
+/// Clean white & orange modern minimalist theme.
 import 'package:flutter/material.dart';
 
 // ─── COLOR CONSTANTS ───
 
-const Color kBg = Color(0xFF0D0221);
-const Color kCard = Color(0xFF1A0533);
-const Color kGold = Color(0xFFD4A639);
-const Color kTeal = Color(0xFF00BFA5);
-const Color kPurple = Color(0xFF7C4DFF);
-const Color kText = Color(0xFFF5F0E8);
-const Color kMuted = Color(0xFF8B7FA3);
-const Color kShubha = Color(0xFF00C853);
-const Color kAshubha = Color(0xFFFF1744);
-const Color kMadhyama = Color(0xFFFFB300);
-const Color kBorder = Color(0x26D4A639); // gold at 15%
-const Color kCardBorder = Color(0x33D4A639); // gold at 20%
+const Color kBg = Color(0xFFF8F6F2);           // Warm off-white
+const Color kCard = Color(0xFFFFFFFF);           // Pure white cards
+const Color kGold = Color(0xFFE65100);           // Deep orange (primary)
+const Color kTeal = Color(0xFF00897B);           // Teal accent
+const Color kPurple = Color(0xFF5C6BC0);         // Indigo accent
+const Color kText = Color(0xFF212121);           // Near-black text
+const Color kMuted = Color(0xFF9E9E9E);          // Grey muted
+const Color kShubha = Color(0xFF2E7D32);         // Green for shubha
+const Color kAshubha = Color(0xFFD32F2F);        // Red for ashubha
+const Color kMadhyama = Color(0xFFEF6C00);       // Orange for madhyama
+const Color kBorder = Color(0x1AE65100);         // Orange at 10%
+const Color kCardBorder = Color(0x1A000000);     // Black at 10%
 
 // ─── THEME ───
 
 ThemeData appTheme() => ThemeData(
-  brightness: Brightness.dark,
+  brightness: Brightness.light,
   scaffoldBackgroundColor: kBg,
   primaryColor: kGold,
-  colorScheme: const ColorScheme.dark(
+  colorScheme: const ColorScheme.light(
     primary: kGold,
     secondary: kTeal,
     surface: kCard,
-    onPrimary: kBg,
-    onSecondary: kBg,
+    onPrimary: Colors.white,
+    onSecondary: Colors.white,
     onSurface: kText,
   ),
   appBarTheme: const AppBarTheme(
@@ -49,8 +49,8 @@ ThemeData appTheme() => ThemeData(
       borderRadius: BorderRadius.circular(16),
       side: const BorderSide(color: kCardBorder, width: 1),
     ),
-    elevation: 8,
-    shadowColor: Colors.black54,
+    elevation: 2,
+    shadowColor: Colors.black12,
   ),
   textTheme: const TextTheme(
     headlineMedium: TextStyle(fontFamily: 'NotoSansKannada', fontSize: 20, fontWeight: FontWeight.bold, color: kGold),
@@ -65,6 +65,7 @@ ThemeData appTheme() => ThemeData(
     selectedItemColor: kGold,
     unselectedItemColor: kMuted,
     type: BottomNavigationBarType.fixed,
+    elevation: 8,
   ),
   tabBarTheme: const TabBarThemeData(
     labelColor: kGold,
@@ -90,7 +91,7 @@ class AppCard extends StatelessWidget {
         color: kCard.withAlpha(178),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: kCardBorder, width: 1),
-        boxShadow: const [BoxShadow(color: Colors.black38, blurRadius: 16, offset: Offset(0, 4))],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2))],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
