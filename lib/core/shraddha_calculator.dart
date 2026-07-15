@@ -252,7 +252,7 @@ class ShraddhaCalculator {
       tithiStatus += '\n📌 ಕುತುಪ ಕಾಲದಲ್ಲಿ $kpPakshaName $kpTithiName ಇದೆ';
     }
 
-    final ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ (೮ನೇ ಮುಹೂರ್ತ) ಇರಬೇಕು';
+    final ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು';
 
     // ── Pitru Paksha / Mahalaya ──
     int krishnaIdx = -1;
