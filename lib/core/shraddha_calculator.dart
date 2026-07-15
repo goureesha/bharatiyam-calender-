@@ -264,12 +264,20 @@ class ShraddhaCalculator {
       aparahnaShraddha = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
     }
 
+    // ── Kshaya Tithi detection ──
+    // If tithi started after yesterday's Kutupa AND ends before today's Kutupa
+    // → it misses Kutupa on both days → Kshaya Tithi
+    final isKshayaTithi = !isTithiPresent &&
+        tithiStartJd > yesterdayKutupaEndJd &&
+        tithiEndJd < kutupaStartJd;
+
     String tithiStatus;
-    if (isSecondDay) {
-      // Today is 2nd day — shraddha was yesterday (first day)
+    if (isKshayaTithi) {
+      // Kshaye Purva: shraddha on the first day (when tithi begins)
+      tithiStatus = '⚠️ $pakshaName $tithiName — ಕ್ಷಯ ತಿಥಿ (ಕುತುಪ ಕಾಲ ಇಲ್ಲ)\n📜 ಕ್ಷಯೇ ಪೂರ್ವ — ತಿಥಿ ಆರಂಭ ದಿನ (ಹಿಂದಿನ ದಿನ) ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+    } else if (isSecondDay) {
       tithiStatus = '⚠️ $pakshaName $tithiName — ಎರಡು ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ\n📌 ಹಿಂದಿನ ದಿನ (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
     } else if (isFirstDay) {
-      // Tithi at 2 Kutupas — today is first day
       tithiStatus = '✅ $pakshaName $tithiName — ಎರಡು ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ\n📌 ಇಂದು (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
     } else if (tithiEndJd >= kutupaEndJd) {
       tithiStatus = '✅ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಾಚೆಗೂ ಇದೆ';
@@ -283,7 +291,12 @@ class ShraddhaCalculator {
       tithiStatus += '\n📌 ಕುತುಪ ಕಾಲದಲ್ಲಿ $kpPakshaName $kpTithiName ಇದೆ';
     }
 
-    final ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು';
+    String ruleText;
+    if (isKshayaTithi) {
+      ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು\nಕ್ಷಯೇ ಪೂರ್ವ: ಕ್ಷಯ ತಿಥಿಯಲ್ಲಿ ಪ್ರಥಮ ದಿನ ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+    } else {
+      ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು';
+    }
 
     // ── Pitru Paksha / Mahalaya ──
     int krishnaIdx = -1;
