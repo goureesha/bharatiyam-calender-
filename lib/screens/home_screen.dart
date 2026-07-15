@@ -9,7 +9,6 @@ import '../core/samvatsara.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
-import '../services/panchanga_cache.dart';
 import '../widgets/common.dart';
 import 'panchanga_screen.dart';
 import 'settings_screen.dart';
@@ -51,18 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await Ephemeris.initSweph();
     _initDone = true;
     _compute();
-    // Start background cache computation for calendar
-    _initCache();
-  }
-
-  Future<void> _initCache() async {
-    final cache = PanchangaCache();
-    if (cache.isInitialized || cache.isComputing) return;
-    await cache.initialize(
-      lat: LocationService.lat,
-      lon: LocationService.lon,
-      tzOffset: LocationService.tzOffset,
-    );
   }
 
   void _compute() {

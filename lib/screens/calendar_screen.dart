@@ -5,7 +5,6 @@ import '../core/masa_calculator.dart';
 import '../core/events.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
-import '../services/panchanga_cache.dart';
 import '../services/location_service.dart';
 import '../widgets/common.dart';
 
@@ -23,6 +22,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
   bool _loading = false;
   int? _selectedDay;
 
+  // In-memory cache for already-computed months
+  static final Map<String, Map<int, PanchangaData>> _dataCache = {};
+  static final Map<String, Map<int, List<AstroEvent>>> _eventsCache = {};
+
   @override
   void initState() {
     super.initState();
@@ -32,22 +35,23 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _loadMonth();
   }
 
+  String _monthKey(int y, int m) => '$y-$m';
+
   void _loadMonth() {
-    final cache = PanchangaCache();
-    if (cache.isInitialized) {
-      // Use cached data — instant!
+    final key = _monthKey(_currentMonth.year, _currentMonth.month);
+    if (_dataCache.containsKey(key)) {
+      // Already computed — instant!
       setState(() {
-        _monthData = cache.getMonthData(_currentMonth.year, _currentMonth.month);
-        _monthEvents = cache.getMonthEvents(_currentMonth.year, _currentMonth.month);
+        _monthData = _dataCache[key]!;
+        _monthEvents = _eventsCache[key] ?? {};
         _loading = false;
       });
     } else {
-      // Cache not ready, compute directly
-      _computeMonthDirect();
+      _computeMonth();
     }
   }
 
-  Future<void> _computeMonthDirect() async {
+  Future<void> _computeMonth() async {
     setState(() => _loading = true);
     final data = <int, PanchangaData>{};
     final events = <int, List<AstroEvent>>{};
@@ -74,15 +78,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
           if (ev.isNotEmpty) events[d] = ev;
         } catch (_) {}
       } catch (_) {}
-      // Yield every 5 days
-      if (d % 5 == 0) await Future.delayed(Duration.zero);
+      // Yield every 2 days to keep UI responsive
+      if (d % 2 == 0) await Future.delayed(Duration.zero);
     }
 
-    setState(() {
-      _monthData = data;
-      _monthEvents = events;
-      _loading = false;
-    });
+    // Save to in-memory cache
+    final key = _monthKey(_currentMonth.year, _currentMonth.month);
+    _dataCache[key] = data;
+    _eventsCache[key] = events;
+
+    if (mounted) {
+      setState(() {
+        _monthData = data;
+        _monthEvents = events;
+        _loading = false;
+      });
+    }
   }
 
   void _changeMonth(int delta) {
@@ -91,15 +102,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       _selectedDay = null;
     });
     _loadMonth();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Reload when cache becomes ready
-    if (_loading && PanchangaCache().isInitialized) {
-      _loadMonth();
-    }
   }
 
   @override
