@@ -57,6 +57,20 @@ class PanchangaData {
   final String currentNakshatra;
   final String currentYoga;
   final String currentKarana;
+  // Current anga end times & parama (when transitioned)
+  final String currentTithiEndTime;
+  final String currentNakEndTime;
+  final String currentYogaEndTime;
+  final String currentKaranaEndTime;
+  final String currentTithiParama;
+  final String currentNakParama;
+  final String currentYogaParama;
+  final String currentKaranaParama;
+  // End time in ghati-vighati from sunrise
+  final String tithiEndGhati;
+  final String nakEndGhati;
+  final String yogaEndGhati;
+  final String karanaEndGhati;
 
   // Sun & Moon
   final String sunrise;
@@ -137,6 +151,18 @@ class PanchangaData {
     this.currentNakshatra = '',
     this.currentYoga = '',
     this.currentKarana = '',
+    this.currentTithiEndTime = '',
+    this.currentNakEndTime = '',
+    this.currentYogaEndTime = '',
+    this.currentKaranaEndTime = '',
+    this.currentTithiParama = '',
+    this.currentNakParama = '',
+    this.currentYogaParama = '',
+    this.currentKaranaParama = '',
+    this.tithiEndGhati = '',
+    this.nakEndGhati = '',
+    this.yogaEndGhati = '',
+    this.karanaEndGhati = '',
     required this.sunrise,
     required this.sunset,
     required this.chandraRashi,
@@ -183,6 +209,18 @@ class PanchangaData {
     String? currentNakshatra,
     String? currentYoga,
     String? currentKarana,
+    String? currentTithiEndTime,
+    String? currentNakEndTime,
+    String? currentYogaEndTime,
+    String? currentKaranaEndTime,
+    String? currentTithiParama,
+    String? currentNakParama,
+    String? currentYogaParama,
+    String? currentKaranaParama,
+    String? tithiEndGhati,
+    String? nakEndGhati,
+    String? yogaEndGhati,
+    String? karanaEndGhati,
   }) => PanchangaData(
     tithi: tithi, vara: vara, nakshatra: nakshatra, yoga: yoga, karana: karana,
     tithiIndex: tithiIndex, nakshatraIndex: nakshatraIndex, yogaIndex: yogaIndex,
@@ -208,6 +246,18 @@ class PanchangaData {
     currentNakshatra: currentNakshatra ?? this.currentNakshatra,
     currentYoga: currentYoga ?? this.currentYoga,
     currentKarana: currentKarana ?? this.currentKarana,
+    currentTithiEndTime: currentTithiEndTime ?? this.currentTithiEndTime,
+    currentNakEndTime: currentNakEndTime ?? this.currentNakEndTime,
+    currentYogaEndTime: currentYogaEndTime ?? this.currentYogaEndTime,
+    currentKaranaEndTime: currentKaranaEndTime ?? this.currentKaranaEndTime,
+    currentTithiParama: currentTithiParama ?? this.currentTithiParama,
+    currentNakParama: currentNakParama ?? this.currentNakParama,
+    currentYogaParama: currentYogaParama ?? this.currentYogaParama,
+    currentKaranaParama: currentKaranaParama ?? this.currentKaranaParama,
+    tithiEndGhati: tithiEndGhati ?? this.tithiEndGhati,
+    nakEndGhati: nakEndGhati ?? this.nakEndGhati,
+    yogaEndGhati: yogaEndGhati ?? this.yogaEndGhati,
+    karanaEndGhati: karanaEndGhati ?? this.karanaEndGhati,
     sunrise: sunrise, sunset: sunset,
     chandraRashi: chandraRashi, chandraPada: chandraPada,
     suryaNakshatra: suryaNakshatra, suryaPada: suryaPada, nakPercent: nakPercent,

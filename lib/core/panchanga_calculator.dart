@@ -187,6 +187,18 @@ class PanchangaCalculator {
       currentNakshatra: 'n${nakNowResult['index']!.toInt()}',
       currentYoga: 'y${yogaNowResult['index']!.toInt()}',
       currentKarana: _karanaKey(karanaNowResult['index']!.toInt()),
+      currentTithiEndTime: Ephemeris.formatTimeFromJd(tithiNowResult['endJd']!, tzOffset: tzOffset),
+      currentNakEndTime: Ephemeris.formatTimeFromJd(nakNowResult['endJd']!, tzOffset: tzOffset),
+      currentYogaEndTime: Ephemeris.formatTimeFromJd(yogaNowResult['endJd']!, tzOffset: tzOffset),
+      currentKaranaEndTime: Ephemeris.formatTimeFromJd(karanaNowResult['endJd']!, tzOffset: tzOffset),
+      currentTithiParama: Ephemeris.formatGhati(tithiNowResult['parama']!),
+      currentNakParama: Ephemeris.formatGhati(nakNowResult['parama']!),
+      currentYogaParama: Ephemeris.formatGhati(yogaNowResult['parama']!),
+      currentKaranaParama: Ephemeris.formatGhati(karanaNowResult['parama']!),
+      tithiEndGhati: Ephemeris.formatGhati((tithiEnd['endJd']! - sunriseJd) * 60),
+      nakEndGhati: Ephemeris.formatGhati((nakEnd['endJd']! - sunriseJd) * 60),
+      yogaEndGhati: Ephemeris.formatGhati((yogaEnd['endJd']! - sunriseJd) * 60),
+      karanaEndGhati: Ephemeris.formatGhati((karanaEnd['endJd']! - sunriseJd) * 60),
       sunrise: Ephemeris.formatTimeFromJd(sunriseJd, tzOffset: tzOffset),
       sunset: Ephemeris.formatTimeFromJd(sunsetJd, tzOffset: tzOffset),
       chandraRashi: 'r$chandraRashiIdx',
@@ -323,7 +335,7 @@ class PanchangaCalculator {
   /// Compute Gata/Shesha/Parama ghatis from boundary JDs
   /// Compute current anga ghati with transition detection.
   /// If nowJd > endJd (sunrise anga has ended), find the current anga at nowJd.
-  /// Returns {'gata': ..., 'shesha': ..., 'index': currentAngaIndex}
+  /// Returns {'gata', 'shesha', 'parama', 'index', 'endJd'}
   static Map<String, double> _computeCurrentAnga(
     double nowJd,
     Map<String, double> sunriseEnd,
@@ -337,47 +349,53 @@ class PanchangaCalculator {
     if (nowJd <= endJd) {
       // Still in sunrise anga — normal computation
       final ghati = _computeGhati(nowJd, startJd, endJd);
-      return {'gata': ghati['gata']!, 'shesha': ghati['shesha']!, 'index': sunriseIndex.toDouble()};
+      return {
+        'gata': ghati['gata']!, 'shesha': ghati['shesha']!, 'parama': ghati['parama']!,
+        'index': sunriseIndex.toDouble(), 'endJd': endJd,
+      };
     }
 
     // Anga has transitioned — find current anga at nowJd
     final planets = Ephemeris.calcAll(nowJd, ayanamsaMode, trueNode);
     final sunDeg = planets['Sun']![0];
     final moonDeg = planets['Moon']![0];
+
+    Map<String, double> newEnd;
     int currentIndex;
 
     switch (type) {
       case 'tithi':
         final deg = Ephemeris.normDeg(moonDeg - sunDeg);
         currentIndex = (deg / _tithiSpan).floor().clamp(0, 29);
-        final newEnd = _findTithiLimit(nowJd - 0.5, currentIndex, lat, lon, ayanamsaMode, trueNode);
-        final ghati = _computeGhati(nowJd, newEnd['startJd']!, newEnd['endJd']!);
-        return {'gata': ghati['gata']!, 'shesha': ghati['shesha']!, 'index': currentIndex.toDouble()};
-
+        newEnd = _findTithiLimit(nowJd, currentIndex, lat, lon, ayanamsaMode, trueNode);
+        break;
       case 'nak':
         currentIndex = (moonDeg / _nakshatraSpan).floor() % 27;
-        final newEnd = _findNakLimit(nowJd - 0.5, currentIndex, lat, lon, ayanamsaMode, trueNode);
-        final ghati = _computeGhati(nowJd, newEnd['startJd']!, newEnd['endJd']!);
-        return {'gata': ghati['gata']!, 'shesha': ghati['shesha']!, 'index': currentIndex.toDouble()};
-
+        newEnd = _findNakLimit(nowJd, currentIndex, lat, lon, ayanamsaMode, trueNode);
+        break;
       case 'yoga':
         final deg = Ephemeris.normDeg(moonDeg + sunDeg);
         currentIndex = (deg / _yogaSpan).floor() % 27;
-        final newEnd = _findYogaLimit(nowJd - 0.5, currentIndex, lat, lon, ayanamsaMode, trueNode);
-        final ghati = _computeGhati(nowJd, newEnd['startJd']!, newEnd['endJd']!);
-        return {'gata': ghati['gata']!, 'shesha': ghati['shesha']!, 'index': currentIndex.toDouble()};
-
+        newEnd = _findYogaLimit(nowJd, currentIndex, lat, lon, ayanamsaMode, trueNode);
+        break;
       case 'karana':
         final deg = Ephemeris.normDeg(moonDeg - sunDeg);
         currentIndex = (deg / _karanaSpan).floor();
-        final newEnd = _findKaranaLimit(nowJd - 0.5, currentIndex, lat, lon, ayanamsaMode, trueNode);
-        final ghati = _computeGhati(nowJd, newEnd['startJd']!, newEnd['endJd']!);
-        return {'gata': ghati['gata']!, 'shesha': ghati['shesha']!, 'index': currentIndex.toDouble()};
-
+        newEnd = _findKaranaLimit(nowJd, currentIndex, lat, lon, ayanamsaMode, trueNode);
+        break;
       default:
         final ghati = _computeGhati(nowJd, startJd, endJd);
-        return {'gata': ghati['gata']!, 'shesha': ghati['shesha']!, 'index': sunriseIndex.toDouble()};
+        return {
+          'gata': ghati['gata']!, 'shesha': ghati['shesha']!, 'parama': ghati['parama']!,
+          'index': sunriseIndex.toDouble(), 'endJd': endJd,
+        };
     }
+
+    final ghati = _computeGhati(nowJd, newEnd['startJd']!, newEnd['endJd']!);
+    return {
+      'gata': ghati['gata']!, 'shesha': ghati['shesha']!, 'parama': ghati['parama']!,
+      'index': currentIndex.toDouble(), 'endJd': newEnd['endJd']!,
+    };
   }
 
   static Map<String, double> _computeGhati(double jdSunrise, double startJd, double endJd) {

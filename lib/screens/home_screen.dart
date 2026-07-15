@@ -374,37 +374,41 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: AppLocale.t('tithi'),
                   value: AppLocale.t(d.tithi),
                   currentName: d.currentTithi.isNotEmpty && d.currentTithi != d.tithi ? AppLocale.t(d.currentTithi) : null,
-                  endTime: d.tithiEndTime,
+                  endTime: d.tithiEndTime, endGhati: d.tithiEndGhati,
                   endsNextDay: d.tithiEndsNextDay,
                   gata: d.tithiGata, shesha: d.tithiShesha, parama: d.tithiParama,
                   gataNow: d.tithiGataNow, sheshaNow: d.tithiSheshaNow,
+                  currentEndTime: d.currentTithiEndTime, currentParama: d.currentTithiParama,
                 ),
                 _limbWithGhati(
                   label: AppLocale.t('nakshatra'),
                   value: '${AppLocale.t(d.nakshatra)} (${AppLocale.t("pada")} ${d.chandraPada})',
                   currentName: d.currentNakshatra.isNotEmpty && d.currentNakshatra != d.nakshatra ? AppLocale.t(d.currentNakshatra) : null,
-                  endTime: d.nakEndTime,
+                  endTime: d.nakEndTime, endGhati: d.nakEndGhati,
                   endsNextDay: d.nakEndsNextDay,
                   gata: d.nakGata, shesha: d.nakShesha, parama: d.nakParama,
                   gataNow: d.nakGataNow, sheshaNow: d.nakSheshaNow,
+                  currentEndTime: d.currentNakEndTime, currentParama: d.currentNakParama,
                 ),
                 _limbWithGhati(
                   label: AppLocale.t('yoga'),
                   value: AppLocale.t(d.yoga),
                   currentName: d.currentYoga.isNotEmpty && d.currentYoga != d.yoga ? AppLocale.t(d.currentYoga) : null,
-                  endTime: d.yogaEndTime,
+                  endTime: d.yogaEndTime, endGhati: d.yogaEndGhati,
                   endsNextDay: d.yogaEndsNextDay,
                   gata: d.yogaGata, shesha: d.yogaShesha, parama: d.yogaParama,
                   gataNow: d.yogaGataNow, sheshaNow: d.yogaSheshaNow,
+                  currentEndTime: d.currentYogaEndTime, currentParama: d.currentYogaParama,
                 ),
                 _limbWithGhati(
                   label: AppLocale.t('karana'),
                   value: AppLocale.t(d.karana),
                   currentName: d.currentKarana.isNotEmpty && d.currentKarana != d.karana ? AppLocale.t(d.currentKarana) : null,
-                  endTime: d.karanaEndTime,
+                  endTime: d.karanaEndTime, endGhati: d.karanaEndGhati,
                   endsNextDay: d.karanaEndsNextDay,
                   gata: d.karanaGata, shesha: d.karanaShesha, parama: d.karanaParama,
                   gataNow: d.karanaGataNow, sheshaNow: d.karanaSheshaNow,
+                  currentEndTime: d.currentKaranaEndTime, currentParama: d.currentKaranaParama,
                 ),
                 const SizedBox(height: 6),
                 // Udayadi Ghati
@@ -510,13 +514,20 @@ class _HomeScreenState extends State<HomeScreen> {
     required String value,
     String? currentName,
     required String endTime,
+    String endGhati = '',
     required bool endsNextDay,
     required String gata,
     required String shesha,
     required String parama,
     required String gataNow,
     required String sheshaNow,
+    String currentEndTime = '',
+    String currentParama = '',
   }) {
+    final hasTransitioned = currentName != null;
+    final displayEndTime = hasTransitioned && currentEndTime.isNotEmpty ? currentEndTime : endTime;
+    final displayParama = hasTransitioned && currentParama.isNotEmpty ? currentParama : parama;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(10),
@@ -528,16 +539,20 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Name & Value
+          // Name & Value (at sunrise)
           Row(
             children: [
               Text(label, style: TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.bold)),
               const Spacer(),
-              Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText)),
+              Text(value, style: TextStyle(
+                fontSize: 13, fontWeight: FontWeight.bold,
+                color: hasTransitioned ? kMuted : kText,
+                decoration: hasTransitioned ? TextDecoration.lineThrough : null,
+              )),
             ],
           ),
           // Current anga (if different from sunrise)
-          if (currentName != null) ...[
+          if (hasTransitioned) ...[
             const SizedBox(height: 4),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -550,19 +565,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text('⏱ ಈಗ: ', style: TextStyle(fontSize: 9, color: kTeal, fontWeight: FontWeight.bold)),
-                  Text(currentName, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kTeal)),
+                  Text(currentName!, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kTeal)),
                 ],
               ),
             ),
           ],
           const SizedBox(height: 4),
-          // End time + next day flag
+          // End time
           Row(
             children: [
               Text('${AppLocale.t("endLabel")}: ', style: TextStyle(fontSize: 10, color: kMuted)),
-              Text(endTime, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold)),
-              if (endsNextDay)
+              Text(displayEndTime, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold)),
+              if (!hasTransitioned && endsNextDay)
                 Text(' (+1)', style: TextStyle(fontSize: 9, color: kAshubha)),
+              if (endGhati.isNotEmpty && !hasTransitioned) ...[
+                Text('  (', style: TextStyle(fontSize: 9, color: kMuted)),
+                Text(endGhati, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kMuted)),
+                Text(' ಘ)', style: TextStyle(fontSize: 9, color: kMuted)),
+              ],
             ],
           ),
           const SizedBox(height: 4),
@@ -574,7 +594,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 6),
               _ghatiTag('ಶೇಷ', shesha, kTeal),
               const SizedBox(width: 6),
-              _ghatiTag('ಪರಮ', parama, kMuted),
+              _ghatiTag('ಪರಮ', displayParama, kMuted),
             ],
           ),
           const SizedBox(height: 3),
