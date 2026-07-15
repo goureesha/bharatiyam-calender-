@@ -150,11 +150,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(color: kTeal.withAlpha(76)),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.gps_fixed_rounded, size: 12, color: kTeal),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text('GPS', style: TextStyle(fontSize: 10, color: kTeal, fontWeight: FontWeight.bold)),
                           ],
                         ),
@@ -283,12 +283,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               const SectionHeader(icon: Icons.info_outline_rounded, title: 'About'),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold),
               ),
               const SizedBox(height: 4),
-              const Text(
+              Text(
                 'High-precision Hindu calendar using Swiss Ephemeris.\n'
                 'Lahiri Ayanamsha • Mid-limb Sunrise\n'
                 '4 Calendar Systems • 15+15 Muhurtas\n'
