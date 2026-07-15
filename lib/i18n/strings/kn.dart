@@ -12,6 +12,7 @@ const Map<String, String> knStrings = {
   'vishaPraghati': 'ವಿಷ ಘಟಿ', 'amrutaPraghati': 'ಅಮೃತ ಘಟಿ',
   'chandraRashi': 'ಚಂದ್ರ ರಾಶಿ', 'suryaNak': 'ಸೂರ್ಯ ನಕ್ಷತ್ರ',
   'pada': 'ಪಾದ', 'agniVasa': 'ಅಗ್ನಿವಾಸ',
+  'suryaNakshatra': 'ಸೂರ್ಯ ನಕ್ಷತ್ರ',
   'settings': 'ಸೆಟ್ಟಿಂಗ್ಸ್', 'language': 'ಭಾಷೆ', 'location': 'ಸ್ಥಳ',
   'today': 'ಇಂದು', 'home': 'ಮನೆ',
   'muhurta': 'ಮುಹೂರ್ತ', 'dayMuhurta': 'ದಿನ ಮುಹೂರ್ತ', 'nightMuhurta': 'ರಾತ್ರಿ ಮುಹೂರ್ತ',
@@ -126,4 +127,19 @@ const Map<String, String> knStrings = {
   // ─── Chougadiya ───
   'Udveg': 'ಉದ್ವೇಗ', 'Chal': 'ಚಲ', 'Laabh': 'ಲಾಭ', 'Amrut': 'ಅಮೃತ',
   'Kaal': 'ಕಾಲ', 'Shubh': 'ಶುಭ', 'Rog': 'ರೋಗ',
+
+  // ─── Calendar Section Labels ───
+  'calendarSystems': 'ಪಂಚಾಂಗ ಪದ್ಧತಿ',
+  'ghatiDetails': 'ಘಟಿ ವಿವರ',
+  'kalaTimings': 'ಕಾಲ ಸಮಯ',
+  'festivalsEvents': 'ಹಬ್ಬ ಮತ್ತು ವಿಶೇಷ',
+  'sunMoonDetails': 'ಸೂರ್ಯೋದಯ / ಸೂರ್ಯಾಸ್ತ',
+  'chandraPada': 'ಚಂದ್ರ ಪಾದ',
+  'suryaNakshatra': 'ಸೂರ್ಯ ನಕ್ಷತ್ರ',
+  'paksha': 'ಪಕ್ಷ',
+  'shukla': 'ಶುಕ್ಲ',
+  'krishna': 'ಕೃಷ್ಣ',
+  'shraddha': 'ಶ್ರಾದ್ಧ',
+  'shraddhaDetails': 'ಶ್ರಾದ್ಧ ವಿವರ',
+  'calendar': 'ಪಂಚಾಂಗ',
 };

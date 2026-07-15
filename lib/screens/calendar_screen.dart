@@ -417,18 +417,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SectionHeader(icon: Icons.calendar_today_rounded, title: 'Calendar Systems'),
+                SectionHeader(icon: Icons.calendar_today_rounded, title: AppLocale.t('calendarSystems')),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Expanded(child: _infoTile('Amānta', AppLocale.t(d.amantaMasa))),
-                    Expanded(child: _infoTile('Pūrṇimānta', AppLocale.t(d.pournimantaMasa))),
+                    Expanded(child: _infoTile(AppLocale.t('amanta'), AppLocale.t(d.amantaMasa))),
+                    Expanded(child: _infoTile(AppLocale.t('pournimanta'), AppLocale.t(d.pournimantaMasa))),
                   ],
                 ),
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    Expanded(child: _infoTile('Saura', d.souraMasa)),
+                    Expanded(child: _infoTile(AppLocale.t('souraMasa'), '${AppLocale.t(d.souraMasa)} (${AppLocale.t("gataDina")} ${d.souraMasaGataDina})')),
                     Expanded(child: _infoTile(AppLocale.t('samvatsara'), AppLocale.t(d.samvatsara))),
                   ],
                 ),
@@ -437,7 +437,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   children: [
                     Expanded(child: _infoTile(AppLocale.t('rutu'), AppLocale.t(d.rutu))),
                     Expanded(child: _infoTile(AppLocale.t('ayana'), AppLocale.t(d.ayana))),
-                    Expanded(child: _infoTile(AppLocale.t('paksha'), AppLocale.t(d.paksha))),
+                    Expanded(child: _infoTile(AppLocale.t('paksha'), d.tithiIndex < 15 ? AppLocale.t('shukla') : AppLocale.t('krishna'))),
                   ],
                 ),
               ],
@@ -449,7 +449,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SectionHeader(icon: Icons.access_time_rounded, title: 'Ghati Details'),
+                SectionHeader(icon: Icons.access_time_rounded, title: AppLocale.t('ghatiDetails')),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -469,7 +469,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SectionHeader(icon: Icons.warning_amber_rounded, title: 'Kāla Timings'),
+                  SectionHeader(icon: Icons.warning_amber_rounded, title: AppLocale.t('kalaTimings')),
                   const SizedBox(height: 8),
                   ..._selectedKalas!.map((k) =>
                     KalaTimeBar(name: AppLocale.t(k.name), startTime: k.startTime, endTime: k.endTime),
@@ -484,7 +484,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SectionHeader(icon: Icons.celebration_rounded, title: 'Festivals & Events'),
+                  SectionHeader(icon: Icons.celebration_rounded, title: AppLocale.t('festivalsEvents')),
                   const SizedBox(height: 8),
                   ..._monthEvents[_selectedDay]!.map((e) => Container(
                     margin: const EdgeInsets.only(bottom: 8),
