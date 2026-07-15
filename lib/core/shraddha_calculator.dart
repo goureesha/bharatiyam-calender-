@@ -132,16 +132,15 @@ class ShraddhaCalculator {
            lower.contains('ಆಶ್ವಿನ');
   }
 
-  /// Calculate Aparahna timing.
-  /// Day is divided into 5 equal parts (Panchabhaga):
-  /// 1. Pratah  2. Sangava  3. Madhyahna  4. Aparahna  5. Sayahna
-  /// Aparahna = 4th part = sunrise + (3/5)*dayDuration to sunrise + (4/5)*dayDuration
-  static Map<String, double> _calcAparahna(double sunriseJd, double sunsetJd) {
+  /// Calculate Kutupa Kala timing.
+  /// Day is divided into 15 muhurtas (sunrise to sunset).
+  /// Kutupa (Kutapa) = 8th muhurta = sunrise + (7/15)*dayDuration to sunrise + (8/15)*dayDuration
+  static Map<String, double> _calcKutupa(double sunriseJd, double sunsetJd) {
     final dayDuration = sunsetJd - sunriseJd;
-    final partDuration = dayDuration / 5.0;
+    final muhurtaDuration = dayDuration / 15.0;
     return {
-      'startJd': sunriseJd + 3 * partDuration,
-      'endJd': sunriseJd + 4 * partDuration,
+      'startJd': sunriseJd + 7 * muhurtaDuration,
+      'endJd': sunriseJd + 8 * muhurtaDuration,
     };
   }
 
@@ -192,75 +191,68 @@ class ShraddhaCalculator {
       varshikaSoura = '$souraName $pakshaName $tithiName ಶ್ರಾದ್ಧ';
     }
 
-    // ── Aparahna Rule ──
-    // Rule: ತಿಥಿ ಅಪರಾಹ್ನ ಆರಂಭದಿಂದ ಕನಿಷ್ಠ ೨ ಘಟಿ ಇರಬೇಕು
-    // 2 ghati = 48 minutes = 48/1440 days
-    final aparahna = _calcAparahna(sunriseJd, sunsetJd);
-    final aparahnaStartJd = aparahna['startJd']!;
-    final aparahnaEndJd = aparahna['endJd']!;
-    final twoGhatiJd = 2.0 / 60.0; // 2 ghati in days (2/60 of a day = 48 min)
-    final ruleCheckJd = aparahnaStartJd + twoGhatiJd;
+    // ── Kutupa Kala Rule ──
+    // Rule: ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು
+    // Kutupa = 8th muhurta of 15 day muhurtas
+    final kutupa = _calcKutupa(sunriseJd, sunsetJd);
+    final kutupaStartJd = kutupa['startJd']!;
+    final kutupaEndJd = kutupa['endJd']!;
 
-    final aparahnaStartTime = Ephemeris.formatTimeFromJd(aparahnaStartJd, tzOffset: tzOffset);
-    final aparahnaEndTime = Ephemeris.formatTimeFromJd(aparahnaEndJd, tzOffset: tzOffset);
+    final kutupaStartTime = Ephemeris.formatTimeFromJd(kutupaStartJd, tzOffset: tzOffset);
+    final kutupaEndTime = Ephemeris.formatTimeFromJd(kutupaEndJd, tzOffset: tzOffset);
     final tithiEndTimeForRule = Ephemeris.formatTimeFromJd(tithiEndJd, tzOffset: tzOffset);
 
-    // Aparahna start in ghati from sunrise
-    final aparahnaStartGhati = (aparahnaStartJd - sunriseJd) * 60.0;
-    final aparahnaGhatiStr = Ephemeris.formatGhati(aparahnaStartGhati);
+    // Kutupa start in ghati from sunrise
+    final kutupaStartGhati = (kutupaStartJd - sunriseJd) * 60.0;
+    final kutupaGhatiStr = Ephemeris.formatGhati(kutupaStartGhati);
 
-    // Check if tithi extends past aparahna + 2 ghati
-    final isTithiPresent = tithiEndJd >= ruleCheckJd;
+    // Check if tithi is present during Kutupa Kala
+    final isTithiPresent = tithiEndJd >= kutupaStartJd;
 
-    // Determine which tithi is at aparahna
-    int aparahnaTithiIdx;
-    if (tithiEndJd >= aparahnaStartJd) {
-      // Sunrise tithi is still present at aparahna start
-      aparahnaTithiIdx = tithiIndex;
+    // Determine which tithi is at Kutupa
+    int kutupaTithiIdx;
+    if (tithiEndJd >= kutupaStartJd) {
+      kutupaTithiIdx = tithiIndex;
     } else {
-      // Sunrise tithi ended before aparahna → next tithi is at aparahna
-      aparahnaTithiIdx = (tithiIndex + 1) % 30;
+      kutupaTithiIdx = (tithiIndex + 1) % 30;
     }
 
-    // Build aparahna shraddha name
-    final apIsKrishna = aparahnaTithiIdx >= 15;
-    final apIsAmavasya = aparahnaTithiIdx == 29;
-    final apIsPurnima = aparahnaTithiIdx == 14;
-    final apPakshaName = apIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
-    String apTithiName;
-    if (apIsAmavasya) {
-      apTithiName = 'ಅಮಾವಾಸ್ಯೆ';
-    } else if (apIsPurnima) {
-      apTithiName = 'ಹುಣ್ಣಿಮೆ';
+    // Build kutupa shraddha name
+    final kpIsKrishna = kutupaTithiIdx >= 15;
+    final kpIsAmavasya = kutupaTithiIdx == 29;
+    final kpIsPurnima = kutupaTithiIdx == 14;
+    final kpPakshaName = kpIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+    String kpTithiName;
+    if (kpIsAmavasya) {
+      kpTithiName = 'ಅಮಾವಾಸ್ಯೆ';
+    } else if (kpIsPurnima) {
+      kpTithiName = 'ಹುಣ್ಣಿಮೆ';
     } else {
-      final apTithiInPaksha = apIsKrishna ? aparahnaTithiIdx - 15 : aparahnaTithiIdx;
-      apTithiName = (apTithiInPaksha >= 0 && apTithiInPaksha < 14) ? _tithiNames[apTithiInPaksha] : '';
+      final kpTithiInPaksha = kpIsKrishna ? kutupaTithiIdx - 15 : kutupaTithiIdx;
+      kpTithiName = (kpTithiInPaksha >= 0 && kpTithiInPaksha < 14) ? _tithiNames[kpTithiInPaksha] : '';
     }
 
     String aparahnaShraddha;
-    if (apIsAmavasya || apIsPurnima) {
-      aparahnaShraddha = '$amantaName $apTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
+    if (kpIsAmavasya || kpIsPurnima) {
+      aparahnaShraddha = '$amantaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
     } else {
-      aparahnaShraddha = '$amantaName $apPakshaName $apTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
+      aparahnaShraddha = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
     }
 
     String tithiStatus;
-    if (tithiEndJd >= aparahnaEndJd) {
-      tithiStatus = '✅ $pakshaName $tithiName — ಅಪರಾಹ್ನ ಕಾಲದಾಚೆಗೂ ಇದೆ';
+    if (tithiEndJd >= kutupaEndJd) {
+      tithiStatus = '✅ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಾಚೆಗೂ ಇದೆ';
     } else if (isTithiPresent) {
-      tithiStatus = '✅ $pakshaName $tithiName — ಅಪರಾಹ್ನ ಆರಂಭದಿಂದ ೨ ಘಟಿ ಇದೆ';
-    } else if (tithiEndJd >= aparahnaStartJd) {
-      tithiStatus = '⚠️ $pakshaName $tithiName — ಅಪರಾಹ್ನದಲ್ಲಿ ೨ ಘಟಿ ಇಲ್ಲ';
+      tithiStatus = '✅ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
     } else {
-      tithiStatus = '⚠️ $pakshaName $tithiName — ಅಪರಾಹ್ನಕ್ಕೆ ಮೊದಲೇ ಮುಗಿಯುತ್ತದೆ';
+      tithiStatus = '⚠️ $pakshaName $tithiName — ಕುತುಪ ಕಾಲಕ್ಕೆ ಮೊದಲೇ ಮುಗಿಯುತ್ತದೆ';
     }
 
-    // If sunrise tithi not present at aparahna, show which tithi IS present
-    if (!isTithiPresent && aparahnaTithiIdx != tithiIndex) {
-      tithiStatus += '\n📌 ಅಪರಾಹ್ನದಲ್ಲಿ $apPakshaName $apTithiName ಇದೆ';
+    if (!isTithiPresent && kutupaTithiIdx != tithiIndex) {
+      tithiStatus += '\n📌 ಕುತುಪ ಕಾಲದಲ್ಲಿ $kpPakshaName $kpTithiName ಇದೆ';
     }
 
-    final ruleText = 'ನಿಯಮ: ತಿಥಿ ಅಪರಾಹ್ನ ಆರಂಭದಿಂದ ಕನಿಷ್ಠ ೨ ಘಟಿ (೪೮ ನಿಮಿಷ) ಇರಬೇಕು';
+    final ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ (೮ನೇ ಮುಹೂರ್ತ) ಇರಬೇಕು';
 
     // ── Pitru Paksha / Mahalaya ──
     int krishnaIdx = -1;
