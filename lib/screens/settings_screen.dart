@@ -298,7 +298,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(fontSize: 11, color: kMuted, height: 1.6),
               ),
               const SizedBox(height: 8),
-              const Text('v1.0.0', style: TextStyle(fontSize: 10, color: kMuted)),
+              Text('v1.0.0', style: TextStyle(fontSize: 10, color: kMuted)),
             ],
           ),
         ),
@@ -321,7 +321,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('GPS not available. Select a city manually.'),
           backgroundColor: kCard,
           behavior: SnackBarBehavior.floating,

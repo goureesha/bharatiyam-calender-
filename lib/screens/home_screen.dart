@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           border: Border(top: BorderSide(color: kCardBorder, width: 1)),
         ),
         child: BottomNavigationBar(
@@ -423,7 +423,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('ಉದಯಾದಿ ಘಟಿ: ', style: TextStyle(fontSize: 11, color: kMuted)),
+                      Text('ಉದಯಾದಿ ಘಟಿ: ', style: TextStyle(fontSize: 11, color: kMuted)),
                       Text(d.udayadiGhati, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
                     ],
                   ),
@@ -545,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text('${AppLocale.t("endLabel")}: ', style: TextStyle(fontSize: 10, color: kMuted)),
               Text(endTime, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold)),
               if (endsNextDay)
-                const Text(' (+1)', style: TextStyle(fontSize: 9, color: kAshubha)),
+                Text(' (+1)', style: TextStyle(fontSize: 9, color: kAshubha)),
             ],
           ),
           const SizedBox(height: 4),

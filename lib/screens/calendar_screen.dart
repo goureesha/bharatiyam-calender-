@@ -105,7 +105,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -279,7 +279,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   Container(
                     width: 5, height: 5,
                     margin: const EdgeInsets.only(top: 1),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Color(0xFFFF9800),
                       shape: BoxShape.circle,
                     ),
