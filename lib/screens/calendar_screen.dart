@@ -27,7 +27,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Map<int, List<AstroEvent>> _monthEvents = {};
   bool _loading = false;
   int? _selectedDay;
-  Map<String, String>? _selectedKalas;
+  List<KalaTiming>? _selectedKalas;
 
   // In-memory cache
   static final Map<String, Map<int, PanchangaData>> _dataCache = {};
@@ -471,12 +471,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 children: [
                   const SectionHeader(icon: Icons.warning_amber_rounded, title: 'Kāla Timings'),
                   const SizedBox(height: 8),
-                  if (_selectedKalas!['rahuKala'] != null)
-                    KalaTimeBar(name: AppLocale.t('rahuKala'), startTime: _selectedKalas!['rahuKala']!.split('-')[0].trim(), endTime: _selectedKalas!['rahuKala']!.split('-').last.trim()),
-                  if (_selectedKalas!['yamaKala'] != null)
-                    KalaTimeBar(name: AppLocale.t('yamaKala'), startTime: _selectedKalas!['yamaKala']!.split('-')[0].trim(), endTime: _selectedKalas!['yamaKala']!.split('-').last.trim()),
-                  if (_selectedKalas!['gulikaKala'] != null)
-                    KalaTimeBar(name: AppLocale.t('gulikaKala'), startTime: _selectedKalas!['gulikaKala']!.split('-')[0].trim(), endTime: _selectedKalas!['gulikaKala']!.split('-').last.trim()),
+                  ..._selectedKalas!.map((k) =>
+                    KalaTimeBar(name: AppLocale.t(k.name), startTime: k.startTime, endTime: k.endTime),
+                  ),
                 ],
               ),
             ),
