@@ -525,8 +525,6 @@ class _HomeScreenState extends State<HomeScreen> {
     String currentParama = '',
   }) {
     final hasTransitioned = currentName != null;
-    final displayEndTime = hasTransitioned && currentEndTime.isNotEmpty ? currentEndTime : endTime;
-    final displayParama = hasTransitioned && currentParama.isNotEmpty ? currentParama : parama;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -539,74 +537,77 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Name & Value (at sunrise)
+          // ── Sunrise Anga ──
+          // Row 1: label + name + end time
           Row(
             children: [
               Text(label, style: TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.bold)),
-              const Spacer(),
-              Text(value, style: TextStyle(
-                fontSize: 13, fontWeight: FontWeight.bold,
-                color: hasTransitioned ? kMuted : kText,
-                decoration: hasTransitioned ? TextDecoration.lineThrough : null,
-              )),
-            ],
-          ),
-          // Current anga (if different from sunrise)
-          if (hasTransitioned) ...[
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: kTeal.withAlpha(15),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: kTeal.withAlpha(51)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('⏱ ಈಗ: ', style: TextStyle(fontSize: 9, color: kTeal, fontWeight: FontWeight.bold)),
-                  Text(currentName!, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kTeal)),
-                ],
-              ),
-            ),
-          ],
-          const SizedBox(height: 4),
-          // End time
-          Row(
-            children: [
-              Text('${AppLocale.t("endLabel")}: ', style: TextStyle(fontSize: 10, color: kMuted)),
-              Text(displayEndTime, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold)),
-              if (!hasTransitioned && endsNextDay)
+              const SizedBox(width: 8),
+              Expanded(child: Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText))),
+              Text(endTime, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
+              if (endsNextDay)
                 Text(' (+1)', style: TextStyle(fontSize: 9, color: kAshubha)),
-              if (endGhati.isNotEmpty && !hasTransitioned) ...[
-                Text('  (', style: TextStyle(fontSize: 9, color: kMuted)),
+              if (endGhati.isNotEmpty) ...[
+                Text(' (', style: TextStyle(fontSize: 9, color: kMuted)),
                 Text(endGhati, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kMuted)),
                 Text(' ಘ)', style: TextStyle(fontSize: 9, color: kMuted)),
               ],
             ],
           ),
-          const SizedBox(height: 4),
-          // Sunrise Ghati row
-          Row(
-            children: [
-              const Text('☀ ', style: TextStyle(fontSize: 10)),
-              _ghatiTag('ಗತ', gata, kGold),
-              const SizedBox(width: 6),
-              _ghatiTag('ಶೇಷ', shesha, kTeal),
-              const SizedBox(width: 6),
-              _ghatiTag('ಪರಮ', displayParama, kMuted),
-            ],
-          ),
+          // Row 2: (at sunrise) + ghati
           const SizedBox(height: 3),
-          // Current time Ghati row
           Row(
             children: [
-              const Text('⏱ ', style: TextStyle(fontSize: 10)),
-              _ghatiTag('ಗತ', gataNow, const Color(0xFFFF9800)),
-              const SizedBox(width: 6),
-              _ghatiTag('ಶೇಷ', sheshaNow, const Color(0xFF4CAF50)),
+              Text(hasTransitioned ? '(ಉದಯ ಕಾಲ)  ' : '☀  ', style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
+              _ghatiTag('ಗತ', gata, kGold),
+              const SizedBox(width: 4),
+              _ghatiTag('ಶೇಷ', shesha, kTeal),
+              const SizedBox(width: 4),
+              _ghatiTag('ಪರಮ', parama, kMuted),
             ],
           ),
+
+          // ── Current Anga (when transitioned) ──
+          if (hasTransitioned) ...[
+            const SizedBox(height: 6),
+            Container(height: 1, color: kTeal.withAlpha(30)),
+            const SizedBox(height: 6),
+            // Row 1: label + current name + end time
+            Row(
+              children: [
+                Text(label, style: TextStyle(fontSize: 11, color: kTeal, fontWeight: FontWeight.bold)),
+                const SizedBox(width: 8),
+                Expanded(child: Text(currentName!, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kTeal))),
+                if (currentEndTime.isNotEmpty)
+                  Text(currentEndTime, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kTeal)),
+              ],
+            ),
+            // Row 2: (current) + ghati
+            const SizedBox(height: 3),
+            Row(
+              children: [
+                Text('(ಈಗ)  ', style: TextStyle(fontSize: 9, color: kTeal, fontStyle: FontStyle.italic)),
+                _ghatiTag('ಗತ', gataNow, const Color(0xFFFF9800)),
+                const SizedBox(width: 4),
+                _ghatiTag('ಶೇಷ', sheshaNow, const Color(0xFF4CAF50)),
+                if (currentParama.isNotEmpty) ...[
+                  const SizedBox(width: 4),
+                  _ghatiTag('ಪರಮ', currentParama, kMuted),
+                ],
+              ],
+            ),
+          ] else ...[
+            // No transition — just show current ghati
+            const SizedBox(height: 3),
+            Row(
+              children: [
+                Text('⏱  ', style: TextStyle(fontSize: 9, color: kMuted)),
+                _ghatiTag('ಗತ', gataNow, const Color(0xFFFF9800)),
+                const SizedBox(width: 4),
+                _ghatiTag('ಶೇಷ', sheshaNow, const Color(0xFF4CAF50)),
+              ],
+            ),
+          ],
         ],
       ),
     );
