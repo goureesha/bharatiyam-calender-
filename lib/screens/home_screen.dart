@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
       lastDate: DateTime(2100),
       builder: (ctx, child) => Theme(
         data: Theme.of(ctx).copyWith(
-          colorScheme: const ColorScheme.dark(
+          colorScheme: ColorScheme.dark(
             primary: kGold,
             onPrimary: kBg,
             surface: kCard,
@@ -215,9 +215,9 @@ class _HomeScreenState extends State<HomeScreen> {
         _buildDateBar(),
         Expanded(
           child: _loading
-            ? const Center(child: CircularProgressIndicator(color: kGold))
+            ? Center(child: CircularProgressIndicator(color: kGold))
             : _data == null
-              ? const Center(child: Text('Unable to compute', style: TextStyle(color: kMuted)))
+              ? Center(child: Text('Unable to compute', style: TextStyle(color: kMuted)))
               : _buildContent(),
         ),
       ],
@@ -229,17 +229,17 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          const Icon(Icons.auto_awesome, color: kGold, size: 28),
+          Icon(Icons.auto_awesome, color: kGold, size: 28),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(AppLocale.t('appName'),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold,
                     fontFamily: 'NotoSansKannada')),
                 Text('📍 ${AppLocale.isKannada ? LocationService.cityNameKn : LocationService.cityName}',
-                  style: const TextStyle(fontSize: 11, color: kMuted)),
+                  style: TextStyle(fontSize: 11, color: kMuted)),
               ],
             ),
           ),
@@ -254,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 border: Border.all(color: kGold.withAlpha(76)),
               ),
               child: Text(AppLocale.languageNames[AppLocale.current] ?? 'ಕನ್ನಡ',
-                style: const TextStyle(fontSize: 11, color: kGold, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 11, color: kGold, fontWeight: FontWeight.bold)),
             ),
           ),
         ],
@@ -278,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.chevron_left_rounded, color: kGold),
+            icon: Icon(Icons.chevron_left_rounded, color: kGold),
             onPressed: () => _changeDate(-1),
             iconSize: 28,
           ),
@@ -289,11 +289,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     '${_selectedDate.day} / ${_selectedDate.month} / ${_selectedDate.year}',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kText),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kText),
                   ),
                   if (_data != null)
                     Text(AppLocale.t(_data!.vara),
-                      style: const TextStyle(fontSize: 12, color: kGold)),
+                      style: TextStyle(fontSize: 12, color: kGold)),
                 ],
               ),
             ),
@@ -308,11 +308,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: kTeal.withAlpha(30),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: Text(AppLocale.t('today'), style: const TextStyle(fontSize: 10, color: kTeal, fontWeight: FontWeight.bold)),
+                child: Text(AppLocale.t('today'), style: TextStyle(fontSize: 10, color: kTeal, fontWeight: FontWeight.bold)),
               ),
             ),
           IconButton(
-            icon: const Icon(Icons.chevron_right_rounded, color: kGold),
+            icon: Icon(Icons.chevron_right_rounded, color: kGold),
             onPressed: () => _changeDate(1),
             iconSize: 28,
           ),
@@ -424,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text('ಉದಯಾದಿ ಘಟಿ: ', style: TextStyle(fontSize: 11, color: kMuted)),
-                      Text(d.udayadiGhati, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                      Text(d.udayadiGhati, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
                     ],
                   ),
                 ),
@@ -502,8 +502,8 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Text(emoji, style: const TextStyle(fontSize: 24)),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontSize: 10, color: kMuted)),
-        Text(time, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: kGold)),
+        Text(label, style: TextStyle(fontSize: 10, color: kMuted)),
+        Text(time, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: kGold)),
       ],
     );
   }
@@ -533,17 +533,17 @@ class _HomeScreenState extends State<HomeScreen> {
           // Name & Value
           Row(
             children: [
-              Text(label, style: const TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.bold)),
+              Text(label, style: TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.bold)),
               const Spacer(),
-              Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText)),
+              Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText)),
             ],
           ),
           const SizedBox(height: 4),
           // End time + next day flag
           Row(
             children: [
-              Text('${AppLocale.t("endLabel")}: ', style: const TextStyle(fontSize: 10, color: kMuted)),
-              Text(endTime, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold)),
+              Text('${AppLocale.t("endLabel")}: ', style: TextStyle(fontSize: 10, color: kMuted)),
+              Text(endTime, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold)),
               if (endsNextDay)
                 const Text(' (+1)', style: TextStyle(fontSize: 9, color: kAshubha)),
             ],

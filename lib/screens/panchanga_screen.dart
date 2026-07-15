@@ -161,29 +161,29 @@ class _PanchangaScreenState extends State<PanchangaScreen> with SingleTickerProv
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded, color: kGold, size: 20),
+            icon: Icon(Icons.arrow_back_ios_rounded, color: kGold, size: 20),
             onPressed: () => Navigator.pop(context),
           ),
           Expanded(
             child: Column(
               children: [
                 Text(AppLocale.t('panchanga'),
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: kGold)),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: kGold)),
                 Text('${widget.date.day}/${widget.date.month}/${widget.date.year} — ${AppLocale.t(widget.data.vara)}',
-                  style: const TextStyle(fontSize: 11, color: kMuted)),
+                  style: TextStyle(fontSize: 11, color: kMuted)),
               ],
             ),
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.share_rounded, color: kGold, size: 20),
+            icon: Icon(Icons.share_rounded, color: kGold, size: 20),
             color: kCard,
             onSelected: (v) {
               if (v == 'pdf') ExportService.exportPdf(widget.data, widget.date);
               if (v == 'image') ExportService.exportImage(_repaintKey);
             },
             itemBuilder: (_) => [
-              PopupMenuItem(value: 'pdf', child: Text(AppLocale.t('export_pdf'), style: const TextStyle(color: kText))),
-              PopupMenuItem(value: 'image', child: Text(AppLocale.t('export_image'), style: const TextStyle(color: kText))),
+              PopupMenuItem(value: 'pdf', child: Text(AppLocale.t('export_pdf'), style: TextStyle(color: kText))),
+              PopupMenuItem(value: 'image', child: Text(AppLocale.t('export_image'), style: TextStyle(color: kText))),
             ],
           ),
         ],
@@ -242,9 +242,9 @@ class _PanchangaScreenState extends State<PanchangaScreen> with SingleTickerProv
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Row(
                         children: [
-                          const Icon(Icons.auto_awesome, color: kShubha, size: 16),
+                          Icon(Icons.auto_awesome, color: kShubha, size: 16),
                           const SizedBox(width: 8),
-                          Text(AppLocale.t('amritaSiddhi'), style: const TextStyle(fontSize: 12, color: kShubha, fontWeight: FontWeight.bold)),
+                          Text(AppLocale.t('amritaSiddhi'), style: TextStyle(fontSize: 12, color: kShubha, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -336,11 +336,11 @@ class _PanchangaScreenState extends State<PanchangaScreen> with SingleTickerProv
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
       child: Row(
         children: [
-          SizedBox(width: 24, child: Text('${idx + 1}', style: const TextStyle(fontSize: 11, color: kMuted))),
+          SizedBox(width: 24, child: Text('${idx + 1}', style: TextStyle(fontSize: 11, color: kMuted))),
           Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
           const SizedBox(width: 8),
           Expanded(child: Text(AppLocale.t(h.planet), style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500))),
-          Text('${h.startTime} - ${h.endTime}', style: const TextStyle(fontSize: 10, color: kMuted)),
+          Text('${h.startTime} - ${h.endTime}', style: TextStyle(fontSize: 10, color: kMuted)),
         ],
       ),
     );
@@ -413,11 +413,11 @@ class _PanchangaScreenState extends State<PanchangaScreen> with SingleTickerProv
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
       child: Row(
         children: [
-          SizedBox(width: 24, child: Text('${idx + 1}', style: const TextStyle(fontSize: 11, color: kMuted))),
-          Expanded(child: Text(AppLocale.t(c.name), style: const TextStyle(fontSize: 12, color: kText))),
+          SizedBox(width: 24, child: Text('${idx + 1}', style: TextStyle(fontSize: 11, color: kMuted))),
+          Expanded(child: Text(AppLocale.t(c.name), style: TextStyle(fontSize: 12, color: kText))),
           NaturePill(nature: c.nature),
           const SizedBox(width: 8),
-          Text('${c.startTime} - ${c.endTime}', style: const TextStyle(fontSize: 10, color: kMuted)),
+          Text('${c.startTime} - ${c.endTime}', style: TextStyle(fontSize: 10, color: kMuted)),
         ],
       ),
     );

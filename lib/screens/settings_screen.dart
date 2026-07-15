@@ -28,7 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(AppLocale.t('settings'),
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: kGold)),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: kGold)),
         ),
 
         // ── Language ──
@@ -140,7 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: Icons.location_on_rounded,
                 title: AppLocale.t('location'),
                 trailing: _detectingGps
-                  ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: kGold))
+                  ? SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: kGold))
                   : GestureDetector(
                       onTap: _onDetectGps,
                       child: Container(
@@ -172,7 +172,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.place_rounded, color: kGold, size: 18),
+                    Icon(Icons.place_rounded, color: kGold, size: 18),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Column(
@@ -180,11 +180,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           Text(
                             AppLocale.isKannada ? LocationService.cityNameKn : LocationService.cityName,
-                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold),
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold),
                           ),
                           Text(
                             '${LocationService.lat.toStringAsFixed(4)}°N, ${LocationService.lon.toStringAsFixed(4)}°E',
-                            style: const TextStyle(fontSize: 10, color: kMuted),
+                            style: TextStyle(fontSize: 10, color: kMuted),
                           ),
                         ],
                       ),
@@ -204,11 +204,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 child: TextField(
                   controller: _searchCtrl,
-                  style: const TextStyle(fontSize: 13, color: kText),
+                  style: TextStyle(fontSize: 13, color: kText),
                   decoration: InputDecoration(
                     hintText: AppLocale.t('search'),
-                    hintStyle: const TextStyle(color: kMuted, fontSize: 12),
-                    prefixIcon: const Icon(Icons.search_rounded, color: kMuted, size: 18),
+                    hintStyle: TextStyle(color: kMuted, fontSize: 12),
+                    prefixIcon: Icon(Icons.search_rounded, color: kMuted, size: 18),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(vertical: 10),
                   ),
@@ -258,13 +258,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     ),
                                   ),
                                   Text(city.state,
-                                    style: const TextStyle(fontSize: 10, color: kMuted)),
+                                    style: TextStyle(fontSize: 10, color: kMuted)),
                                 ],
                               ),
                             ),
                             Text(
                               '${city.lat.toStringAsFixed(2)}°N',
-                              style: const TextStyle(fontSize: 10, color: kMuted),
+                              style: TextStyle(fontSize: 10, color: kMuted),
                             ),
                           ],
                         ),

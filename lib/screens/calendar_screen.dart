@@ -119,7 +119,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             _buildWeekdayHeader(),
             Expanded(
               child: _loading
-                ? const Center(child: CircularProgressIndicator(color: kGold))
+                ? Center(child: CircularProgressIndicator(color: kGold))
                 : _buildCalendarGrid(),
             ),
             if (_selectedDay != null && _monthData.containsKey(_selectedDay))
@@ -143,7 +143,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.chevron_left_rounded, color: kGold),
+            icon: Icon(Icons.chevron_left_rounded, color: kGold),
             onPressed: () => _changeMonth(-1),
             iconSize: 28,
           ),
@@ -157,7 +157,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   lastDate: DateTime(2100),
                   builder: (ctx, child) => Theme(
                     data: Theme.of(ctx).copyWith(
-                      colorScheme: const ColorScheme.dark(
+                      colorScheme: ColorScheme.dark(
                         primary: kGold, onPrimary: kBg,
                         surface: kCard, onSurface: kText,
                       ),
@@ -176,12 +176,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Text(
                 '${months[_currentMonth.month]} ${_currentMonth.year}',
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold),
               ),
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.chevron_right_rounded, color: kGold),
+            icon: Icon(Icons.chevron_right_rounded, color: kGold),
             onPressed: () => _changeMonth(1),
             iconSize: 28,
           ),
@@ -197,7 +197,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       child: Row(
         children: days.map((d) => Expanded(
           child: Center(
-            child: Text(d, style: const TextStyle(fontSize: 10, color: kMuted, fontWeight: FontWeight.bold)),
+            child: Text(d, style: TextStyle(fontSize: 10, color: kMuted, fontWeight: FontWeight.bold)),
           ),
         )).toList(),
       ),
@@ -327,9 +327,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
             children: [
               Text(
                 '$_selectedDay/${_currentMonth.month}/${_currentMonth.year}',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold),
               ),
-              Text(AppLocale.t(d.vara), style: const TextStyle(fontSize: 12, color: kGold)),
+              Text(AppLocale.t(d.vara), style: TextStyle(fontSize: 12, color: kGold)),
             ],
           ),
           const SizedBox(height: 6),
@@ -377,7 +377,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ],
                   ),
                   const SizedBox(height: 3),
-                  Text(e.description, style: const TextStyle(fontSize: 9, color: kMuted)),
+                  Text(e.description, style: TextStyle(fontSize: 9, color: kMuted)),
                   if (e.shloka.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Container(
@@ -388,13 +388,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                       child: Text(
                         e.shloka.replaceAll('\\\\n', '\n'),
-                        style: const TextStyle(fontSize: 9, color: kGold, fontStyle: FontStyle.italic),
+                        style: TextStyle(fontSize: 9, color: kGold, fontStyle: FontStyle.italic),
                       ),
                     ),
                   ],
                   if (e.meaning.isNotEmpty) ...[
                     const SizedBox(height: 3),
-                    Text(e.meaning, style: const TextStyle(fontSize: 9, color: kTeal)),
+                    Text(e.meaning, style: TextStyle(fontSize: 9, color: kTeal)),
                   ],
                   const SizedBox(height: 2),
                   Text('— ${e.source}', style: TextStyle(fontSize: 8, color: kMuted.withAlpha(127))),
@@ -411,8 +411,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 8, color: kMuted)),
-        Text(value, style: const TextStyle(fontSize: 11, color: kText, fontWeight: FontWeight.w500)),
+        Text(label, style: TextStyle(fontSize: 8, color: kMuted)),
+        Text(value, style: TextStyle(fontSize: 11, color: kText, fontWeight: FontWeight.w500)),
       ],
     );
   }

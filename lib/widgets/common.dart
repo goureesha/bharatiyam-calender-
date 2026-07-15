@@ -229,7 +229,7 @@ class SectionHeader extends StatelessWidget {
           Icon(icon, color: kGold, size: 20),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(title, style: const TextStyle(
+            child: Text(title, style: TextStyle(
               fontFamily: 'NotoSansKannada',
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -270,7 +270,7 @@ class InfoRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 100,
-            child: Text(label, style: const TextStyle(fontSize: 12, color: kMuted)),
+            child: Text(label, style: TextStyle(fontSize: 12, color: kMuted)),
           ),
           Expanded(
             child: Column(
@@ -298,9 +298,10 @@ class InfoRow extends StatelessWidget {
 
 class TimeChip extends StatelessWidget {
   final String time;
-  final Color color;
+  final Color? _color;
+  Color get color => _color ?? kTeal;
 
-  const TimeChip({super.key, required this.time, this.color = kTeal});
+  const TimeChip({super.key, required this.time, Color? color}) : _color = color;
 
   @override
   Widget build(BuildContext context) {
@@ -360,15 +361,17 @@ class KalaTimeBar extends StatelessWidget {
   final String name;
   final String startTime;
   final String endTime;
-  final Color color;
+  final Color? _color;
 
   const KalaTimeBar({
     super.key,
     required this.name,
     required this.startTime,
     required this.endTime,
-    this.color = kAshubha,
-  });
+    Color? color,
+  }) : _color = color;
+
+  Color get color => _color ?? kAshubha;
 
   @override
   Widget build(BuildContext context) {
@@ -378,7 +381,7 @@ class KalaTimeBar extends StatelessWidget {
         children: [
           Container(width: 4, height: 28, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
           const SizedBox(width: 8),
-          Expanded(child: Text(name, style: const TextStyle(fontSize: 12, color: kText))),
+          Expanded(child: Text(name, style: TextStyle(fontSize: 12, color: kText))),
           TimeChip(time: '$startTime - $endTime', color: color),
         ],
       ),
@@ -420,7 +423,7 @@ class MuhurtaListItem extends StatelessWidget {
         children: [
           SizedBox(width: 24, child: Text('${index + 1}', style: TextStyle(fontSize: 11, color: isCurrent ? kGold : kMuted))),
           if (isCurrent) ...[
-            const Icon(Icons.play_arrow_rounded, color: kGold, size: 14),
+            Icon(Icons.play_arrow_rounded, color: kGold, size: 14),
             const SizedBox(width: 4),
           ],
           Expanded(child: Text(name, style: TextStyle(fontSize: 12, color: isCurrent ? kGold : kText))),
@@ -461,7 +464,7 @@ class LagnaListItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.auto_awesome, color: kTeal, size: 14),
+          Icon(Icons.auto_awesome, color: kTeal, size: 14),
           const SizedBox(width: 8),
           Expanded(child: Text(rashi, style: TextStyle(fontSize: 12, color: isCurrent ? kTeal : kText))),
           Text('$startTime - $endTime', style: TextStyle(fontSize: 10, color: isCurrent ? kTeal : kMuted)),
