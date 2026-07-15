@@ -27,10 +27,11 @@ class ShraddhaInfo {
   final String aparahnaStart;       // Clock time
   final String aparahnaEnd;         // Clock time
   final String ruleText;            // Rule description
-  final bool isTithiPresentAtAparahna; // Does tithi extend into aparahna?
+  final bool isTithiPresentAtAparahna; // Does sunrise tithi extend into aparahna?
   final String tithiStatusAtAparahna;  // Status text
   final String aparahnaStartGhati;  // Ghati-vighati from sunrise
   final String tithiEndTimeForRule; // Tithi end time used for rule check
+  final String aparahnaShraddha;    // Which shraddha can be done at aparahna
 
   const ShraddhaInfo({
     this.varshikaChandraAmanta = '',
@@ -50,6 +51,7 @@ class ShraddhaInfo {
     this.tithiStatusAtAparahna = '',
     this.aparahnaStartGhati = '',
     this.tithiEndTimeForRule = '',
+    this.aparahnaShraddha = '',
   });
 }
 
@@ -210,15 +212,52 @@ class ShraddhaCalculator {
     // Check if tithi extends past aparahna + 2 ghati
     final isTithiPresent = tithiEndJd >= ruleCheckJd;
 
+    // Determine which tithi is at aparahna
+    int aparahnaTithiIdx;
+    if (tithiEndJd >= aparahnaStartJd) {
+      // Sunrise tithi is still present at aparahna start
+      aparahnaTithiIdx = tithiIndex;
+    } else {
+      // Sunrise tithi ended before aparahna → next tithi is at aparahna
+      aparahnaTithiIdx = (tithiIndex + 1) % 30;
+    }
+
+    // Build aparahna shraddha name
+    final apIsKrishna = aparahnaTithiIdx >= 15;
+    final apIsAmavasya = aparahnaTithiIdx == 29;
+    final apIsPurnima = aparahnaTithiIdx == 14;
+    final apPakshaName = apIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+    String apTithiName;
+    if (apIsAmavasya) {
+      apTithiName = 'ಅಮಾವಾಸ್ಯೆ';
+    } else if (apIsPurnima) {
+      apTithiName = 'ಹುಣ್ಣಿಮೆ';
+    } else {
+      final apTithiInPaksha = apIsKrishna ? aparahnaTithiIdx - 15 : aparahnaTithiIdx;
+      apTithiName = (apTithiInPaksha >= 0 && apTithiInPaksha < 14) ? _tithiNames[apTithiInPaksha] : '';
+    }
+
+    String aparahnaShraddha;
+    if (apIsAmavasya || apIsPurnima) {
+      aparahnaShraddha = '$amantaName $apTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
+    } else {
+      aparahnaShraddha = '$amantaName $apPakshaName $apTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
+    }
+
     String tithiStatus;
     if (tithiEndJd >= aparahnaEndJd) {
-      tithiStatus = '✅ ತಿಥಿ ಅಪರಾಹ್ನ ಕಾಲದಾಚೆಗೂ ಇದೆ — ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
+      tithiStatus = '✅ $pakshaName $tithiName — ಅಪರಾಹ್ನ ಕಾಲದಾಚೆಗೂ ಇದೆ';
     } else if (isTithiPresent) {
-      tithiStatus = '✅ ತಿಥಿ ಅಪರಾಹ್ನ ಆರಂಭದಿಂದ ೨ ಘಟಿ ಮೇಲೆ ಇದೆ — ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
+      tithiStatus = '✅ $pakshaName $tithiName — ಅಪರಾಹ್ನ ಆರಂಭದಿಂದ ೨ ಘಟಿ ಇದೆ';
     } else if (tithiEndJd >= aparahnaStartJd) {
-      tithiStatus = '⚠️ ತಿಥಿ ಅಪರಾಹ್ನದಲ್ಲಿ ೨ ಘಟಿ ಇಲ್ಲ — ಹಿಂದಿನ ದಿನ ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+      tithiStatus = '⚠️ $pakshaName $tithiName — ಅಪರಾಹ್ನದಲ್ಲಿ ೨ ಘಟಿ ಇಲ್ಲ';
     } else {
-      tithiStatus = '⚠️ ತಿಥಿ ಅಪರಾಹ್ನಕ್ಕೆ ಮೊದಲೇ ಮುಗಿಯುತ್ತದೆ — ಹಿಂದಿನ ದಿನ ಶ್ರಾದ್ಧ';
+      tithiStatus = '⚠️ $pakshaName $tithiName — ಅಪರಾಹ್ನಕ್ಕೆ ಮೊದಲೇ ಮುಗಿಯುತ್ತದೆ';
+    }
+
+    // If sunrise tithi not present at aparahna, show which tithi IS present
+    if (!isTithiPresent && aparahnaTithiIdx != tithiIndex) {
+      tithiStatus += '\n📌 ಅಪರಾಹ್ನದಲ್ಲಿ $apPakshaName $apTithiName ಇದೆ';
     }
 
     final ruleText = 'ನಿಯಮ: ತಿಥಿ ಅಪರಾಹ್ನ ಆರಂಭದಿಂದ ಕನಿಷ್ಠ ೨ ಘಟಿ (೪೮ ನಿಮಿಷ) ಇರಬೇಕು';
@@ -248,6 +287,7 @@ class ShraddhaCalculator {
         tithiStatusAtAparahna: tithiStatus,
         aparahnaStartGhati: aparahnaGhatiStr,
         tithiEndTimeForRule: tithiEndTimeForRule,
+        aparahnaShraddha: aparahnaShraddha,
       );
     }
 
@@ -263,6 +303,7 @@ class ShraddhaCalculator {
       tithiStatusAtAparahna: tithiStatus,
       aparahnaStartGhati: aparahnaGhatiStr,
       tithiEndTimeForRule: tithiEndTimeForRule,
+      aparahnaShraddha: aparahnaShraddha,
     );
   }
 }

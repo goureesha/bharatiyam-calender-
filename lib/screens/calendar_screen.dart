@@ -641,6 +641,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(info.tithiStatusAtAparahna, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: info.isTithiPresentAtAparahna ? const Color(0xFF388E3C) : kAshubha)),
+                const SizedBox(height: 6),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: kGold.withAlpha(12),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: kGold.withAlpha(40)),
+                  ),
+                  child: Text('🙏 ${info.aparahnaShraddha}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
+                ),
               ],
             ),
           ),
