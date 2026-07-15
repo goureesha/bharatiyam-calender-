@@ -27,6 +27,12 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Pre-compute 3-year panchanga data
+        run: |
+          mkdir -p assets
+          flutter test test/generate_panchanga_data_test.dart --timeout 15m || echo "Data generation skipped"
+          ls -la assets/ || true
+
       - name: Build Web
         run: flutter build web --release --base-href /bharatiyam-calender-/
 
@@ -64,6 +70,12 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
+
+      - name: Pre-compute 3-year panchanga data
+        run: |
+          mkdir -p assets
+          flutter test test/generate_panchanga_data_test.dart --timeout 15m || echo "Data generation skipped"
+          ls -la assets/ || true
 
       - name: Patch all plugins to compileSdk 36
         run: |

@@ -206,6 +206,53 @@ class PanchangaData {
     chandraUdaya: chandraUdaya, chandraAsta: chandraAsta,
     sunriseJd: sunriseJd, sunsetJd: sunsetJd,
   );
+
+  Map<String, dynamic> toJson() => {
+    'ti': tithi, 'va': vara, 'na': nakshatra, 'yo': yoga, 'ka': karana,
+    'tI': tithiIndex, 'nI': nakshatraIndex, 'yI': yogaIndex, 'kI': karanaIndex, 'vI': varaIndex,
+    'tE': tithiEndTime, 'nE': nakEndTime, 'yE': yogaEndTime, 'kE': karanaEndTime,
+    'tN': tithiEndsNextDay, 'nN': nakEndsNextDay, 'yN': yogaEndsNextDay, 'kN': karanaEndsNextDay,
+    'tG': tithiGata, 'tS': tithiShesha, 'tP': tithiParama,
+    'nG': nakGata, 'nS': nakShesha, 'nP': nakParama,
+    'yG': yogaGata, 'yS': yogaShesha, 'yP': yogaParama,
+    'kG': karanaGata, 'kS': karanaShesha, 'kP': karanaParama,
+    'uG': udayadiGhati, 'sr': sunrise, 'ss': sunset,
+    'cR': chandraRashi, 'cP': chandraPada, 'sN': suryaNakshatra, 'sP': suryaPada,
+    'np': nakPercent, 'aM': amantaMasa, 'pM': pournimantaMasa,
+    'sM': souraMasa, 'sD': souraMasaGataDina, 'sv': samvatsara,
+    'ru': rutu, 'ay': ayana, 'dm': divamana, 'rm': ratrimana,
+    'vP': vishaPraghati, 'aP': amrutaPraghati, 'ag': agniVasa,
+    'sk': shakaVarsha, 'pk': paksha, 'cu': chandraUdaya, 'ca': chandraAsta,
+    'rJ': sunriseJd, 'sJ': sunsetJd,
+  };
+
+  factory PanchangaData.fromJson(Map<String, dynamic> j) => PanchangaData(
+    tithi: j['ti'] ?? '', vara: j['va'] ?? '', nakshatra: j['na'] ?? '',
+    yoga: j['yo'] ?? '', karana: j['ka'] ?? '',
+    tithiIndex: j['tI'] ?? 0, nakshatraIndex: j['nI'] ?? 0,
+    yogaIndex: j['yI'] ?? 0, karanaIndex: j['kI'] ?? 0, varaIndex: j['vI'] ?? 0,
+    tithiEndTime: j['tE'] ?? '', nakEndTime: j['nE'] ?? '',
+    yogaEndTime: j['yE'] ?? '', karanaEndTime: j['kE'] ?? '',
+    tithiEndsNextDay: j['tN'] ?? false, nakEndsNextDay: j['nN'] ?? false,
+    yogaEndsNextDay: j['yN'] ?? false, karanaEndsNextDay: j['kN'] ?? false,
+    tithiGata: j['tG'] ?? '', tithiShesha: j['tS'] ?? '', tithiParama: j['tP'] ?? '',
+    nakGata: j['nG'] ?? '', nakShesha: j['nS'] ?? '', nakParama: j['nP'] ?? '',
+    yogaGata: j['yG'] ?? '', yogaShesha: j['yS'] ?? '', yogaParama: j['yP'] ?? '',
+    karanaGata: j['kG'] ?? '', karanaShesha: j['kS'] ?? '', karanaParama: j['kP'] ?? '',
+    udayadiGhati: j['uG'] ?? '',
+    sunrise: j['sr'] ?? '', sunset: j['ss'] ?? '',
+    chandraRashi: j['cR'] ?? '', chandraPada: j['cP'] ?? '',
+    suryaNakshatra: j['sN'] ?? '', suryaPada: j['sP'] ?? '',
+    nakPercent: (j['np'] ?? 0).toDouble(),
+    amantaMasa: j['aM'] ?? '', pournimantaMasa: j['pM'] ?? '',
+    souraMasa: j['sM'] ?? '', souraMasaGataDina: j['sD'] ?? '',
+    samvatsara: j['sv'] ?? '', rutu: j['ru'] ?? '', ayana: j['ay'] ?? '',
+    divamana: j['dm'] ?? '', ratrimana: j['rm'] ?? '',
+    vishaPraghati: j['vP'] ?? '', amrutaPraghati: j['aP'] ?? '', agniVasa: j['ag'] ?? '',
+    shakaVarsha: j['sk'] ?? 0, paksha: j['pk'] ?? '',
+    chandraUdaya: j['cu'] ?? '', chandraAsta: j['ca'] ?? '',
+    sunriseJd: (j['rJ'] ?? 0).toDouble(), sunsetJd: (j['sJ'] ?? 0).toDouble(),
+  );
 }
 
 /// Lagna transit timing (when a rashi rises/sets)

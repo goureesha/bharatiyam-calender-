@@ -6,6 +6,7 @@ import '../core/events.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
+import '../services/precomputed_data.dart';
 import '../widgets/common.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -40,15 +41,31 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void _loadMonth() {
     final key = _monthKey(_currentMonth.year, _currentMonth.month);
     if (_dataCache.containsKey(key)) {
-      // Already computed — instant!
       setState(() {
         _monthData = _dataCache[key]!;
         _monthEvents = _eventsCache[key] ?? {};
         _loading = false;
       });
-    } else {
-      _computeMonth();
+      return;
     }
+    // Try pre-computed asset data first (instant!)
+    final pre = PrecomputedData();
+    if (pre.isLoaded) {
+      final data = pre.getMonthData(_currentMonth.year, _currentMonth.month);
+      if (data.isNotEmpty) {
+        final events = pre.getMonthEvents(_currentMonth.year, _currentMonth.month);
+        _dataCache[key] = data;
+        _eventsCache[key] = events;
+        setState(() {
+          _monthData = data;
+          _monthEvents = events;
+          _loading = false;
+        });
+        return;
+      }
+    }
+    // Fallback: compute on-demand
+    _computeMonth();
   }
 
   Future<void> _computeMonth() async {

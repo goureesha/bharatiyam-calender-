@@ -9,6 +9,7 @@ import '../core/samvatsara.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
+import '../services/precomputed_data.dart';
 import '../widgets/common.dart';
 import 'panchanga_screen.dart';
 import 'settings_screen.dart';
@@ -47,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _init() async {
     await AppLocale.loadLang();
     await LocationService.loadSavedLocation();
+    await PrecomputedData().load();
     await Ephemeris.initSweph();
     _initDone = true;
     _compute();
