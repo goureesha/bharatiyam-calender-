@@ -135,7 +135,6 @@ const Map<String, String> knStrings = {
   'festivalsEvents': 'ಹಬ್ಬ ಮತ್ತು ವಿಶೇಷ',
   'sunMoonDetails': 'ಸೂರ್ಯೋದಯ / ಸೂರ್ಯಾಸ್ತ',
   'chandraPada': 'ಚಂದ್ರ ಪಾದ',
-  'suryaNakshatra': 'ಸೂರ್ಯ ನಕ್ಷತ್ರ',
   'paksha': 'ಪಕ್ಷ',
   'shukla': 'ಶುಕ್ಲ',
   'krishna': 'ಕೃಷ್ಣ',
