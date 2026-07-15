@@ -156,6 +156,7 @@ class PanchangaCalculator {
       varaIndex: varaIndex,
       tithiEndTime: Ephemeris.formatTimeFromJd(tithiEnd['endJd']!, tzOffset: tzOffset),
       tithiEndJd: tithiEnd['endJd']!,
+      tithiStartJd: tithiEnd['startJd']!,
       nakEndTime: Ephemeris.formatTimeFromJd(nakEnd['endJd']!, tzOffset: tzOffset),
       yogaEndTime: Ephemeris.formatTimeFromJd(yogaEnd['endJd']!, tzOffset: tzOffset),
       karanaEndTime: Ephemeris.formatTimeFromJd(karanaEnd['endJd']!, tzOffset: tzOffset),

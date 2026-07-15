@@ -543,6 +543,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       sunriseJd: d.sunriseJd,
       sunsetJd: d.sunsetJd,
       tithiEndJd: d.tithiEndJd,
+      tithiStartJd: d.tithiStartJd,
     );
 
     return AppCard(

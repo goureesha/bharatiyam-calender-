@@ -640,6 +640,7 @@ class _HomeScreenState extends State<HomeScreen> {
       sunriseJd: d.sunriseJd,
       sunsetJd: d.sunsetJd,
       tithiEndJd: d.tithiEndJd,
+      tithiStartJd: d.tithiStartJd,
     );
 
     return AppCard(

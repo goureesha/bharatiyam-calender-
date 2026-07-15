@@ -153,6 +153,7 @@ class ShraddhaCalculator {
     required double sunriseJd,
     required double sunsetJd,
     required double tithiEndJd,
+    required double tithiStartJd,
     double tzOffset = 5.5,
   }) {
     final isKrishna = tithiIndex >= 15;
@@ -192,8 +193,7 @@ class ShraddhaCalculator {
     }
 
     // ── Kutupa Kala Rule ──
-    // Rule: ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು
-    // Kutupa = 8th muhurta of 15 day muhurtas
+    // Kutupa = 8th of 15 day muhurtas
     final kutupa = _calcKutupa(sunriseJd, sunsetJd);
     final kutupaStartJd = kutupa['startJd']!;
     final kutupaEndJd = kutupa['endJd']!;
@@ -208,6 +208,31 @@ class ShraddhaCalculator {
 
     // Check if tithi is present during Kutupa Kala
     final isTithiPresent = tithiEndJd >= kutupaStartJd;
+
+    // ── 2-day Kutupa detection ──
+    // Yesterday's Kutupa (approx 24h earlier)
+    final yesterdayKutupaStartJd = kutupaStartJd - 1.0;
+    final yesterdayKutupaEndJd = kutupaEndJd - 1.0;
+    // Tomorrow's Kutupa (approx 24h later)
+    final tomorrowKutupaStartJd = kutupaStartJd + 1.0;
+
+    // Was this tithi at yesterday's Kutupa?
+    final wasAtYesterdayKutupa = tithiStartJd < yesterdayKutupaEndJd && tithiEndJd > yesterdayKutupaStartJd;
+    // Will this tithi be at tomorrow's Kutupa?
+    final willBeAtTomorrowKutupa = tithiEndJd >= tomorrowKutupaStartJd;
+
+    bool isFirstDay = false;
+    bool isSecondDay = false;
+
+    if (isTithiPresent) {
+      if (willBeAtTomorrowKutupa) {
+        // Tithi at today AND tomorrow → today is first day
+        isFirstDay = true;
+      } else if (wasAtYesterdayKutupa) {
+        // Tithi at yesterday AND today → today is second day
+        isSecondDay = true;
+      }
+    }
 
     // Determine which tithi is at Kutupa
     int kutupaTithiIdx;
@@ -240,7 +265,13 @@ class ShraddhaCalculator {
     }
 
     String tithiStatus;
-    if (tithiEndJd >= kutupaEndJd) {
+    if (isSecondDay) {
+      // Today is 2nd day — shraddha was yesterday (first day)
+      tithiStatus = '⚠️ $pakshaName $tithiName — ಎರಡು ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ\n📌 ಹಿಂದಿನ ದಿನ (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
+    } else if (isFirstDay) {
+      // Tithi at 2 Kutupas — today is first day
+      tithiStatus = '✅ $pakshaName $tithiName — ಎರಡು ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ\n📌 ಇಂದು (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+    } else if (tithiEndJd >= kutupaEndJd) {
       tithiStatus = '✅ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಾಚೆಗೂ ಇದೆ';
     } else if (isTithiPresent) {
       tithiStatus = '✅ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
