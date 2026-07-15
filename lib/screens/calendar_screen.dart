@@ -7,6 +7,7 @@ import '../core/ghati_calculator.dart';
 import '../core/kala_calculator.dart';
 import '../core/ephemeris.dart';
 import '../core/events.dart';
+import '../core/shraddha_calculator.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
@@ -527,6 +528,159 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ],
               ),
             ),
+
+          // ── Shraddha Details ──
+          _buildShraddhaSection(d),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildShraddhaSection(PanchangaData d) {
+    final info = ShraddhaCalculator.calculate(
+      tithiIndex: d.tithiIndex,
+      nakshatraIndex: d.nakshatraIndex,
+      amantaMasa: d.amantaMasa,
+      paksha: d.paksha,
+    );
+
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SectionHeader(
+            icon: Icons.self_improvement_rounded,
+            title: info.isPitruPaksha ? '🙏 ಪಿತೃ ಪಕ್ಷ ಶ್ರಾದ್ಧ' : 'ಶ್ರಾದ್ಧ ವಿವರ',
+          ),
+          const SizedBox(height: 8),
+
+          // Pitru Paksha banner
+          if (info.isPitruPaksha) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [const Color(0xFFFF6F00).withAlpha(30), const Color(0xFFE65100).withAlpha(15)],
+                ),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFF6F00).withAlpha(76)),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    info.pitruPakshaDay,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    info.significance,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 11, color: kText, height: 1.4),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    info.significanceEn,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+
+          // Special badges
+          if (info.isSarvaPitru || info.isBharaniShraddha || info.isAvidhavaNavami || info.isGhataChaturdashi)
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                if (info.isSarvaPitru) _shraddhaChip('ಸರ್ವ ಪಿತೃ', 'Universal', const Color(0xFFFF6F00)),
+                if (info.isBharaniShraddha) _shraddhaChip('ಭರಣಿ ಶ್ರಾದ್ಧ', 'Bharani', const Color(0xFF7B1FA2)),
+                if (info.isAvidhavaNavami) _shraddhaChip('ಅವಿಧವಾ ನವಮೀ', 'Avidhava', const Color(0xFFC62828)),
+                if (info.isGhataChaturdashi) _shraddhaChip('ಘಾತ ಚತುರ್ದಶಿ', 'Ghata', const Color(0xFF37474F)),
+              ],
+            ),
+
+          // Monthly Shraddha note
+          if (info.isMonthlyShraddha && !info.isPitruPaksha) ...[
+            const SizedBox(height: 6),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: kTeal.withAlpha(15),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: kTeal.withAlpha(51)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('📅 ಮಾಸಿಕ ಶ್ರಾದ್ಧ (Monthly Shraddha)', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kTeal)),
+                  const SizedBox(height: 3),
+                  Text(info.monthlyNote, style: TextStyle(fontSize: 9, color: kText)),
+                ],
+              ),
+            ),
+          ],
+
+          if (!info.isMonthlyShraddha && info.monthlyNote.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(info.monthlyNote, style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
+          ],
+
+          // Vidhi rules during Pitru Paksha
+          if (info.isPitruPaksha && info.rules.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text('ಶ್ರಾದ್ಧ ವಿಧಿ (Shraddha Vidhi)', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kMuted)),
+            const SizedBox(height: 4),
+            ...info.rules.map((r) => Padding(
+              padding: const EdgeInsets.only(bottom: 3),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('• ', style: TextStyle(fontSize: 10, color: kMuted)),
+                  Expanded(child: Text(r, style: TextStyle(fontSize: 9, color: kText, height: 1.3))),
+                ],
+              ),
+            )),
+          ],
+
+          // Amavasya note
+          if (info.isSarvaPitru) ...[
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF6F00).withAlpha(20),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                '🙏 ಮಹಾಲಯ ಅಮಾವಾಸ್ಯೆ — ತಿಥಿ ತಿಳಿಯದಿದ್ದರೂ ಈ ದಿನ ಎಲ್ಲ ಪಿತೃಗಳಿಗೆ ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು\n'
+                'Mahalaya Amavasya — Perform Shraddha for all ancestors even if death tithi is unknown',
+                style: TextStyle(fontSize: 9, color: kText, height: 1.4),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _shraddhaChip(String kn, String en, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withAlpha(20),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withAlpha(76)),
+      ),
+      child: Column(
+        children: [
+          Text(kn, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
+          Text(en, style: TextStyle(fontSize: 7, color: color.withAlpha(178))),
         ],
       ),
     );
