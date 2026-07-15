@@ -17,8 +17,6 @@ class ShraddhaInfo {
   final bool isGhataChaturdashi;   // K14 — accidental death
   final bool isMonthlyShraddha;    // Monthly tithi match day
   final String monthlyNote;        // Note about monthly shraddha
-  final List<String> rules;        // Shraddha vidhi rules for the day
-
   const ShraddhaInfo({
     this.isPitruPaksha = false,
     this.pitruPakshaDay = '',
@@ -30,7 +28,6 @@ class ShraddhaInfo {
     this.isGhataChaturdashi = false,
     this.isMonthlyShraddha = false,
     this.monthlyNote = '',
-    this.rules = const [],
   });
 }
 
@@ -112,87 +109,46 @@ class ShraddhaCalculator {
     'Sarva Pitru Amavasya (Mahalaya) — Universal Shraddha for ALL ancestors',              // Amavasya
   ];
 
-  /// Shraddha Vidhi rules for Pitru Paksha
-  static const pitruPakshaRules = [
-    'ಶ್ರಾದ್ಧವನ್ನು ಅಪರಾಹ್ಣ ಕಾಲದಲ್ಲಿ (ಮಧ್ಯಾಹ್ನ ನಂತರ) ಮಾಡಬೇಕು',
-    'ಕುತಪ ಕಾಲ (ಮಧ್ಯಾಹ್ನ 11:36-12:24) ಶ್ರೇಷ್ಠ',
-    'ದಕ್ಷಿಣ ದಿಕ್ಕಿಗೆ ಮುಖ ಮಾಡಿ ಪಿಂಡ ಪ್ರದಾನ',
-    'ತಿಲ (ಎಳ್ಳು), ಕುಶ (ದರ್ಭೆ) ಬಳಕೆ ಶ್ರೇಷ್ಠ',
-    'ಬ್ರಾಹ್ಮಣ ಭೋಜನ ಮತ್ತು ದಾನ',
-  ];
-
-  /// Check if the given Amanta masa is Bhadrapada (Pitru Paksha month)
   static bool _isPitruPakshaMasa(String amantaMasa) {
     final lower = amantaMasa.toLowerCase();
     return lower.contains('bhadrapada') ||
            lower.contains('ಭಾದ್ರಪದ') ||
-           lower.contains('ಭಾದ್ರಪದ') ||
-           lower.contains('ashwin') ||  // Some traditions use Ashwin
+           lower.contains('ashwin') ||
            lower.contains('ಆಶ್ವಿನ');
   }
 
-  /// Calculate Shraddha information for a given day
   static ShraddhaInfo calculate({
-    required int tithiIndex,      // 0-29
-    required int nakshatraIndex,  // 0-26
-    required String amantaMasa,   // Amanta masa key
-    required String paksha,       // 'shukla' or 'krishna'
+    required int tithiIndex,
+    required int nakshatraIndex,
+    required String amantaMasa,
+    required String paksha,
   }) {
     final isKrishna = tithiIndex >= 15 || tithiIndex == 29;
     final isPitruPakshaMasa = _isPitruPakshaMasa(amantaMasa);
 
-    // Krishna Paksha tithi index within the paksha (0-14)
     int krishnaIdx = -1;
     if (isKrishna) {
-      krishnaIdx = tithiIndex >= 15 ? tithiIndex - 15 : 14; // 29 = Amavasya = idx 14
+      krishnaIdx = tithiIndex >= 15 ? tithiIndex - 15 : 14;
     }
 
-    // Pitru Paksha: Bhadrapada Krishna Paksha
     final isPitruPaksha = isPitruPakshaMasa && isKrishna;
 
     if (!isPitruPaksha && !isKrishna) {
-      // Shukla Paksha — no Shraddha relevance
       return const ShraddhaInfo(
         monthlyNote: 'ಶ್ರಾದ್ಧ ಕೃಷ್ಣ ಪಕ್ಷದಲ್ಲಿ ಮಾತ್ರ (Shraddha only in Krishna Paksha)',
       );
     }
 
-    // Monthly Shraddha: any Krishna Paksha day matches ancestors' death tithi
-    final isMonthlyShraddha = isKrishna;
     final monthlyNote = isKrishna
       ? '${_krishnaTithiKn[krishnaIdx]} — ಈ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಮಾಸಿಕ ಶ್ರಾದ್ಧ ದಿನ'
       : '';
 
     if (!isPitruPaksha) {
       return ShraddhaInfo(
-        isMonthlyShraddha: isMonthlyShraddha,
+        isMonthlyShraddha: isKrishna,
         monthlyNote: monthlyNote,
-        isSarvaPitru: tithiIndex == 29, // Amavasya is always good for Shraddha
+        isSarvaPitru: tithiIndex == 29,
       );
-    }
-
-    // ── Pitru Paksha specific ──
-
-    final isSarvaPitru = krishnaIdx == 14; // Mahalaya Amavasya
-    final isAvidhavaNavami = krishnaIdx == 8; // K9
-    final isGhataChaturdashi = krishnaIdx == 13; // K14
-
-    // Bharani Shraddha: K2 or K3 with Bharani nakshatra (index 1)
-    final isBharaniShraddha = (krishnaIdx == 1 || krishnaIdx == 2) && nakshatraIndex == 1;
-
-    final rules = <String>[...pitruPakshaRules];
-
-    if (isSarvaPitru) {
-      rules.insert(0, '🙏 ಎಲ್ಲ ಪಿತೃಗಳಿಗೆ ಶ್ರಾದ್ಧ ಮಾಡಿ — ಮಹಾಲಯ ಅಮಾವಾಸ್ಯೆ');
-    }
-    if (isBharaniShraddha) {
-      rules.insert(0, '⭐ ಭರಣಿ ಶ್ರಾದ್ಧ — ಗಯಾ ಶ್ರಾದ್ಧಕ್ಕೆ ಸಮಾನ ಫಲ');
-    }
-    if (isAvidhavaNavami) {
-      rules.insert(0, '🙏 ಅವಿಧವಾ ನವಮೀ — ಸೌಭಾಗ್ಯವತಿಯರ ಶ್ರಾದ್ಧ');
-    }
-    if (isGhataChaturdashi) {
-      rules.insert(0, '⚔️ ಘಾತ ಚತುರ್ದಶಿ — ಅಪಮೃತ್ಯು/ಅಪಘಾತ ಮರಣ ಶ್ರಾದ್ಧ');
     }
 
     return ShraddhaInfo(
@@ -200,13 +156,12 @@ class ShraddhaCalculator {
       pitruPakshaDay: _krishnaTithiKn[krishnaIdx],
       significance: _pitruPakshaSignificanceKn[krishnaIdx],
       significanceEn: _pitruPakshaSignificanceEn[krishnaIdx],
-      isSarvaPitru: isSarvaPitru,
-      isBharaniShraddha: isBharaniShraddha,
-      isAvidhavaNavami: isAvidhavaNavami,
-      isGhataChaturdashi: isGhataChaturdashi,
+      isSarvaPitru: krishnaIdx == 14,
+      isBharaniShraddha: (krishnaIdx == 1 || krishnaIdx == 2) && nakshatraIndex == 1,
+      isAvidhavaNavami: krishnaIdx == 8,
+      isGhataChaturdashi: krishnaIdx == 13,
       isMonthlyShraddha: true,
       monthlyNote: monthlyNote,
-      rules: rules,
     );
   }
 }

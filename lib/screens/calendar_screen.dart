@@ -630,22 +630,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
             Text(info.monthlyNote, style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
           ],
 
-          // Vidhi rules during Pitru Paksha
-          if (info.isPitruPaksha && info.rules.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text('ಶ್ರಾದ್ಧ ವಿಧಿ (Shraddha Vidhi)', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kMuted)),
-            const SizedBox(height: 4),
-            ...info.rules.map((r) => Padding(
-              padding: const EdgeInsets.only(bottom: 3),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('• ', style: TextStyle(fontSize: 10, color: kMuted)),
-                  Expanded(child: Text(r, style: TextStyle(fontSize: 9, color: kText, height: 1.3))),
-                ],
-              ),
-            )),
-          ],
 
           // Amavasya note
           if (info.isSarvaPitru) ...[
