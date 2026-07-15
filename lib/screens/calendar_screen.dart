@@ -1,7 +1,11 @@
-/// Calendar Screen — Monthly grid view with panchanga summary per day.
+/// Calendar Screen — Full-screen monthly grid + full panchanga detail on scroll.
 import 'package:flutter/material.dart';
 import '../core/panchanga_calculator.dart';
 import '../core/masa_calculator.dart';
+import '../core/samvatsara.dart';
+import '../core/ghati_calculator.dart';
+import '../core/kala_calculator.dart';
+import '../core/ephemeris.dart';
 import '../core/events.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
@@ -22,8 +26,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Map<int, List<AstroEvent>> _monthEvents = {};
   bool _loading = false;
   int? _selectedDay;
+  Map<String, String>? _selectedKalas;
 
-  // In-memory cache for already-computed months
+  // In-memory cache
   static final Map<String, Map<int, PanchangaData>> _dataCache = {};
   static final Map<String, Map<int, List<AstroEvent>>> _eventsCache = {};
 
@@ -46,9 +51,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         _monthEvents = _eventsCache[key] ?? {};
         _loading = false;
       });
+      _computeKalas();
       return;
     }
-    // Try pre-computed asset data first (instant!)
     final pre = PrecomputedData();
     if (pre.isLoaded) {
       final data = pre.getMonthData(_currentMonth.year, _currentMonth.month);
@@ -61,10 +66,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           _monthEvents = events;
           _loading = false;
         });
+        _computeKalas();
         return;
       }
     }
-    // Fallback: compute on-demand
     _computeMonth();
   }
 
@@ -95,11 +100,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           if (ev.isNotEmpty) events[d] = ev;
         } catch (_) {}
       } catch (_) {}
-      // Yield every 2 days to keep UI responsive
       if (d % 2 == 0) await Future.delayed(Duration.zero);
     }
 
-    // Save to in-memory cache
     final key = _monthKey(_currentMonth.year, _currentMonth.month);
     _dataCache[key] = data;
     _eventsCache[key] = events;
@@ -110,6 +113,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
         _monthEvents = events;
         _loading = false;
       });
+      _computeKalas();
+    }
+  }
+
+  void _computeKalas() {
+    if (_selectedDay == null || !_monthData.containsKey(_selectedDay)) {
+      _selectedKalas = null;
+      return;
+    }
+    final d = _monthData[_selectedDay]!;
+    try {
+      final kalas = KalaCalculator.calculate(
+        sunriseJd: d.sunriseJd, sunsetJd: d.sunsetJd,
+        varaIndex: d.varaIndex, tzOffset: LocationService.tzOffset,
+      );
+      setState(() => _selectedKalas = kalas);
+    } catch (_) {
+      _selectedKalas = null;
     }
   }
 
@@ -117,37 +138,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
     setState(() {
       _currentMonth = DateTime(_currentMonth.year, _currentMonth.month + delta, 1);
       _selectedDay = null;
+      _selectedKalas = null;
     });
     _loadMonth();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: appGradientColors,
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            _buildMonthBar(),
-            _buildWeekdayHeader(),
-            Expanded(
-              child: _loading
-                ? Center(child: CircularProgressIndicator(color: kGold))
-                : _buildCalendarGrid(),
-            ),
-            if (_selectedDay != null && _monthData.containsKey(_selectedDay))
-              _buildDayDetail(_monthData[_selectedDay]!),
-          ],
-        ),
-      ),
-    );
+    return _loading
+      ? Center(child: CircularProgressIndicator(color: kGold))
+      : SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: Column(
+            children: [
+              _buildMonthBar(),
+              _buildWeekdayHeader(),
+              _buildCalendarGrid(),
+              if (_selectedDay != null && _monthData.containsKey(_selectedDay)) ...[
+                const SizedBox(height: 8),
+                _buildFullDetail(_monthData[_selectedDay]!),
+              ],
+            ],
+          ),
+        );
   }
+
+  // ─── MONTH BAR ─────────────────────────────────────────
 
   Widget _buildMonthBar() {
     final months = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -209,6 +225,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
+  // ─── WEEKDAY HEADER ────────────────────────────────────
+
   Widget _buildWeekdayHeader() {
     final days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return Padding(
@@ -223,59 +241,52 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
+  // ─── CALENDAR GRID ─────────────────────────────────────
+
   Widget _buildCalendarGrid() {
     final daysInMonth = DateUtils.getDaysInMonth(_currentMonth.year, _currentMonth.month);
-    final firstWeekday = DateTime(_currentMonth.year, _currentMonth.month, 1).weekday % 7; // 0=Sun
+    final firstWeekday = DateTime(_currentMonth.year, _currentMonth.month, 1).weekday % 7;
     final today = DateTime.now();
     final isCurrentMonth = today.year == _currentMonth.year && today.month == _currentMonth.month;
 
     final cells = <Widget>[];
-
-    // Empty cells before first day
     for (int i = 0; i < firstWeekday; i++) {
       cells.add(const SizedBox());
     }
 
-    // Day cells
     for (int d = 1; d <= daysInMonth; d++) {
       final data = _monthData[d];
       final isToday = isCurrentMonth && d == today.day;
       final isSelected = d == _selectedDay;
 
-      // Determine tithi paksha for color
       Color dayColor = kText;
       if (data != null) {
-        final ti = data.tithiIndex;
-        if (ti == 14) dayColor = const Color(0xFFFFD700); // Purnima - gold
-        if (ti == 29) dayColor = const Color(0xFF9E9E9E); // Amavasya - grey
+        if (data.tithiIndex == 14) dayColor = const Color(0xFFFFD700);
+        if (data.tithiIndex == 29) dayColor = const Color(0xFF9E9E9E);
       }
 
       cells.add(
         GestureDetector(
-          onTap: () => setState(() => _selectedDay = d),
+          onTap: () {
+            setState(() => _selectedDay = d);
+            _computeKalas();
+          },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             margin: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               color: isSelected
                 ? kGold.withAlpha(30)
-                : isToday
-                  ? kTeal.withAlpha(20)
-                  : Colors.transparent,
+                : isToday ? kTeal.withAlpha(20) : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: isSelected
-                  ? kGold
-                  : isToday
-                    ? kTeal.withAlpha(127)
-                    : kBorder.withAlpha(51),
+                color: isSelected ? kGold : isToday ? kTeal.withAlpha(127) : kBorder.withAlpha(51),
                 width: isSelected ? 2 : 1,
               ),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Day number
                 Text(
                   '$d',
                   style: TextStyle(
@@ -284,32 +295,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     color: isSelected ? kGold : isToday ? kTeal : dayColor,
                   ),
                 ),
-                // Tithi short
                 if (data != null)
                   Text(
                     _tithiShort(data.tithiIndex),
-                    style: TextStyle(
-                      fontSize: 7,
-                      color: isSelected ? kGold.withAlpha(178) : kMuted,
-                    ),
+                    style: TextStyle(fontSize: 7, color: isSelected ? kGold.withAlpha(178) : kMuted),
                   ),
-                // Event dot
                 if (_monthEvents.containsKey(d))
                   Container(
                     width: 5, height: 5,
                     margin: const EdgeInsets.only(top: 1),
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFF9800),
-                      shape: BoxShape.circle,
-                    ),
+                    decoration: BoxDecoration(color: Color(0xFFFF9800), shape: BoxShape.circle),
                   )
                 else if (data != null)
                   Text(
                     _nakShort(data.nakshatraIndex),
-                    style: TextStyle(
-                      fontSize: 6,
-                      color: isSelected ? kGold.withAlpha(127) : kMuted.withAlpha(127),
-                    ),
+                    style: TextStyle(fontSize: 6, color: isSelected ? kGold.withAlpha(127) : kMuted.withAlpha(127)),
                   ),
               ],
             ),
@@ -322,128 +322,294 @@ class _CalendarScreenState extends State<CalendarScreen> {
       crossAxisCount: 7,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       childAspectRatio: 0.85,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: cells,
     );
   }
 
-  Widget _buildDayDetail(PanchangaData d) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 380),
-      child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: kCard.withAlpha(204),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: kGold.withAlpha(51)),
-      ),
-      child: SingleChildScrollView(child: Column(
-        mainAxisSize: MainAxisSize.min,
+  // ─── FULL PANCHANGA DETAIL ─────────────────────────────
+
+  Widget _buildFullDetail(PanchangaData d) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
         children: [
-          // Date & Vara
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '$_selectedDay/${_currentMonth.month}/${_currentMonth.year}',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold),
-              ),
-              Text(AppLocale.t(d.vara), style: TextStyle(fontSize: 12, color: kGold)),
-            ],
+          // Date header
+          AppCard(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '$_selectedDay/${_currentMonth.month}/${_currentMonth.year}',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: kGold),
+                    ),
+                    Text(AppLocale.t(d.vara), style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('${AppLocale.t("udayadiGhati")}: ', style: TextStyle(fontSize: 11, color: kMuted)),
+                    Text(d.udayadiGhati, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 6),
-          // Panchanga summary
-          Row(
-            children: [
-              Expanded(child: _miniInfo(AppLocale.t('tithi'), AppLocale.t(d.tithi))),
-              Expanded(child: _miniInfo(AppLocale.t('nakshatra'), AppLocale.t(d.nakshatra))),
-            ],
+
+          // ── 5 Angas ──
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SectionHeader(icon: Icons.auto_awesome_rounded, title: AppLocale.t('panchanga')),
+                const SizedBox(height: 8),
+                _angaRow(AppLocale.t('tithi'), AppLocale.t(d.tithi), d.tithiEndTime, d.tithiEndsNextDay, d.tithiGata, d.tithiShesha, d.tithiParama),
+                const Divider(height: 12, thickness: 0.3),
+                _angaRow(AppLocale.t('nakshatra'), AppLocale.t(d.nakshatra), d.nakEndTime, d.nakEndsNextDay, d.nakGata, d.nakShesha, d.nakParama),
+                const Divider(height: 12, thickness: 0.3),
+                _angaRow(AppLocale.t('yoga'), AppLocale.t(d.yoga), d.yogaEndTime, d.yogaEndsNextDay, d.yogaGata, d.yogaShesha, d.yogaParama),
+                const Divider(height: 12, thickness: 0.3),
+                _angaRow(AppLocale.t('karana'), AppLocale.t(d.karana), d.karanaEndTime, d.karanaEndsNextDay, d.karanaGata, d.karanaShesha, d.karanaParama),
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Expanded(child: _miniInfo(AppLocale.t('yoga'), AppLocale.t(d.yoga))),
-              Expanded(child: _miniInfo(AppLocale.t('karana'), AppLocale.t(d.karana))),
-            ],
+
+          // ── Sun / Moon / Rashi ──
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SectionHeader(icon: Icons.wb_sunny_rounded, title: '${AppLocale.t("sunrise")} / ${AppLocale.t("sunset")}'),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(child: _infoTile('☀️ ${AppLocale.t("sunrise")}', d.sunrise)),
+                    Expanded(child: _infoTile('🌅 ${AppLocale.t("sunset")}', d.sunset)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(child: _infoTile(AppLocale.t('divamana'), d.divamana)),
+                    Expanded(child: _infoTile(AppLocale.t('ratrimana'), d.ratrimana)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(child: _infoTile(AppLocale.t('chandraRashi'), AppLocale.t(d.chandraRashi))),
+                    Expanded(child: _infoTile(AppLocale.t('chandraPada'), d.chandraPada)),
+                    Expanded(child: _infoTile(AppLocale.t('suryaNakshatra'), AppLocale.t(d.suryaNakshatra))),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Expanded(child: _miniInfo(AppLocale.t('sunrise'), d.sunrise)),
-              Expanded(child: _miniInfo(AppLocale.t('sunset'), d.sunset)),
-              Expanded(child: _miniInfo(AppLocale.t('chandraRashi'), AppLocale.t(d.chandraRashi))),
-            ],
+
+          // ── Calendar Systems ──
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SectionHeader(icon: Icons.calendar_today_rounded, title: 'Calendar Systems'),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(child: _infoTile('Amānta', AppLocale.t(d.amantaMasa))),
+                    Expanded(child: _infoTile('Pūrṇimānta', AppLocale.t(d.pournimantaMasa))),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Expanded(child: _infoTile('Saura', d.souraMasa)),
+                    Expanded(child: _infoTile(AppLocale.t('samvatsara'), AppLocale.t(d.samvatsara))),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Expanded(child: _infoTile(AppLocale.t('rutu'), AppLocale.t(d.rutu))),
+                    Expanded(child: _infoTile(AppLocale.t('ayana'), AppLocale.t(d.ayana))),
+                    Expanded(child: _infoTile(AppLocale.t('paksha'), AppLocale.t(d.paksha))),
+                  ],
+                ),
+              ],
+            ),
           ),
-          // Events
-          if (_selectedDay != null && _monthEvents.containsKey(_selectedDay))
-            ..._monthEvents[_selectedDay]!.map((e) => Container(
-              margin: const EdgeInsets.only(top: 6),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF9800).withAlpha(20),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFFF9800).withAlpha(76)),
-              ),
+
+          // ── Ghati & Visha/Amruta ──
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SectionHeader(icon: Icons.access_time_rounded, title: 'Ghati Details'),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(child: _infoTile('⚠️ ${AppLocale.t("vishaPraghati")}', d.vishaPraghati, isWarning: true)),
+                    Expanded(child: _infoTile('✨ ${AppLocale.t("amrutaPraghati")}', d.amrutaPraghati)),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                _infoTile(AppLocale.t('agniVasa'), d.agniVasa),
+              ],
+            ),
+          ),
+
+          // ── Kala Timings ──
+          if (_selectedKalas != null)
+            AppCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      const Text('🪔 ', style: TextStyle(fontSize: 14)),
-                      Expanded(
-                        child: Text(e.name, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFFF9800))),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 3),
-                  Text(e.description, style: TextStyle(fontSize: 9, color: kMuted)),
-                  if (e.shloka.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: kBg.withAlpha(127),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        e.shloka.replaceAll('\\\\n', '\n'),
-                        style: TextStyle(fontSize: 9, color: kGold, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                  ],
-                  if (e.meaning.isNotEmpty) ...[
-                    const SizedBox(height: 3),
-                    Text(e.meaning, style: TextStyle(fontSize: 9, color: kTeal)),
-                  ],
-                  const SizedBox(height: 2),
-                  Text('— ${e.source}', style: TextStyle(fontSize: 8, color: kMuted.withAlpha(127))),
+                  const SectionHeader(icon: Icons.warning_amber_rounded, title: 'Kāla Timings'),
+                  const SizedBox(height: 8),
+                  if (_selectedKalas!['rahuKala'] != null)
+                    KalaTimeBar(name: AppLocale.t('rahuKala'), startTime: _selectedKalas!['rahuKala']!.split('-')[0].trim(), endTime: _selectedKalas!['rahuKala']!.split('-').last.trim()),
+                  if (_selectedKalas!['yamaKala'] != null)
+                    KalaTimeBar(name: AppLocale.t('yamaKala'), startTime: _selectedKalas!['yamaKala']!.split('-')[0].trim(), endTime: _selectedKalas!['yamaKala']!.split('-').last.trim()),
+                  if (_selectedKalas!['gulikaKala'] != null)
+                    KalaTimeBar(name: AppLocale.t('gulikaKala'), startTime: _selectedKalas!['gulikaKala']!.split('-')[0].trim(), endTime: _selectedKalas!['gulikaKala']!.split('-').last.trim()),
                 ],
               ),
-            )),
+            ),
+
+          // ── Events ──
+          if (_selectedDay != null && _monthEvents.containsKey(_selectedDay))
+            AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SectionHeader(icon: Icons.celebration_rounded, title: 'Festivals & Events'),
+                  const SizedBox(height: 8),
+                  ..._monthEvents[_selectedDay]!.map((e) => Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF9800).withAlpha(20),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFFFF9800).withAlpha(76)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(children: [
+                          const Text('🪔 ', style: TextStyle(fontSize: 14)),
+                          Expanded(child: Text(e.name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFFF9800)))),
+                        ]),
+                        if (e.description.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(e.description, style: TextStyle(fontSize: 10, color: kMuted)),
+                        ],
+                        if (e.shloka.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(color: kBg.withAlpha(127), borderRadius: BorderRadius.circular(6)),
+                            child: Text(e.shloka.replaceAll('\\\\n', '\n'), style: TextStyle(fontSize: 9, color: kGold, fontStyle: FontStyle.italic)),
+                          ),
+                        ],
+                        if (e.meaning.isNotEmpty) ...[
+                          const SizedBox(height: 3),
+                          Text(e.meaning, style: TextStyle(fontSize: 10, color: kTeal)),
+                        ],
+                        const SizedBox(height: 2),
+                        Text('— ${e.source}', style: TextStyle(fontSize: 8, color: kMuted.withAlpha(127))),
+                      ],
+                    ),
+                  )),
+                ],
+              ),
+            ),
         ],
-      )),
       ),
     );
   }
 
-  Widget _miniInfo(String label, String value) {
+  // ─── HELPER WIDGETS ────────────────────────────────────
+
+  Widget _angaRow(String label, String value, String endTime, bool endsNextDay, String gata, String shesha, String parama) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 8, color: kMuted)),
-        Text(value, style: TextStyle(fontSize: 11, color: kText, fontWeight: FontWeight.w500)),
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label, style: TextStyle(fontSize: 9, color: kMuted)),
+                  Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText)),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('${AppLocale.t("endLabel")}', style: TextStyle(fontSize: 8, color: kMuted)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(endTime, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
+                      if (endsNextDay) Text(' +1', style: TextStyle(fontSize: 8, color: kAshubha)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            _ghatiChip('G', gata),
+            const SizedBox(width: 8),
+            _ghatiChip('S', shesha),
+            const SizedBox(width: 8),
+            _ghatiChip('P', parama),
+          ],
+        ),
       ],
     );
   }
 
-  /// Short tithi display: "ಶು01" = Shukla Pratipada
+  Widget _ghatiChip(String label, String value) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('$label: ', style: TextStyle(fontSize: 8, color: kMuted)),
+        Text(value, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kTeal)),
+      ],
+    );
+  }
+
+  Widget _infoTile(String label, String value, {bool isWarning = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: TextStyle(fontSize: 8, color: isWarning ? kAshubha : kMuted)),
+          Text(value.isEmpty ? '—' : value, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: isWarning ? kAshubha : kText)),
+        ],
+      ),
+    );
+  }
+
   String _tithiShort(int idx) {
     if (idx < 15) return 'ಶು${(idx + 1).toString().padLeft(2, '0')}';
     if (idx == 29) return 'ಅಮಾ';
     return 'ಕೃ${(idx - 14).toString().padLeft(2, '0')}';
   }
 
-  /// Short nakshatra: first 3 chars of Kannada name
   String _nakShort(int idx) {
     final key = 'n$idx';
     final name = AppLocale.t(key);
