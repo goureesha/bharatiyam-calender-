@@ -552,52 +552,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
         children: [
           SectionHeader(
             icon: Icons.self_improvement_rounded,
-            title: info.isPitruPaksha ? '🙏 ಪಿತೃ ಪಕ್ಷ ಶ್ರಾದ್ಧ' : 'ಶ್ರಾದ್ಧ ನಿರ್ಣಯ',
+            title: 'ಶ್ರಾದ್ಧ ನಿರ್ಣಯ',
           ),
           const SizedBox(height: 8),
 
-          // ── Pitru Paksha banner ──
-          if (info.isPitruPaksha) ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [const Color(0xFFFF6F00).withAlpha(30), const Color(0xFFE65100).withAlpha(15)],
-                ),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFFF6F00).withAlpha(76)),
-              ),
-              child: Column(
-                children: [
-                  Text(info.pitruPakshaDay, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
-                  const SizedBox(height: 4),
-                  Text(info.significance, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: kText, height: 1.4)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            if (info.isSarvaPitru || info.isBharaniShraddha || info.isAvidhavaNavami || info.isGhataChaturdashi)
-              Wrap(
-                spacing: 6, runSpacing: 6,
-                children: [
-                  if (info.isSarvaPitru) _shraddhaChip('ಸರ್ವ ಪಿತೃ', const Color(0xFFFF6F00)),
-                  if (info.isBharaniShraddha) _shraddhaChip('ಭರಣಿ ಶ್ರಾದ್ಧ', const Color(0xFF7B1FA2)),
-                  if (info.isAvidhavaNavami) _shraddhaChip('ಅವಿಧವಾ ನವಮೀ', const Color(0xFFC62828)),
-                  if (info.isGhataChaturdashi) _shraddhaChip('ಘಾತ ಚತುರ್ದಶಿ', const Color(0xFF37474F)),
-                ],
-              ),
-            const SizedBox(height: 8),
-          ],
-
-          // ── Varshika Shraddha ──
-          Text('📅 ವಾರ್ಷಿಕ ಶ್ರಾದ್ಧ', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
-          const SizedBox(height: 6),
-          _shraddhaManaTile('ಚಾಂದ್ರಮಾನ (ಅಮಾಂತ)', info.varshikaChandraAmanta),
-          const SizedBox(height: 4),
-          _shraddhaManaTile('ಚಾಂದ್ರಮಾನ (ಪೂರ್ಣಿಮಾಂತ)', info.varshikaChandraPournimanta),
-          const SizedBox(height: 4),
-          _shraddhaManaTile('ಸೌರಮಾನ', info.varshikaSoura),
 
           // ── Shraddha Rule & Timing ──
           const SizedBox(height: 10),
