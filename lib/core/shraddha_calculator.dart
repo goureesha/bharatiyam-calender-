@@ -220,11 +220,11 @@ class ShraddhaCalculator {
     ];
     String monthlyNote;
     if (isAmavasya) {
-      monthlyNote = 'ಅಮಾವಾಸ್ಯೆ — ಎಲ್ಲ ಪಿತೃಗಳ ಮಾಸಿಕ ಶ್ರಾದ್ಧ ದಿನ';
+      monthlyNote = 'ಅಮಾವಾಸ್ಯೆ — ಎಲ್ಲ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ ದಿನ';
     } else if (isPurnima) {
-      monthlyNote = 'ಹುಣ್ಣಿಮೆ — ಹುಣ್ಣಿಮೆ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಮಾಸಿಕ ಶ್ರಾದ್ಧ';
+      monthlyNote = 'ಹುಣ್ಣಿಮೆ — ಹುಣ್ಣಿಮೆ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ';
     } else if (tithiInPaksha >= 0 && tithiInPaksha < 14) {
-      monthlyNote = '$pakshaName ${tithiNames[tithiInPaksha]} — ಈ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಮಾಸಿಕ ಶ್ರಾದ್ಧ ದಿನ';
+      monthlyNote = '$pakshaName ${tithiNames[tithiInPaksha]} — ಈ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ ದಿನ';
     } else {
       monthlyNote = '';
     }

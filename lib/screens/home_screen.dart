@@ -695,7 +695,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('📅 ಮಾಸಿಕ ಶ್ರಾದ್ಧ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kTeal)),
+                  Text('📅 ಶ್ರಾದ್ಧ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kTeal)),
                   const SizedBox(height: 3),
                   Text(info.monthlyNote, style: TextStyle(fontSize: 9, color: kText)),
                 ],
