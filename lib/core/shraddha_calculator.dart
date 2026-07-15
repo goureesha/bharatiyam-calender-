@@ -1,33 +1,40 @@
-/// Shraddha Calculator — Ancestor ritual dates based on tithi, nakshatra, and masa.
+/// Shraddha Calculator — Ancestor ritual dates and daily Shraddha Nirnaya.
 ///
 /// Covers:
 /// - Pitru Paksha (Mahalaya) identification and per-tithi significance
-/// - Monthly Shraddha tithi matching
-/// - Special Shraddha days (Bharani, Avidhava Navami, etc.)
-/// - Shraddha eligibility rules
+/// - Daily Shraddha Nirnaya for every day (both Shukla and Krishna Paksha)
+/// - Special Shraddha days (Bharani, Avidhava Navami, Vyatipata, Vaidhriti, etc.)
+/// - Monthly tithi matching
 
 class ShraddhaInfo {
   final bool isPitruPaksha;
   final String pitruPakshaDay;     // e.g. "ಕೃಷ್ಣ ಏಕಾದಶಿ" during Pitru Paksha
   final String significance;       // Kannada significance text
-  final String significanceEn;     // English significance
   final bool isSarvaPitru;         // Mahalaya Amavasya — for all ancestors
   final bool isBharaniShraddha;    // Bharani nakshatra + Pitru Paksha
   final bool isAvidhavaNavami;     // K9 — married women
   final bool isGhataChaturdashi;   // K14 — accidental death
   final bool isMonthlyShraddha;    // Monthly tithi match day
   final String monthlyNote;        // Note about monthly shraddha
+  // Daily Shraddha Nirnaya
+  final String dailyNirnaya;       // Today's shraddha suitability note
+  final bool isShraddhaYogya;      // Is today suitable for shraddha?
+  final List<String> shraddhaGuna; // Positive factors
+  final List<String> shraddhaDosha;// Negative factors
   const ShraddhaInfo({
     this.isPitruPaksha = false,
     this.pitruPakshaDay = '',
     this.significance = '',
-    this.significanceEn = '',
     this.isSarvaPitru = false,
     this.isBharaniShraddha = false,
     this.isAvidhavaNavami = false,
     this.isGhataChaturdashi = false,
     this.isMonthlyShraddha = false,
     this.monthlyNote = '',
+    this.dailyNirnaya = '',
+    this.isShraddhaYogya = false,
+    this.shraddhaGuna = const [],
+    this.shraddhaDosha = const [],
   });
 }
 
@@ -52,67 +59,79 @@ class ShraddhaCalculator {
     'ಅಮಾವಾಸ್ಯೆ',          // Amavasya
   ];
 
-  /// English tithi names for Krishna Paksha
-  static const _krishnaTithiEn = [
-    'Krishna Pratipada',    // K1
-    'Krishna Dvitiya',      // K2
-    'Krishna Tritiya',      // K3
-    'Krishna Chaturthi',    // K4
-    'Krishna Panchami',     // K5
-    'Krishna Shashthi',     // K6
-    'Krishna Saptami',      // K7
-    'Krishna Ashtami',      // K8
-    'Krishna Navami',       // K9
-    'Krishna Dashami',      // K10
-    'Krishna Ekadashi',     // K11
-    'Krishna Dvadashi',     // K12
-    'Krishna Trayodashi',   // K13
-    'Krishna Chaturdashi',  // K14
-    'Amavasya',             // Amavasya
-  ];
-
   /// Pitru Paksha significance per tithi (Kannada)
   static const _pitruPakshaSignificanceKn = [
-    'ಪ್ರತಿಪದಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',                           // K1
-    'ದ್ವಿತೀಯಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',                           // K2
-    'ತೃತೀಯಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',                             // K3
-    'ಚತುರ್ಥೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ; ಸುಹಾಗಿನ/ವಿಧವೆ ಸ್ತ್ರೀಯರಿಗೂ', // K4
-    'ಪಂಚಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ; ಅವಿವಾಹಿತರಿಗೆ',               // K5
-    'ಷಷ್ಠೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',                               // K6
-    'ಸಪ್ತಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',                              // K7
-    'ಅಷ್ಟಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',                              // K8
-    'ಅವಿಧವಾ ನವಮೀ — ಸೌಭಾಗ್ಯವತಿ ಸ್ತ್ರೀಯರ (ಗಂಡನ ಮುಂಚೆ ಮೃತ) ಶ್ರಾದ್ಧ',         // K9
-    'ದಶಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',                                // K10
-    'ಏಕಾದಶಿ — ಸನ್ಯಾಸಿಗಳು/ಯತಿಗಳ ಶ್ರಾದ್ಧ',                                    // K11
-    'ದ್ವಾದಶಿ — ಸನ್ಯಾಸಿಗಳು/ಯತಿಗಳ ಶ್ರಾದ್ಧ; ವೈಷ್ಣವ ಶ್ರಾದ್ಧ',                  // K12
-    'ಮಘಾ ಶ್ರಾದ್ಧ — ತಿಥಿ ತಿಳಿಯದವರ ಶ್ರಾದ್ಧಕ್ಕೆ ಸೂಕ್ತ',                       // K13
-    'ಘಾತ ಚತುರ್ದಶಿ — ಶಸ್ತ್ರ/ಅಪಘಾತ/ಅಕಾಲ ಮರಣದ ಶ್ರಾದ್ಧ',                       // K14
-    'ಸರ್ವ ಪಿತೃ ಅಮಾವಾಸ್ಯೆ (ಮಹಾಲಯ) — ಎಲ್ಲ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',                   // Amavasya
+    'ಪ್ರತಿಪದಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
+    'ದ್ವಿತೀಯಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
+    'ತೃತೀಯಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
+    'ಚತುರ್ಥೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ; ಸುಹಾಗಿನ/ವಿಧವೆ ಸ್ತ್ರೀಯರಿಗೂ',
+    'ಪಂಚಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ; ಅವಿವಾಹಿತರಿಗೆ',
+    'ಷಷ್ಠೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
+    'ಸಪ್ತಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
+    'ಅಷ್ಟಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
+    'ಅವಿಧವಾ ನವಮೀ — ಸೌಭಾಗ್ಯವತಿ ಸ್ತ್ರೀಯರ ಶ್ರಾದ್ಧ',
+    'ದಶಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
+    'ಏಕಾದಶಿ — ಸನ್ಯಾಸಿಗಳು/ಯತಿಗಳ ಶ್ರಾದ್ಧ',
+    'ದ್ವಾದಶಿ — ಸನ್ಯಾಸಿಗಳ ಶ್ರಾದ್ಧ; ವೈಷ್ಣವ ಶ್ರಾದ್ಧ',
+    'ಮಘಾ ಶ್ರಾದ್ಧ — ತಿಥಿ ತಿಳಿಯದವರ ಶ್ರಾದ್ಧಕ್ಕೆ ಸೂಕ್ತ',
+    'ಘಾತ ಚತುರ್ದಶಿ — ಶಸ್ತ್ರ/ಅಪಘಾತ/ಅಕಾಲ ಮರಣದ ಶ್ರಾದ್ಧ',
+    'ಸರ್ವ ಪಿತೃ ಅಮಾವಾಸ್ಯೆ (ಮಹಾಲಯ) — ಎಲ್ಲ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
   ];
 
-  /// Pitru Paksha significance per tithi (English)
-  static const _pitruPakshaSignificanceEn = [
-    'Shraddha for ancestors who died on Pratipada tithi',                                // K1
-    'Shraddha for ancestors who died on Dvitiya tithi',                                  // K2
-    'Shraddha for ancestors who died on Tritiya tithi',                                  // K3
-    'Shraddha for ancestors who died on Chaturthi; also for married/widowed women',       // K4
-    'Shraddha for ancestors who died on Panchami; also for unmarried persons',            // K5
-    'Shraddha for ancestors who died on Shashthi tithi',                                  // K6
-    'Shraddha for ancestors who died on Saptami tithi',                                   // K7
-    'Shraddha for ancestors who died on Ashtami tithi',                                   // K8
-    'Avidhava Navami — Shraddha for married women who died before their husbands',        // K9
-    'Shraddha for ancestors who died on Dashami tithi',                                    // K10
-    'Ekadashi — Shraddha for Sannyasis and ascetics',                                     // K11
-    'Dvadashi — Shraddha for Sannyasis; Vaishnava Shraddha',                              // K12
-    'Magha Shraddha — Suitable when death tithi is unknown',                               // K13
-    'Ghata Chaturdashi — Shraddha for those who died by weapons/accidents/untimely death', // K14
-    'Sarva Pitru Amavasya (Mahalaya) — Universal Shraddha for ALL ancestors',              // Amavasya
-  ];
+  /// Tithis that are Shraddha-yogya (suitable for shraddha) in BOTH pakshas
+  /// Based on Dharmasindhu / Nirnayasindhu rules:
+  /// Amavasya, Purnima, Ashtami, Chaturdashi, Dvadashi, Sankranti are generally good.
+  /// Ekadashi, Chaturthi, Shashthi are generally avoided.
+  static const _shraddhaYogyaTithis = {
+    0, 1, 2, 3, 4, 5, 7, 9, 11, 14,   // Shukla: Prat-Shashti, Ashtami, Dashami, Dvadashi, Purnima
+    15, 16, 17, 18, 19, 20, 22, 24, 26, 28, 29, // Krishna: most + Amavasya
+  };
+
+  /// Tithis that are NOT suitable for shraddha (varjya tithis)
+  static const _shraddhaVarjyaTithis = {
+    6,   // Shukla Saptami (some texts)
+    10,  // Shukla Ekadashi
+    25,  // Krishna Ekadashi
+  };
+
+  /// Nakshatras suitable for shraddha
+  static const _shraddhaYogyaNakshatras = {
+    0,  // Ashwini
+    1,  // Bharani (especially good - Pitru Nakshatra)
+    3,  // Rohini
+    9,  // Magha (Pitru Nakshatra)
+    10, // Purva Phalguni
+    11, // Uttara Phalguni
+    12, // Hasta
+    16, // Anuradha
+    18, // Mula
+    20, // Uttarashada
+    21, // Shravana
+    24, // Purva Bhadra
+    25, // Uttara Bhadra
+    26, // Revati
+  };
+
+  /// Nakshatras to avoid for shraddha
+  static const _shraddhaVarjyaNakshatras = {
+    5,  // Ardra
+    6,  // Punarvasu
+    14, // Swati
+    22, // Dhanishta
+  };
+
+  /// Yogas that are special for shraddha
+  /// Vyatipata (y16) and Vaidhriti (y26) are extremely auspicious for shraddha
+  static const _shraddhaSpecialYogas = {16, 26};
+
+  /// Yogas to avoid for shraddha
+  static const _shraddhaVarjyaYogas = {8, 9, 12}; // Shula, Ganda, Vyaghata
 
   static bool _isPitruPakshaMasa(String amantaMasa) {
     final lower = amantaMasa.toLowerCase();
     return lower.contains('bhadrapada') ||
            lower.contains('ಭಾದ್ರಪದ') ||
+           lower.contains('cm5') ||
            lower.contains('ashwin') ||
            lower.contains('ಆಶ್ವಿನ');
   }
@@ -120,48 +139,123 @@ class ShraddhaCalculator {
   static ShraddhaInfo calculate({
     required int tithiIndex,
     required int nakshatraIndex,
+    required int yogaIndex,
+    required int varaIndex,
     required String amantaMasa,
-    required String paksha,
   }) {
-    final isKrishna = tithiIndex >= 15 || tithiIndex == 29;
+    final isKrishna = tithiIndex >= 15;
+    final isAmavasya = tithiIndex == 29;
+    final isPurnima = tithiIndex == 14;
     final isPitruPakshaMasa = _isPitruPakshaMasa(amantaMasa);
+    final isPitruPaksha = isPitruPakshaMasa && isKrishna;
 
     int krishnaIdx = -1;
     if (isKrishna) {
       krishnaIdx = tithiIndex >= 15 ? tithiIndex - 15 : 14;
     }
 
-    final isPitruPaksha = isPitruPakshaMasa && isKrishna;
+    // ── Daily Shraddha Nirnaya (applies to ALL days, both pakshas) ──
+    final guna = <String>[];
+    final dosha = <String>[];
 
-    if (!isPitruPaksha && !isKrishna) {
-      return const ShraddhaInfo(
-        monthlyNote: 'ಶ್ರಾದ್ಧ ಕೃಷ್ಣ ಪಕ್ಷದಲ್ಲಿ ಮಾತ್ರ (Shraddha only in Krishna Paksha)',
-      );
+    // Tithi-based
+    if (isAmavasya) {
+      guna.add('ಅಮಾವಾಸ್ಯೆ — ಎಲ್ಲ ಪಿತೃಗಳ ಶ್ರಾದ್ಧಕ್ಕೆ ಶ್ರೇಷ್ಠ');
+    } else if (isPurnima) {
+      guna.add('ಹುಣ್ಣಿಮೆ — ಶ್ರಾದ್ಧಕ್ಕೆ ಯೋಗ್ಯ ದಿನ');
+    }
+    if (_shraddhaVarjyaTithis.contains(tithiIndex)) {
+      dosha.add('ಏಕಾದಶಿ ತಿಥಿ — ಶ್ರಾದ್ಧ ವರ್ಜ್ಯ');
     }
 
-    final monthlyNote = isKrishna
-      ? '${_krishnaTithiKn[krishnaIdx]} — ಈ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಮಾಸಿಕ ಶ್ರಾದ್ಧ ದಿನ'
-      : '';
+    // Nakshatra-based
+    if (nakshatraIndex == 1) {
+      guna.add('ಭರಣಿ ನಕ್ಷತ್ರ — ಪಿತೃ ನಕ್ಷತ್ರ, ಶ್ರಾದ್ಧಕ್ಕೆ ಅತ್ಯುತ್ತಮ');
+    } else if (nakshatraIndex == 9) {
+      guna.add('ಮಘಾ ನಕ್ಷತ್ರ — ಪಿತೃ ನಕ್ಷತ್ರ, ಶ್ರಾದ್ಧಕ್ಕೆ ಉತ್ತಮ');
+    } else if (_shraddhaYogyaNakshatras.contains(nakshatraIndex)) {
+      guna.add('ಶ್ರಾದ್ಧ ಯೋಗ್ಯ ನಕ್ಷತ್ರ');
+    }
+    if (_shraddhaVarjyaNakshatras.contains(nakshatraIndex)) {
+      dosha.add('ಶ್ರಾದ್ಧ ವರ್ಜ್ಯ ನಕ್ಷತ್ರ');
+    }
 
-    if (!isPitruPaksha) {
+    // Yoga-based
+    if (_shraddhaSpecialYogas.contains(yogaIndex)) {
+      final yogaName = yogaIndex == 16 ? 'ವ್ಯತೀಪಾತ' : 'ವೈಧೃತಿ';
+      guna.add('$yogaName ಯೋಗ — ಶ್ರಾದ್ಧಕ್ಕೆ ಅತಿ ಶ್ರೇಷ್ಠ');
+    }
+    if (_shraddhaVarjyaYogas.contains(yogaIndex)) {
+      dosha.add('ಶ್ರಾದ್ಧ ವರ್ಜ್ಯ ಯೋಗ');
+    }
+
+    // Vara-based (Tuesday is inauspicious for shraddha in some texts)
+    if (varaIndex == 2) {
+      dosha.add('ಮಂಗಳವಾರ — ಕೆಲವು ಗ್ರಂಥಗಳಲ್ಲಿ ಶ್ರಾದ್ಧ ವರ್ಜ್ಯ');
+    }
+
+    // Overall suitability
+    final isShraddhaYogya = dosha.isEmpty || guna.isNotEmpty;
+
+    // Build daily nirnaya text
+    String dailyNirnaya;
+    if (guna.isNotEmpty && dosha.isEmpty) {
+      dailyNirnaya = 'ಇಂದು ಶ್ರಾದ್ಧಕ್ಕೆ ಯೋಗ್ಯ ದಿನ';
+    } else if (guna.isEmpty && dosha.isNotEmpty) {
+      dailyNirnaya = 'ಇಂದು ಶ್ರಾದ್ಧಕ್ಕೆ ವರ್ಜ್ಯ ದಿನ';
+    } else if (guna.isNotEmpty && dosha.isNotEmpty) {
+      dailyNirnaya = 'ಇಂದು ಶ್ರಾದ್ಧ — ಗುಣ ಮತ್ತು ದೋಷ ಎರಡೂ ಇವೆ';
+    } else {
+      dailyNirnaya = 'ಇಂದು ಶ್ರಾದ್ಧಕ್ಕೆ ಸಾಮಾನ್ಯ ದಿನ';
+    }
+
+    // ── Monthly Shraddha (tithi match for any day) ──
+    // If someone died on this tithi, today is their monthly shraddha
+    final tithiInPaksha = isKrishna ? tithiIndex - 15 : tithiIndex;
+    final pakshaName = isKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+    final tithiNames = [
+      'ಪ್ರತಿಪದಾ', 'ದ್ವಿತೀಯಾ', 'ತೃತೀಯಾ', 'ಚತುರ್ಥೀ', 'ಪಂಚಮೀ',
+      'ಷಷ್ಠೀ', 'ಸಪ್ತಮೀ', 'ಅಷ್ಟಮೀ', 'ನವಮೀ', 'ದಶಮೀ',
+      'ಏಕಾದಶಿ', 'ದ್ವಾದಶಿ', 'ತ್ರಯೋದಶಿ', 'ಚತುರ್ದಶಿ',
+    ];
+    String monthlyNote;
+    if (isAmavasya) {
+      monthlyNote = 'ಅಮಾವಾಸ್ಯೆ — ಎಲ್ಲ ಪಿತೃಗಳ ಮಾಸಿಕ ಶ್ರಾದ್ಧ ದಿನ';
+    } else if (isPurnima) {
+      monthlyNote = 'ಹುಣ್ಣಿಮೆ — ಹುಣ್ಣಿಮೆ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಮಾಸಿಕ ಶ್ರಾದ್ಧ';
+    } else if (tithiInPaksha >= 0 && tithiInPaksha < 14) {
+      monthlyNote = '$pakshaName ${tithiNames[tithiInPaksha]} — ಈ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಮಾಸಿಕ ಶ್ರಾದ್ಧ ದಿನ';
+    } else {
+      monthlyNote = '';
+    }
+
+    // ── Pitru Paksha (Krishna Paksha of Bhadrapada) ──
+    if (isPitruPaksha) {
       return ShraddhaInfo(
-        isMonthlyShraddha: isKrishna,
+        isPitruPaksha: true,
+        pitruPakshaDay: _krishnaTithiKn[krishnaIdx],
+        significance: _pitruPakshaSignificanceKn[krishnaIdx],
+        isSarvaPitru: krishnaIdx == 14,
+        isBharaniShraddha: (krishnaIdx == 1 || krishnaIdx == 2) && nakshatraIndex == 1,
+        isAvidhavaNavami: krishnaIdx == 8,
+        isGhataChaturdashi: krishnaIdx == 13,
+        isMonthlyShraddha: true,
         monthlyNote: monthlyNote,
-        isSarvaPitru: tithiIndex == 29,
+        dailyNirnaya: dailyNirnaya,
+        isShraddhaYogya: true, // Pitru Paksha is always yogya
+        shraddhaGuna: [...guna, 'ಪಿತೃ ಪಕ್ಷ — ಶ್ರಾದ್ಧಕ್ಕೆ ಅತ್ಯಂತ ಪವಿತ್ರ ಕಾಲ'],
+        shraddhaDosha: dosha,
       );
     }
 
     return ShraddhaInfo(
-      isPitruPaksha: true,
-      pitruPakshaDay: _krishnaTithiKn[krishnaIdx],
-      significance: _pitruPakshaSignificanceKn[krishnaIdx],
-      significanceEn: _pitruPakshaSignificanceEn[krishnaIdx],
-      isSarvaPitru: krishnaIdx == 14,
-      isBharaniShraddha: (krishnaIdx == 1 || krishnaIdx == 2) && nakshatraIndex == 1,
-      isAvidhavaNavami: krishnaIdx == 8,
-      isGhataChaturdashi: krishnaIdx == 13,
       isMonthlyShraddha: true,
       monthlyNote: monthlyNote,
+      isSarvaPitru: isAmavasya,
+      dailyNirnaya: dailyNirnaya,
+      isShraddhaYogya: isShraddhaYogya,
+      shraddhaGuna: guna,
+      shraddhaDosha: dosha,
     );
   }
 }

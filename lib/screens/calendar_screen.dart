@@ -537,8 +537,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final info = ShraddhaCalculator.calculate(
       tithiIndex: d.tithiIndex,
       nakshatraIndex: d.nakshatraIndex,
+      yogaIndex: d.yogaIndex,
+      varaIndex: d.varaIndex,
       amantaMasa: d.amantaMasa,
-      paksha: d.paksha,
     );
 
     return AppCard(
@@ -547,7 +548,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         children: [
           SectionHeader(
             icon: Icons.self_improvement_rounded,
-            title: info.isPitruPaksha ? '🙏 ಪಿತೃ ಪಕ್ಷ ಶ್ರಾದ್ಧ' : 'ಶ್ರಾದ್ಧ ವಿವರ',
+            title: info.isPitruPaksha ? '🙏 ಪಿತೃ ಪಕ್ಷ ಶ್ರಾದ್ಧ' : 'ಶ್ರಾದ್ಧ ನಿರ್ಣಯ',
           ),
           const SizedBox(height: 8),
 
@@ -565,22 +566,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
               child: Column(
                 children: [
-                  Text(
-                    info.pitruPakshaDay,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold),
-                  ),
+                  Text(info.pitruPakshaDay, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
                   const SizedBox(height: 4),
-                  Text(
-                    info.significance,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 11, color: kText, height: 1.4),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    info.significanceEn,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic),
-                  ),
+                  Text(info.significance, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: kText, height: 1.4)),
                 ],
               ),
             ),
@@ -590,18 +578,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
           // Special badges
           if (info.isSarvaPitru || info.isBharaniShraddha || info.isAvidhavaNavami || info.isGhataChaturdashi)
             Wrap(
-              spacing: 6,
-              runSpacing: 6,
+              spacing: 6, runSpacing: 6,
               children: [
-                if (info.isSarvaPitru) _shraddhaChip('ಸರ್ವ ಪಿತೃ', 'Universal', const Color(0xFFFF6F00)),
-                if (info.isBharaniShraddha) _shraddhaChip('ಭರಣಿ ಶ್ರಾದ್ಧ', 'Bharani', const Color(0xFF7B1FA2)),
-                if (info.isAvidhavaNavami) _shraddhaChip('ಅವಿಧವಾ ನವಮೀ', 'Avidhava', const Color(0xFFC62828)),
-                if (info.isGhataChaturdashi) _shraddhaChip('ಘಾತ ಚತುರ್ದಶಿ', 'Ghata', const Color(0xFF37474F)),
+                if (info.isSarvaPitru) _shraddhaChip('ಸರ್ವ ಪಿತೃ', const Color(0xFFFF6F00)),
+                if (info.isBharaniShraddha) _shraddhaChip('ಭರಣಿ ಶ್ರಾದ್ಧ', const Color(0xFF7B1FA2)),
+                if (info.isAvidhavaNavami) _shraddhaChip('ಅವಿಧವಾ ನವಮೀ', const Color(0xFFC62828)),
+                if (info.isGhataChaturdashi) _shraddhaChip('ಘಾತ ಚತುರ್ದಶಿ', const Color(0xFF37474F)),
               ],
             ),
 
           // Monthly Shraddha note
-          if (info.isMonthlyShraddha && !info.isPitruPaksha) ...[
+          if (info.monthlyNote.isNotEmpty) ...[
             const SizedBox(height: 6),
             Container(
               width: double.infinity,
@@ -614,7 +601,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('📅 ಮಾಸಿಕ ಶ್ರಾದ್ಧ (Monthly Shraddha)', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kTeal)),
+                  Text('📅 ಮಾಸಿಕ ಶ್ರಾದ್ಧ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kTeal)),
                   const SizedBox(height: 3),
                   Text(info.monthlyNote, style: TextStyle(fontSize: 9, color: kText)),
                 ],
@@ -622,35 +609,40 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
           ],
 
-          if (!info.isMonthlyShraddha && info.monthlyNote.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Text(info.monthlyNote, style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
-          ],
-
-
-          // Amavasya note
-          if (info.isSarvaPitru) ...[
-            const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF6F00).withAlpha(20),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                '🙏 ಮಹಾಲಯ ಅಮಾವಾಸ್ಯೆ — ತಿಥಿ ತಿಳಿಯದಿದ್ದರೂ ಈ ದಿನ ಎಲ್ಲ ಪಿತೃಗಳಿಗೆ ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು\n'
-                'Mahalaya Amavasya — Perform Shraddha for all ancestors even if death tithi is unknown',
-                style: TextStyle(fontSize: 9, color: kText, height: 1.4),
-              ),
+          // Daily Shraddha Nirnaya
+          const SizedBox(height: 6),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: info.isShraddhaYogya ? kGold.withAlpha(12) : kAshubha.withAlpha(12),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: info.isShraddhaYogya ? kGold.withAlpha(40) : kAshubha.withAlpha(40)),
             ),
-          ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  info.isShraddhaYogya ? '✅ ${info.dailyNirnaya}' : '⚠️ ${info.dailyNirnaya}',
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: info.isShraddhaYogya ? kGold : kAshubha),
+                ),
+                if (info.shraddhaGuna.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  ...info.shraddhaGuna.map((g) => Text('  ✦ $g', style: TextStyle(fontSize: 9, color: const Color(0xFF388E3C)))),
+                ],
+                if (info.shraddhaDosha.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  ...info.shraddhaDosha.map((d) => Text('  ⚠ $d', style: TextStyle(fontSize: 9, color: kAshubha))),
+                ],
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _shraddhaChip(String kn, String en, Color color) {
+  Widget _shraddhaChip(String label, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -658,12 +650,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         borderRadius: BorderRadius.circular(6),
         border: Border.all(color: color.withAlpha(76)),
       ),
-      child: Column(
-        children: [
-          Text(kn, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
-          Text(en, style: TextStyle(fontSize: 7, color: color.withAlpha(178))),
-        ],
-      ),
+      child: Text(label, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
     );
   }
 
