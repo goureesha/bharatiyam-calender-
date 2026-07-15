@@ -637,6 +637,9 @@ class _HomeScreenState extends State<HomeScreen> {
       amantaMasa: d.amantaMasa,
       pournimantaMasa: d.pournimantaMasa,
       souraMasa: d.souraMasa,
+      sunriseJd: d.sunriseJd,
+      sunsetJd: d.sunsetJd,
+      tithiEndJd: d.tithiEndJd,
     );
 
     return AppCard(
@@ -690,6 +693,52 @@ class _HomeScreenState extends State<HomeScreen> {
           _shraddhaManaTile('ಚಾಂದ್ರಮಾನ (ಪೂರ್ಣಿಮಾಂತ)', info.varshikaChandraPournimanta),
           const SizedBox(height: 4),
           _shraddhaManaTile('ಸೌರಮಾನ', info.varshikaSoura),
+
+          // Shraddha Rule & Timing
+          const SizedBox(height: 10),
+          Text('📋 ಶ್ರಾದ್ಧ ನಿಯಮ', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
+          const SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF455A64).withAlpha(12),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: const Color(0xFF455A64).withAlpha(30)),
+            ),
+            child: Text(info.ruleText, style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic, height: 1.4)),
+          ),
+          const SizedBox(height: 6),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: info.isTithiPresentAtAparahna ? const Color(0xFF388E3C).withAlpha(12) : kAshubha.withAlpha(12),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: info.isTithiPresentAtAparahna ? const Color(0xFF388E3C).withAlpha(40) : kAshubha.withAlpha(40)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text('ಅಪರಾಹ್ನ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${info.aparahnaStart} — ${info.aparahnaEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+                    Text('  (${info.aparahnaStartGhati} ಘಟಿ)', style: TextStyle(fontSize: 8, color: kMuted)),
+                  ],
+                ),
+                const SizedBox(height: 3),
+                Row(
+                  children: [
+                    Text('ತಿಥಿ ಅಂತ್ಯ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text(info.tithiEndTimeForRule, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(info.tithiStatusAtAparahna, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: info.isTithiPresentAtAparahna ? const Color(0xFF388E3C) : kAshubha)),
+              ],
+            ),
+          ),
         ],
       ),
     );

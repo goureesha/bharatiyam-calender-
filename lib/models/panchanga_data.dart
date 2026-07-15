@@ -106,6 +106,7 @@ class PanchangaData {
   // Raw JDs for timing calculations
   final double sunriseJd;
   final double sunsetJd;
+  final double tithiEndJd;
 
   const PanchangaData({
     required this.tithi,
@@ -188,6 +189,7 @@ class PanchangaData {
     required this.chandraAsta,
     required this.sunriseJd,
     required this.sunsetJd,
+    this.tithiEndJd = 0,
   });
 
   PanchangaData copyWith({

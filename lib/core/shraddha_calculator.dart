@@ -2,16 +2,15 @@
 ///
 /// Covers:
 /// - Varshika Shraddha: Annual ancestor rites based on masa+paksha+tithi
-///   - Chandra Mana (Amanta): uses amanta masa
-///   - Chandra Mana (Pournimanta): uses pournimanta masa
-///   - Soura Mana: uses soura masa
+///   - Chandra Mana (Amanta/Pournimanta) and Soura Mana
 /// - Mahalaya Shraddha: Pitru Paksha (Krishna Paksha of Bhadrapada)
-///   - Per-tithi significance during Pitru Paksha
-///   - Special days: Bharani, Avidhava Navami, Ghata Chaturdashi, Sarva Pitru Amavasya
+/// - Aparahna Shraddha Rule: Tithi must be present ≥2 ghati after Aparahna start
+
+import 'ephemeris.dart';
 
 class ShraddhaInfo {
   // Varshika Shraddha (annual)
-  final String varshikaChandraAmanta;    // e.g. "ಆಷಾಢ ಶುಕ್ಲ ಪ್ರತಿಪದಾ ಶ್ರಾದ್ಧ"
+  final String varshikaChandraAmanta;
   final String varshikaChandraPournimanta;
   final String varshikaSoura;
 
@@ -24,6 +23,15 @@ class ShraddhaInfo {
   final bool isAvidhavaNavami;
   final bool isGhataChaturdashi;
 
+  // Aparahna Shraddha Rule
+  final String aparahnaStart;       // Clock time
+  final String aparahnaEnd;         // Clock time
+  final String ruleText;            // Rule description
+  final bool isTithiPresentAtAparahna; // Does tithi extend into aparahna?
+  final String tithiStatusAtAparahna;  // Status text
+  final String aparahnaStartGhati;  // Ghati-vighati from sunrise
+  final String tithiEndTimeForRule; // Tithi end time used for rule check
+
   const ShraddhaInfo({
     this.varshikaChandraAmanta = '',
     this.varshikaChandraPournimanta = '',
@@ -35,33 +43,36 @@ class ShraddhaInfo {
     this.isBharaniShraddha = false,
     this.isAvidhavaNavami = false,
     this.isGhataChaturdashi = false,
+    this.aparahnaStart = '',
+    this.aparahnaEnd = '',
+    this.ruleText = '',
+    this.isTithiPresentAtAparahna = false,
+    this.tithiStatusAtAparahna = '',
+    this.aparahnaStartGhati = '',
+    this.tithiEndTimeForRule = '',
   });
 }
 
 class ShraddhaCalculator {
 
-  /// Tithi names (within paksha, 0-13 + Purnima/Amavasya)
   static const _tithiNames = [
     'ಪ್ರತಿಪದಾ', 'ದ್ವಿತೀಯಾ', 'ತೃತೀಯಾ', 'ಚತುರ್ಥೀ', 'ಪಂಚಮೀ',
     'ಷಷ್ಠೀ', 'ಸಪ್ತಮೀ', 'ಅಷ್ಟಮೀ', 'ನವಮೀ', 'ದಶಮೀ',
     'ಏಕಾದಶಿ', 'ದ್ವಾದಶಿ', 'ತ್ರಯೋದಶಿ', 'ಚತುರ್ದಶಿ',
   ];
 
-  /// Chandra Masa names (Amanta/Pournimanta share same names)
   static const _chandraMasaNames = [
     'ಚೈತ್ರ', 'ವೈಶಾಖ', 'ಜ್ಯೇಷ್ಠ', 'ಆಷಾಢ',
     'ಶ್ರಾವಣ', 'ಭಾದ್ರಪದ', 'ಆಶ್ವಿನ', 'ಕಾರ್ತಿಕ',
     'ಮಾರ್ಗಶಿರ', 'ಪುಷ್ಯ', 'ಮಾಘ', 'ಫಾಲ್ಗುಣ',
   ];
 
-  /// Soura Masa names
   static const _souraMasaNames = [
     'ಮೇಷ', 'ವೃಷಭ', 'ಮಿಥುನ', 'ಕರ್ಕ',
     'ಸಿಂಹ', 'ಕನ್ಯಾ', 'ತುಲಾ', 'ವೃಶ್ಚಿಕ',
     'ಧನು', 'ಮಕರ', 'ಕುಂಭ', 'ಮೀನ',
   ];
 
-  /// Pitru Paksha significance per tithi (Kannada)
   static const _pitruPakshaSignificanceKn = [
     'ಪ್ರತಿಪದಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
     'ದ್ವಿತೀಯಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
@@ -80,7 +91,6 @@ class ShraddhaCalculator {
     'ಸರ್ವ ಪಿತೃ ಅಮಾವಾಸ್ಯೆ (ಮಹಾಲಯ) — ಎಲ್ಲ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
   ];
 
-  /// Krishna Paksha tithi names for Pitru Paksha display
   static const _krishnaTithiKn = [
     'ಕೃಷ್ಣ ಪ್ರತಿಪದಾ', 'ಕೃಷ್ಣ ದ್ವಿತೀಯಾ', 'ಕೃಷ್ಣ ತೃತೀಯಾ',
     'ಕೃಷ್ಣ ಚತುರ್ಥೀ', 'ಕೃಷ್ಣ ಪಂಚಮೀ', 'ಕೃಷ್ಣ ಷಷ್ಠೀ',
@@ -89,21 +99,17 @@ class ShraddhaCalculator {
     'ಕೃಷ್ಣ ತ್ರಯೋದಶಿ', 'ಕೃಷ್ಣ ಚತುರ್ದಶಿ', 'ಅಮಾವಾಸ್ಯೆ',
   ];
 
-  /// Resolve a masa key (e.g. "cm3" or "ಆಷಾಢ") to a display name
   static String _resolveChandraMasa(String masaKey) {
-    // Try cmN keys
     if (masaKey.startsWith('cm') && masaKey.length <= 4) {
       final idx = int.tryParse(masaKey.substring(2));
       if (idx != null && idx >= 0 && idx < 12) return _chandraMasaNames[idx];
     }
-    // Already Kannada name
     for (final name in _chandraMasaNames) {
       if (masaKey.contains(name)) return name;
     }
     return masaKey;
   }
 
-  /// Resolve soura masa key (e.g. "sm2" or "ಮಿಥುನ") to a display name
   static String _resolveSouraMasa(String masaKey) {
     if (masaKey.startsWith('sm') && masaKey.length <= 4) {
       final idx = int.tryParse(masaKey.substring(2));
@@ -124,12 +130,29 @@ class ShraddhaCalculator {
            lower.contains('ಆಶ್ವಿನ');
   }
 
+  /// Calculate Aparahna timing.
+  /// Day is divided into 5 equal parts (Panchabhaga):
+  /// 1. Pratah  2. Sangava  3. Madhyahna  4. Aparahna  5. Sayahna
+  /// Aparahna = 4th part = sunrise + (3/5)*dayDuration to sunrise + (4/5)*dayDuration
+  static Map<String, double> _calcAparahna(double sunriseJd, double sunsetJd) {
+    final dayDuration = sunsetJd - sunriseJd;
+    final partDuration = dayDuration / 5.0;
+    return {
+      'startJd': sunriseJd + 3 * partDuration,
+      'endJd': sunriseJd + 4 * partDuration,
+    };
+  }
+
   static ShraddhaInfo calculate({
     required int tithiIndex,
     required int nakshatraIndex,
     required String amantaMasa,
     required String pournimantaMasa,
     required String souraMasa,
+    required double sunriseJd,
+    required double sunsetJd,
+    required double tithiEndJd,
+    double tzOffset = 5.5,
   }) {
     final isKrishna = tithiIndex >= 15;
     final isAmavasya = tithiIndex == 29;
@@ -137,8 +160,7 @@ class ShraddhaCalculator {
     final isPitruPakshaMasa = _isPitruPakshaMasa(amantaMasa);
     final isPitruPaksha = isPitruPakshaMasa && isKrishna;
 
-    // ── Varshika Shraddha (for every day) ──
-    // Build: "MasaName PakshaName TithiName ಶ್ರಾದ್ಧ"
+    // ── Varshika Shraddha ──
     final pakshaName = isKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
     String tithiName;
     if (isAmavasya) {
@@ -158,11 +180,7 @@ class ShraddhaCalculator {
     String varshikaChandraPournimanta;
     String varshikaSoura;
 
-    if (isAmavasya) {
-      varshikaChandraAmanta = '$amantaName $tithiName ಶ್ರಾದ್ಧ';
-      varshikaChandraPournimanta = '$pournimantaName $tithiName ಶ್ರಾದ್ಧ';
-      varshikaSoura = '$souraName $tithiName ಶ್ರಾದ್ಧ';
-    } else if (isPurnima) {
+    if (isAmavasya || isPurnima) {
       varshikaChandraAmanta = '$amantaName $tithiName ಶ್ರಾದ್ಧ';
       varshikaChandraPournimanta = '$pournimantaName $tithiName ಶ್ರಾದ್ಧ';
       varshikaSoura = '$souraName $tithiName ಶ್ರಾದ್ಧ';
@@ -171,6 +189,39 @@ class ShraddhaCalculator {
       varshikaChandraPournimanta = '$pournimantaName $pakshaName $tithiName ಶ್ರಾದ್ಧ';
       varshikaSoura = '$souraName $pakshaName $tithiName ಶ್ರಾದ್ಧ';
     }
+
+    // ── Aparahna Rule ──
+    // Rule: ತಿಥಿ ಅಪರಾಹ್ನ ಆರಂಭದಿಂದ ಕನಿಷ್ಠ ೨ ಘಟಿ ಇರಬೇಕು
+    // 2 ghati = 48 minutes = 48/1440 days
+    final aparahna = _calcAparahna(sunriseJd, sunsetJd);
+    final aparahnaStartJd = aparahna['startJd']!;
+    final aparahnaEndJd = aparahna['endJd']!;
+    final twoGhatiJd = 2.0 / 60.0; // 2 ghati in days (2/60 of a day = 48 min)
+    final ruleCheckJd = aparahnaStartJd + twoGhatiJd;
+
+    final aparahnaStartTime = Ephemeris.formatTimeFromJd(aparahnaStartJd, tzOffset: tzOffset);
+    final aparahnaEndTime = Ephemeris.formatTimeFromJd(aparahnaEndJd, tzOffset: tzOffset);
+    final tithiEndTimeForRule = Ephemeris.formatTimeFromJd(tithiEndJd, tzOffset: tzOffset);
+
+    // Aparahna start in ghati from sunrise
+    final aparahnaStartGhati = (aparahnaStartJd - sunriseJd) * 60.0;
+    final aparahnaGhatiStr = Ephemeris.formatGhati(aparahnaStartGhati);
+
+    // Check if tithi extends past aparahna + 2 ghati
+    final isTithiPresent = tithiEndJd >= ruleCheckJd;
+
+    String tithiStatus;
+    if (tithiEndJd >= aparahnaEndJd) {
+      tithiStatus = '✅ ತಿಥಿ ಅಪರಾಹ್ನ ಕಾಲದಾಚೆಗೂ ಇದೆ — ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
+    } else if (isTithiPresent) {
+      tithiStatus = '✅ ತಿಥಿ ಅಪರಾಹ್ನ ಆರಂಭದಿಂದ ೨ ಘಟಿ ಮೇಲೆ ಇದೆ — ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
+    } else if (tithiEndJd >= aparahnaStartJd) {
+      tithiStatus = '⚠️ ತಿಥಿ ಅಪರಾಹ್ನದಲ್ಲಿ ೨ ಘಟಿ ಇಲ್ಲ — ಹಿಂದಿನ ದಿನ ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+    } else {
+      tithiStatus = '⚠️ ತಿಥಿ ಅಪರಾಹ್ನಕ್ಕೆ ಮೊದಲೇ ಮುಗಿಯುತ್ತದೆ — ಹಿಂದಿನ ದಿನ ಶ್ರಾದ್ಧ';
+    }
+
+    final ruleText = 'ನಿಯಮ: ತಿಥಿ ಅಪರಾಹ್ನ ಆರಂಭದಿಂದ ಕನಿಷ್ಠ ೨ ಘಟಿ (೪೮ ನಿಮಿಷ) ಇರಬೇಕು';
 
     // ── Pitru Paksha / Mahalaya ──
     int krishnaIdx = -1;
@@ -190,6 +241,13 @@ class ShraddhaCalculator {
         isBharaniShraddha: (krishnaIdx == 1 || krishnaIdx == 2) && nakshatraIndex == 1,
         isAvidhavaNavami: krishnaIdx == 8,
         isGhataChaturdashi: krishnaIdx == 13,
+        aparahnaStart: aparahnaStartTime,
+        aparahnaEnd: aparahnaEndTime,
+        ruleText: ruleText,
+        isTithiPresentAtAparahna: isTithiPresent,
+        tithiStatusAtAparahna: tithiStatus,
+        aparahnaStartGhati: aparahnaGhatiStr,
+        tithiEndTimeForRule: tithiEndTimeForRule,
       );
     }
 
@@ -198,6 +256,13 @@ class ShraddhaCalculator {
       varshikaChandraPournimanta: varshikaChandraPournimanta,
       varshikaSoura: varshikaSoura,
       isSarvaPitru: isAmavasya,
+      aparahnaStart: aparahnaStartTime,
+      aparahnaEnd: aparahnaEndTime,
+      ruleText: ruleText,
+      isTithiPresentAtAparahna: isTithiPresent,
+      tithiStatusAtAparahna: tithiStatus,
+      aparahnaStartGhati: aparahnaGhatiStr,
+      tithiEndTimeForRule: tithiEndTimeForRule,
     );
   }
 }
