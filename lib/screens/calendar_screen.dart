@@ -594,6 +594,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 const SizedBox(height: 3),
                 Row(
                   children: [
+                    Text('ಅಪರಾಹ್ನ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${info.aparahnaTimeStart} — ${info.aparahnaTimeEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+                  ],
+                ),
+                const SizedBox(height: 3),
+                Row(
+                  children: [
                     Text('ತಿಥಿ ಅಂತ್ಯ: ', style: TextStyle(fontSize: 9, color: kMuted)),
                     Text(info.tithiEndTimeForRule, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                   ],

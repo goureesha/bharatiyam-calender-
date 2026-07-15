@@ -23,15 +23,17 @@ class ShraddhaInfo {
   final bool isAvidhavaNavami;
   final bool isGhataChaturdashi;
 
-  // Aparahna Shraddha Rule
-  final String aparahnaStart;       // Clock time
-  final String aparahnaEnd;         // Clock time
+  // Kutupa Kala & Aparahna timing
+  final String aparahnaStart;       // Kutupa start clock time
+  final String aparahnaEnd;         // Kutupa end clock time
   final String ruleText;            // Rule description
-  final bool isTithiPresentAtAparahna; // Does sunrise tithi extend into aparahna?
+  final bool isTithiPresentAtAparahna; // Does sunrise tithi extend into kutupa?
   final String tithiStatusAtAparahna;  // Status text
-  final String aparahnaStartGhati;  // Ghati-vighati from sunrise
-  final String tithiEndTimeForRule; // Tithi end time used for rule check
-  final String aparahnaShraddha;    // Which shraddha can be done at aparahna
+  final String aparahnaStartGhati;  // Kutupa ghati from sunrise
+  final String tithiEndTimeForRule; // Tithi end time
+  final String aparahnaShraddha;    // Which shraddha can be done
+  final String aparahnaTimeStart;   // Aparahna (4th of 5 parts) start
+  final String aparahnaTimeEnd;     // Aparahna (4th of 5 parts) end
 
   const ShraddhaInfo({
     this.varshikaChandraAmanta = '',
@@ -52,6 +54,8 @@ class ShraddhaInfo {
     this.aparahnaStartGhati = '',
     this.tithiEndTimeForRule = '',
     this.aparahnaShraddha = '',
+    this.aparahnaTimeStart = '',
+    this.aparahnaTimeEnd = '',
   });
 }
 
@@ -144,6 +148,18 @@ class ShraddhaCalculator {
     };
   }
 
+  /// Calculate Aparahna timing.
+  /// Day is divided into 5 equal parts (Panchabhaga):
+  /// 1. Pratah  2. Sangava  3. Madhyahna  4. Aparahna  5. Sayahna
+  static Map<String, double> _calcAparahna(double sunriseJd, double sunsetJd) {
+    final dayDuration = sunsetJd - sunriseJd;
+    final partDuration = dayDuration / 5.0;
+    return {
+      'startJd': sunriseJd + 3 * partDuration,
+      'endJd': sunriseJd + 4 * partDuration,
+    };
+  }
+
   static ShraddhaInfo calculate({
     required int tithiIndex,
     required int nakshatraIndex,
@@ -198,8 +214,15 @@ class ShraddhaCalculator {
     final kutupaStartJd = kutupa['startJd']!;
     final kutupaEndJd = kutupa['endJd']!;
 
+    // ── Aparahna (4th of 5 parts) ──
+    final aparahna = _calcAparahna(sunriseJd, sunsetJd);
+    final aparahnaStartJd = aparahna['startJd']!;
+    final aparahnaEndJd = aparahna['endJd']!;
+
     final kutupaStartTime = Ephemeris.formatTimeFromJd(kutupaStartJd, tzOffset: tzOffset);
     final kutupaEndTime = Ephemeris.formatTimeFromJd(kutupaEndJd, tzOffset: tzOffset);
+    final aparahnaStartTimeStr = Ephemeris.formatTimeFromJd(aparahnaStartJd, tzOffset: tzOffset);
+    final aparahnaEndTimeStr = Ephemeris.formatTimeFromJd(aparahnaEndJd, tzOffset: tzOffset);
     final tithiEndTimeForRule = Ephemeris.formatTimeFromJd(tithiEndJd, tzOffset: tzOffset);
 
     // Kutupa start in ghati from sunrise
@@ -324,6 +347,8 @@ class ShraddhaCalculator {
         aparahnaStartGhati: kutupaGhatiStr,
         tithiEndTimeForRule: tithiEndTimeForRule,
         aparahnaShraddha: aparahnaShraddha,
+        aparahnaTimeStart: aparahnaStartTimeStr,
+        aparahnaTimeEnd: aparahnaEndTimeStr,
       );
     }
 
@@ -340,6 +365,8 @@ class ShraddhaCalculator {
       aparahnaStartGhati: kutupaGhatiStr,
       tithiEndTimeForRule: tithiEndTimeForRule,
       aparahnaShraddha: aparahnaShraddha,
+      aparahnaTimeStart: aparahnaStartTimeStr,
+      aparahnaTimeEnd: aparahnaEndTimeStr,
     );
   }
 }
