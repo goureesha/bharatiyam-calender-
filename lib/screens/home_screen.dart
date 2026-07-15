@@ -6,6 +6,7 @@ import '../core/kala_calculator.dart';
 import '../core/ghati_calculator.dart';
 import '../core/masa_calculator.dart';
 import '../core/samvatsara.dart';
+import '../core/shraddha_calculator.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
@@ -457,6 +458,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
+          // ── Shraddha Details ──
+          _buildShraddhaCard(d),
+
           // ── View Full Details button ──
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -578,6 +582,117 @@ class _HomeScreenState extends State<HomeScreen> {
           Text(value, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: color)),
         ],
       ),
+    );
+  }
+
+  Widget _buildShraddhaCard(PanchangaData d) {
+    final info = ShraddhaCalculator.calculate(
+      tithiIndex: d.tithiIndex,
+      nakshatraIndex: d.nakshatraIndex,
+      amantaMasa: d.amantaMasa,
+      paksha: d.paksha,
+    );
+
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SectionHeader(
+            icon: Icons.self_improvement_rounded,
+            title: info.isPitruPaksha ? '🙏 ಪಿತೃ ಪಕ್ಷ ಶ್ರಾದ್ಧ' : 'ಶ್ರಾದ್ಧ ವಿವರ',
+          ),
+          const SizedBox(height: 8),
+
+          if (info.isPitruPaksha) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [const Color(0xFFFF6F00).withAlpha(30), const Color(0xFFE65100).withAlpha(15)],
+                ),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFF6F00).withAlpha(76)),
+              ),
+              child: Column(
+                children: [
+                  Text(info.pitruPakshaDay, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                  const SizedBox(height: 4),
+                  Text(info.significance, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: kText, height: 1.4)),
+                  const SizedBox(height: 4),
+                  Text(info.significanceEn, textAlign: TextAlign.center, style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+
+          if (info.isSarvaPitru || info.isBharaniShraddha || info.isAvidhavaNavami || info.isGhataChaturdashi)
+            Wrap(
+              spacing: 6, runSpacing: 6,
+              children: [
+                if (info.isSarvaPitru) _shraddhaTag('ಸರ್ವ ಪಿತೃ', const Color(0xFFFF6F00)),
+                if (info.isBharaniShraddha) _shraddhaTag('ಭರಣಿ ಶ್ರಾದ್ಧ', const Color(0xFF7B1FA2)),
+                if (info.isAvidhavaNavami) _shraddhaTag('ಅವಿಧವಾ ನವಮೀ', const Color(0xFFC62828)),
+                if (info.isGhataChaturdashi) _shraddhaTag('ಘಾತ ಚತುರ್ದಶಿ', const Color(0xFF37474F)),
+              ],
+            ),
+
+          if (info.isMonthlyShraddha && !info.isPitruPaksha) ...[
+            const SizedBox(height: 6),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: kTeal.withAlpha(15),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: kTeal.withAlpha(51)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('📅 ಮಾಸಿಕ ಶ್ರಾದ್ಧ (Monthly Shraddha)', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kTeal)),
+                  const SizedBox(height: 3),
+                  Text(info.monthlyNote, style: TextStyle(fontSize: 9, color: kText)),
+                ],
+              ),
+            ),
+          ],
+
+          if (!info.isMonthlyShraddha && info.monthlyNote.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(info.monthlyNote, style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
+          ],
+
+          if (info.isSarvaPitru) ...[
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF6F00).withAlpha(20),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                '🙏 ಮಹಾಲಯ ಅಮಾವಾಸ್ಯೆ — ಎಲ್ಲ ಪಿತೃಗಳಿಗೆ ಶ್ರಾದ್ಧ\nMahalaya Amavasya — Universal Shraddha for all ancestors',
+                style: TextStyle(fontSize: 9, color: kText, height: 1.4),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _shraddhaTag(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withAlpha(20),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withAlpha(76)),
+      ),
+      child: Text(text, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
     );
   }
 
