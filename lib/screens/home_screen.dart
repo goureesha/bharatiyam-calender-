@@ -373,6 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _limbWithGhati(
                   label: AppLocale.t('tithi'),
                   value: AppLocale.t(d.tithi),
+                  currentName: d.currentTithi.isNotEmpty && d.currentTithi != d.tithi ? AppLocale.t(d.currentTithi) : null,
                   endTime: d.tithiEndTime,
                   endsNextDay: d.tithiEndsNextDay,
                   gata: d.tithiGata, shesha: d.tithiShesha, parama: d.tithiParama,
@@ -381,6 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _limbWithGhati(
                   label: AppLocale.t('nakshatra'),
                   value: '${AppLocale.t(d.nakshatra)} (${AppLocale.t("pada")} ${d.chandraPada})',
+                  currentName: d.currentNakshatra.isNotEmpty && d.currentNakshatra != d.nakshatra ? AppLocale.t(d.currentNakshatra) : null,
                   endTime: d.nakEndTime,
                   endsNextDay: d.nakEndsNextDay,
                   gata: d.nakGata, shesha: d.nakShesha, parama: d.nakParama,
@@ -389,6 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _limbWithGhati(
                   label: AppLocale.t('yoga'),
                   value: AppLocale.t(d.yoga),
+                  currentName: d.currentYoga.isNotEmpty && d.currentYoga != d.yoga ? AppLocale.t(d.currentYoga) : null,
                   endTime: d.yogaEndTime,
                   endsNextDay: d.yogaEndsNextDay,
                   gata: d.yogaGata, shesha: d.yogaShesha, parama: d.yogaParama,
@@ -397,6 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _limbWithGhati(
                   label: AppLocale.t('karana'),
                   value: AppLocale.t(d.karana),
+                  currentName: d.currentKarana.isNotEmpty && d.currentKarana != d.karana ? AppLocale.t(d.currentKarana) : null,
                   endTime: d.karanaEndTime,
                   endsNextDay: d.karanaEndsNextDay,
                   gata: d.karanaGata, shesha: d.karanaShesha, parama: d.karanaParama,
@@ -504,6 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _limbWithGhati({
     required String label,
     required String value,
+    String? currentName,
     required String endTime,
     required bool endsNextDay,
     required String gata,
@@ -531,6 +536,25 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText)),
             ],
           ),
+          // Current anga (if different from sunrise)
+          if (currentName != null) ...[
+            const SizedBox(height: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: kTeal.withAlpha(15),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: kTeal.withAlpha(51)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('⏱ ಈಗ: ', style: TextStyle(fontSize: 9, color: kTeal, fontWeight: FontWeight.bold)),
+                  Text(currentName, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kTeal)),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: 4),
           // End time + next day flag
           Row(

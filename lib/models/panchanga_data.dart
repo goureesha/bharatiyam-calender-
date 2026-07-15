@@ -52,6 +52,12 @@ class PanchangaData {
   final String karanaGataNow;
   final String karanaSheshaNow;
 
+  // Current anga names (may differ from sunrise if transitioned)
+  final String currentTithi;
+  final String currentNakshatra;
+  final String currentYoga;
+  final String currentKarana;
+
   // Sun & Moon
   final String sunrise;
   final String sunset;
@@ -127,6 +133,10 @@ class PanchangaData {
     this.yogaSheshaNow = '',
     this.karanaGataNow = '',
     this.karanaSheshaNow = '',
+    this.currentTithi = '',
+    this.currentNakshatra = '',
+    this.currentYoga = '',
+    this.currentKarana = '',
     required this.sunrise,
     required this.sunset,
     required this.chandraRashi,
@@ -169,6 +179,10 @@ class PanchangaData {
     String? yogaSheshaNow,
     String? karanaGataNow,
     String? karanaSheshaNow,
+    String? currentTithi,
+    String? currentNakshatra,
+    String? currentYoga,
+    String? currentKarana,
   }) => PanchangaData(
     tithi: tithi, vara: vara, nakshatra: nakshatra, yoga: yoga, karana: karana,
     tithiIndex: tithiIndex, nakshatraIndex: nakshatraIndex, yogaIndex: yogaIndex,
@@ -190,6 +204,10 @@ class PanchangaData {
     yogaSheshaNow: yogaSheshaNow ?? this.yogaSheshaNow,
     karanaGataNow: karanaGataNow ?? this.karanaGataNow,
     karanaSheshaNow: karanaSheshaNow ?? this.karanaSheshaNow,
+    currentTithi: currentTithi ?? this.currentTithi,
+    currentNakshatra: currentNakshatra ?? this.currentNakshatra,
+    currentYoga: currentYoga ?? this.currentYoga,
+    currentKarana: currentKarana ?? this.currentKarana,
     sunrise: sunrise, sunset: sunset,
     chandraRashi: chandraRashi, chandraPada: chandraPada,
     suryaNakshatra: suryaNakshatra, suryaPada: suryaPada, nakPercent: nakPercent,
