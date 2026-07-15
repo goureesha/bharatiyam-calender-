@@ -537,9 +537,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final info = ShraddhaCalculator.calculate(
       tithiIndex: d.tithiIndex,
       nakshatraIndex: d.nakshatraIndex,
-      yogaIndex: d.yogaIndex,
-      varaIndex: d.varaIndex,
       amantaMasa: d.amantaMasa,
+      pournimantaMasa: d.pournimantaMasa,
+      souraMasa: d.souraMasa,
     );
 
     return AppCard(
@@ -552,7 +552,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           const SizedBox(height: 8),
 
-          // Pitru Paksha banner
+          // ── Pitru Paksha banner ──
           if (info.isPitruPaksha) ...[
             Container(
               width: double.infinity,
@@ -573,70 +573,47 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
             ),
             const SizedBox(height: 8),
-          ],
-
-          // Special badges
-          if (info.isSarvaPitru || info.isBharaniShraddha || info.isAvidhavaNavami || info.isGhataChaturdashi)
-            Wrap(
-              spacing: 6, runSpacing: 6,
-              children: [
-                if (info.isSarvaPitru) _shraddhaChip('ಸರ್ವ ಪಿತೃ', const Color(0xFFFF6F00)),
-                if (info.isBharaniShraddha) _shraddhaChip('ಭರಣಿ ಶ್ರಾದ್ಧ', const Color(0xFF7B1FA2)),
-                if (info.isAvidhavaNavami) _shraddhaChip('ಅವಿಧವಾ ನವಮೀ', const Color(0xFFC62828)),
-                if (info.isGhataChaturdashi) _shraddhaChip('ಘಾತ ಚತುರ್ದಶಿ', const Color(0xFF37474F)),
-              ],
-            ),
-
-          // Monthly Shraddha note
-          if (info.monthlyNote.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: kTeal.withAlpha(15),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: kTeal.withAlpha(51)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            if (info.isSarvaPitru || info.isBharaniShraddha || info.isAvidhavaNavami || info.isGhataChaturdashi)
+              Wrap(
+                spacing: 6, runSpacing: 6,
                 children: [
-                  Text('📅 ಶ್ರಾದ್ಧ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kTeal)),
-                  const SizedBox(height: 3),
-                  Text(info.monthlyNote, style: TextStyle(fontSize: 9, color: kText)),
+                  if (info.isSarvaPitru) _shraddhaChip('ಸರ್ವ ಪಿತೃ', const Color(0xFFFF6F00)),
+                  if (info.isBharaniShraddha) _shraddhaChip('ಭರಣಿ ಶ್ರಾದ್ಧ', const Color(0xFF7B1FA2)),
+                  if (info.isAvidhavaNavami) _shraddhaChip('ಅವಿಧವಾ ನವಮೀ', const Color(0xFFC62828)),
+                  if (info.isGhataChaturdashi) _shraddhaChip('ಘಾತ ಚತುರ್ದಶಿ', const Color(0xFF37474F)),
                 ],
               ),
-            ),
+            const SizedBox(height: 8),
           ],
 
-          // Daily Shraddha Nirnaya
+          // ── Varshika Shraddha ──
+          Text('📅 ವಾರ್ಷಿಕ ಶ್ರಾದ್ಧ', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
           const SizedBox(height: 6),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: info.isShraddhaYogya ? kGold.withAlpha(12) : kAshubha.withAlpha(12),
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: info.isShraddhaYogya ? kGold.withAlpha(40) : kAshubha.withAlpha(40)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  info.isShraddhaYogya ? '✅ ${info.dailyNirnaya}' : '⚠️ ${info.dailyNirnaya}',
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: info.isShraddhaYogya ? kGold : kAshubha),
-                ),
-                if (info.shraddhaGuna.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  ...info.shraddhaGuna.map((g) => Text('  ✦ $g', style: TextStyle(fontSize: 9, color: const Color(0xFF388E3C)))),
-                ],
-                if (info.shraddhaDosha.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  ...info.shraddhaDosha.map((d) => Text('  ⚠ $d', style: TextStyle(fontSize: 9, color: kAshubha))),
-                ],
-              ],
-            ),
-          ),
+          _shraddhaManaTile('ಚಾಂದ್ರಮಾನ (ಅಮಾಂತ)', info.varshikaChandraAmanta),
+          const SizedBox(height: 4),
+          _shraddhaManaTile('ಚಾಂದ್ರಮಾನ (ಪೂರ್ಣಿಮಾಂತ)', info.varshikaChandraPournimanta),
+          const SizedBox(height: 4),
+          _shraddhaManaTile('ಸೌರಮಾನ', info.varshikaSoura),
+        ],
+      ),
+    );
+  }
+
+  Widget _shraddhaManaTile(String manaLabel, String shraddhaText) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: kTeal.withAlpha(10),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: kTeal.withAlpha(30)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(manaLabel, style: TextStyle(fontSize: 8, color: kMuted, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 2),
+          Text(shraddhaText, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
         ],
       ),
     );
