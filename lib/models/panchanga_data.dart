@@ -274,7 +274,7 @@ class PanchangaData {
     agniVasa: agniVasa,
     shakaVarsha: shakaVarsha, paksha: paksha,
     chandraUdaya: chandraUdaya, chandraAsta: chandraAsta,
-    sunriseJd: sunriseJd, sunsetJd: sunsetJd,
+    sunriseJd: sunriseJd, sunsetJd: sunsetJd, tithiEndJd: tithiEndJd,
   );
 
   Map<String, dynamic> toJson() => {
@@ -293,7 +293,7 @@ class PanchangaData {
     'ru': rutu, 'ay': ayana, 'dm': divamana, 'rm': ratrimana,
     'vP': vishaPraghati, 'aP': amrutaPraghati, 'ag': agniVasa,
     'sk': shakaVarsha, 'pk': paksha, 'cu': chandraUdaya, 'ca': chandraAsta,
-    'rJ': sunriseJd, 'sJ': sunsetJd,
+    'rJ': sunriseJd, 'sJ': sunsetJd, 'tEJ': tithiEndJd,
   };
 
   factory PanchangaData.fromJson(Map<String, dynamic> j) => PanchangaData(
@@ -321,7 +321,7 @@ class PanchangaData {
     vishaPraghati: j['vP'] ?? '', amrutaPraghati: j['aP'] ?? '', agniVasa: j['ag'] ?? '',
     shakaVarsha: j['sk'] ?? 0, paksha: j['pk'] ?? '',
     chandraUdaya: j['cu'] ?? '', chandraAsta: j['ca'] ?? '',
-    sunriseJd: (j['rJ'] ?? 0).toDouble(), sunsetJd: (j['sJ'] ?? 0).toDouble(),
+    sunriseJd: (j['rJ'] ?? 0).toDouble(), sunsetJd: (j['sJ'] ?? 0).toDouble(), tithiEndJd: (j['tEJ'] ?? 0).toDouble(),
   );
 }
 
