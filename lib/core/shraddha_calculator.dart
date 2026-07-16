@@ -35,6 +35,11 @@ class ShraddhaInfo {
   final String aparahnaTimeStart;   // Aparahna (4th of 5 parts) start
   final String aparahnaTimeEnd;     // Aparahna (4th of 5 parts) end
 
+  // Next tithi's shraddha (when sunrise tithi ends during the day)
+  final String nextTithiShraddha;   // Next tithi's shraddha name
+  final String nextTithiStatus;     // Next tithi's kutupa status
+  final String nextTithiEndTime;    // Next tithi's end time
+
   const ShraddhaInfo({
     this.varshikaChandraAmanta = '',
     this.varshikaChandraPournimanta = '',
@@ -56,6 +61,9 @@ class ShraddhaInfo {
     this.aparahnaShraddha = '',
     this.aparahnaTimeStart = '',
     this.aparahnaTimeEnd = '',
+    this.nextTithiShraddha = '',
+    this.nextTithiStatus = '',
+    this.nextTithiEndTime = '',
   });
 }
 
@@ -314,6 +322,55 @@ class ShraddhaCalculator {
       tithiStatus += '\n📌 ಕುತುಪ ಕಾಲದಲ್ಲಿ $kpPakshaName $kpTithiName ಇದೆ';
     }
 
+    // ── Next Tithi Shraddha ──
+    // If the sunrise tithi ends before sunset, the next tithi starts during this day.
+    // That next tithi's shraddha can also be performed today.
+    String nextTithiShraddha = '';
+    String nextTithiStatus = '';
+    String nextTithiEndTime = '';
+
+    final nextTithiIdx = (tithiIndex + 1) % 30;
+    final bool sunriseTithiEndsDuringDay = tithiEndJd < sunsetJd;
+
+    if (sunriseTithiEndsDuringDay) {
+      // Next tithi starts at tithiEndJd
+      final ntIsKrishna = nextTithiIdx >= 15;
+      final ntIsAmavasya = nextTithiIdx == 29;
+      final ntIsPurnima = nextTithiIdx == 14;
+      final ntPakshaName = ntIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+      String ntTithiName;
+      if (ntIsAmavasya) {
+        ntTithiName = 'ಅಮಾವಾಸ್ಯೆ';
+      } else if (ntIsPurnima) {
+        ntTithiName = 'ಹುಣ್ಣಿಮೆ';
+      } else {
+        final ntTithiInPaksha = ntIsKrishna ? nextTithiIdx - 15 : nextTithiIdx;
+        ntTithiName = (ntTithiInPaksha >= 0 && ntTithiInPaksha < 14) ? _tithiNames[ntTithiInPaksha] : '';
+      }
+
+      // Build next tithi shraddha name
+      if (ntIsAmavasya || ntIsPurnima) {
+        nextTithiShraddha = '$amantaName $ntTithiName ಶ್ರಾದ್ಧ';
+      } else {
+        nextTithiShraddha = '$amantaName $ntPakshaName $ntTithiName ಶ್ರಾದ್ಧ';
+      }
+
+      // Check if next tithi is present at Kutupa Kala
+      // Next tithi starts at tithiEndJd, so it's at Kutupa if tithiEndJd < kutupaEndJd
+      // (i.e. the next tithi has started before Kutupa ends)
+      final isNextAtKutupa = tithiEndJd < kutupaEndJd && tithiEndJd >= kutupaStartJd;
+      // Or the sunrise tithi already ended before Kutupa, so next tithi IS at Kutupa
+      final nextTithiAtKutupa = !isTithiPresent || isNextAtKutupa;
+
+      if (nextTithiAtKutupa) {
+        nextTithiStatus = '✅ $ntPakshaName $ntTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
+      } else {
+        nextTithiStatus = 'ℹ️ $ntPakshaName $ntTithiName — ಇಂದು ಆರಂಭ';
+      }
+
+      nextTithiEndTime = '(ಮರುದಿನ)'; // Next tithi typically ends next day
+    }
+
     String ruleText;
     if (isKshayaTithi) {
       ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು\nಕ್ಷಯೇ ಪೂರ್ವ: ಕ್ಷಯ ತಿಥಿಯಲ್ಲಿ ಪ್ರಥಮ ದಿನ ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
@@ -349,6 +406,9 @@ class ShraddhaCalculator {
         aparahnaShraddha: aparahnaShraddha,
         aparahnaTimeStart: aparahnaStartTimeStr,
         aparahnaTimeEnd: aparahnaEndTimeStr,
+        nextTithiShraddha: nextTithiShraddha,
+        nextTithiStatus: nextTithiStatus,
+        nextTithiEndTime: nextTithiEndTime,
       );
     }
 
@@ -367,6 +427,9 @@ class ShraddhaCalculator {
       aparahnaShraddha: aparahnaShraddha,
       aparahnaTimeStart: aparahnaStartTimeStr,
       aparahnaTimeEnd: aparahnaEndTimeStr,
+      nextTithiShraddha: nextTithiShraddha,
+      nextTithiStatus: nextTithiStatus,
+      nextTithiEndTime: nextTithiEndTime,
     );
   }
 }
