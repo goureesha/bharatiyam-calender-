@@ -550,7 +550,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(child: Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText))),
               Text(endTime, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
               if (endsNextDay)
-                Text(' (+1)', style: TextStyle(fontSize: 9, color: kAshubha)),
+                Text(' (ಮರುದಿನ)', style: TextStyle(fontSize: 9, color: kAshubha)),
               if (endGhati.isNotEmpty) ...[
                 Text(' (', style: TextStyle(fontSize: 9, color: kMuted)),
                 Text(endGhati, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kMuted)),

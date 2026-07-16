@@ -705,7 +705,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(endTime, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
-                      if (endsNextDay) Text(' +1', style: TextStyle(fontSize: 8, color: kAshubha)),
+                      if (endsNextDay) Text(' (ಮರುದಿನ)', style: TextStyle(fontSize: 8, color: kAshubha)),
                     ],
                   ),
                 ],
