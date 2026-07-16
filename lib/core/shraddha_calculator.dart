@@ -32,6 +32,7 @@ class ShraddhaInfo {
   final String tithiStatusAtAparahna;  // Status text
   final String aparahnaStartGhati;  // Kutupa ghati from sunrise
   final String tithiEndTimeForRule; // Tithi end time
+  final String sunriseTithiName;    // Sunrise tithi name (e.g. 'ಕೃಷ್ಣ ಷಷ್ಠಿ')
   final String aparahnaShraddha;    // Which shraddha can be done
   final String aparahnaTimeStart;   // Aparahna (4th of 5 parts) start
   final String aparahnaTimeEnd;     // Aparahna (4th of 5 parts) end
@@ -59,6 +60,7 @@ class ShraddhaInfo {
     this.tithiStatusAtAparahna = '',
     this.aparahnaStartGhati = '',
     this.tithiEndTimeForRule = '',
+    this.sunriseTithiName = '',
     this.aparahnaShraddha = '',
     this.aparahnaTimeStart = '',
     this.aparahnaTimeEnd = '',
@@ -452,6 +454,7 @@ class ShraddhaCalculator {
         tithiStatusAtAparahna: tithiStatus,
         aparahnaStartGhati: kutupaGhatiStr,
         tithiEndTimeForRule: tithiEndTimeForRule,
+        sunriseTithiName: '$pakshaName $tithiName',
         aparahnaShraddha: aparahnaShraddha,
         aparahnaTimeStart: aparahnaStartTimeStr,
         aparahnaTimeEnd: aparahnaEndTimeStr,
@@ -473,6 +476,7 @@ class ShraddhaCalculator {
       tithiStatusAtAparahna: tithiStatus,
       aparahnaStartGhati: kutupaGhatiStr,
       tithiEndTimeForRule: tithiEndTimeForRule,
+      sunriseTithiName: '$pakshaName $tithiName',
       aparahnaShraddha: aparahnaShraddha,
       aparahnaTimeStart: aparahnaStartTimeStr,
       aparahnaTimeEnd: aparahnaEndTimeStr,
