@@ -7,7 +7,7 @@
 /// - Aparahna Shraddha Rule: Tithi must be present ≥2 ghati after Aparahna start
 
 import 'ephemeris.dart';
-import 'panchanga_calculator.dart';
+import 'package:sweph/sweph.dart';
 
 class ShraddhaInfo {
   // Varshika Shraddha (annual)
@@ -169,6 +169,25 @@ class ShraddhaCalculator {
     };
   }
 
+  /// Find when the next tithi boundary is reached after a given JD.
+  /// targetDeg = the degree boundary (e.g. 12, 24, 36... for tithi transitions)
+  static double _findTithiEnd(double jdStart, double targetDeg) {
+    // Binary search: find when Moon-Sun elongation crosses targetDeg
+    double lo = jdStart;
+    double hi = jdStart + 2.0; // search up to 2 days ahead
+    for (int i = 0; i < 30; i++) {
+      final mid = (lo + hi) / 2;
+      final moonCalc = Sweph.swe_calc_ut(mid, HeavenlyBody.SE_MOON, SwephFlag.SEFLG_SWIEPH);
+      final sunCalc = Sweph.swe_calc_ut(mid, HeavenlyBody.SE_SUN, SwephFlag.SEFLG_SWIEPH);
+      final ayn = Sweph.swe_get_ayanamsa(mid);
+      final moonSid = ((moonCalc.longitude - ayn) % 360 + 360) % 360;
+      final sunSid = ((sunCalc.longitude - ayn) % 360 + 360) % 360;
+      final elongation = ((moonSid - sunSid) % 360 + 360) % 360;
+      final diff = ((elongation - targetDeg) + 540) % 360 - 180;
+      if (diff < 0) lo = mid; else hi = mid;
+    }
+    return (lo + hi) / 2;
+  }
   static ShraddhaInfo calculate({
     required int tithiIndex,
     required int nakshatraIndex,
@@ -356,9 +375,7 @@ class ShraddhaCalculator {
       final nextTithiBoundaryDeg = ((nextTithiIdx + 1) % 30) * 12.0;
       double nextTithiEndJd;
       try {
-        nextTithiEndJd = PanchangaCalculator.findTithiLimit(
-          tithiEndJd, nextTithiBoundaryDeg, 'lahiri',
-        );
+        nextTithiEndJd = _findTithiEnd(tithiEndJd, nextTithiBoundaryDeg);
       } catch (_) {
         nextTithiEndJd = tithiEndJd + 1.0; // fallback ~1 day
       }
