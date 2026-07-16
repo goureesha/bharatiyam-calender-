@@ -7,6 +7,7 @@
 /// - Aparahna Shraddha Rule: Tithi must be present ≥2 ghati after Aparahna start
 
 import 'ephemeris.dart';
+import 'panchanga_calculator.dart';
 
 class ShraddhaInfo {
   // Varshika Shraddha (annual)
@@ -323,8 +324,11 @@ class ShraddhaCalculator {
     }
 
     // ── Next Tithi Shraddha ──
-    // If the sunrise tithi ends before sunset, the next tithi starts during this day.
-    // That next tithi's shraddha can also be performed today.
+    // If sunrise tithi ends before sunset, the next tithi starts during this day.
+    // Check if the next tithi is Kshaya (misses Kutupa on both today AND tomorrow).
+    // If Kshaya → by Kshaye Purva, its shraddha is TODAY (the first day).
+    // If present at today's Kutupa → shraddha is also today.
+    // If present only at tomorrow's Kutupa → shraddha is tomorrow, not shown here.
     String nextTithiShraddha = '';
     String nextTithiStatus = '';
     String nextTithiEndTime = '';
@@ -348,27 +352,61 @@ class ShraddhaCalculator {
         ntTithiName = (ntTithiInPaksha >= 0 && ntTithiInPaksha < 14) ? _tithiNames[ntTithiInPaksha] : '';
       }
 
-      // Build next tithi shraddha name
-      if (ntIsAmavasya || ntIsPurnima) {
-        nextTithiShraddha = '$amantaName $ntTithiName ಶ್ರಾದ್ಧ';
-      } else {
-        nextTithiShraddha = '$amantaName $ntPakshaName $ntTithiName ಶ್ರಾದ್ಧ';
+      // Find next tithi's END JD using binary search
+      final nextTithiBoundaryDeg = ((nextTithiIdx + 1) % 30) * 12.0;
+      double nextTithiEndJd;
+      try {
+        nextTithiEndJd = PanchangaCalculator.findTithiLimit(
+          tithiEndJd, nextTithiBoundaryDeg, 'lahiri',
+        );
+      } catch (_) {
+        nextTithiEndJd = tithiEndJd + 1.0; // fallback ~1 day
       }
 
-      // Check if next tithi is present at Kutupa Kala
-      // Next tithi starts at tithiEndJd, so it's at Kutupa if tithiEndJd < kutupaEndJd
-      // (i.e. the next tithi has started before Kutupa ends)
-      final isNextAtKutupa = tithiEndJd < kutupaEndJd && tithiEndJd >= kutupaStartJd;
-      // Or the sunrise tithi already ended before Kutupa, so next tithi IS at Kutupa
-      final nextTithiAtKutupa = !isTithiPresent || isNextAtKutupa;
+      // Check if next tithi is at TODAY's Kutupa
+      final nextStartsBeforeKutupaEnd = tithiEndJd < kutupaEndJd;
+      final nextAtTodayKutupa = nextStartsBeforeKutupaEnd && nextTithiEndJd > kutupaStartJd;
 
-      if (nextTithiAtKutupa) {
-        nextTithiStatus = '✅ $ntPakshaName $ntTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
-      } else {
-        nextTithiStatus = 'ℹ️ $ntPakshaName $ntTithiName — ಇಂದು ಆರಂಭ';
+      // Compute TOMORROW's Kutupa Kala
+      final tomorrowSunriseJd = sunriseJd + 1.0; // approximate
+      final tomorrowSunsetJd = sunsetJd + 1.0;   // approximate
+      final tomorrowKutupa = _calcKutupa(tomorrowSunriseJd, tomorrowSunsetJd);
+      final tmrKutupaStartJd = tomorrowKutupa['startJd']!;
+      final tmrKutupaEndJd = tomorrowKutupa['endJd']!;
+
+      // Check if next tithi is at TOMORROW's Kutupa
+      final nextAtTomorrowKutupa = nextTithiEndJd > tmrKutupaStartJd && tithiEndJd < tmrKutupaEndJd;
+
+      // Is this next tithi Kshaya? (misses Kutupa on BOTH days)
+      final isNextTithiKshaya = !nextAtTodayKutupa && !nextAtTomorrowKutupa;
+
+      // Determine if we should show this next tithi's shraddha TODAY
+      bool showNextTithiToday = false;
+      if (nextAtTodayKutupa) {
+        // Next tithi IS at today's Kutupa → shraddha today
+        showNextTithiToday = true;
+      } else if (isNextTithiKshaya) {
+        // Kshaye Purva: Kshaya tithi → shraddha on first day (today)
+        showNextTithiToday = true;
       }
+      // If only at tomorrow's Kutupa → tomorrow's shraddha, don't show here
 
-      nextTithiEndTime = '(ಮರುದಿನ)'; // Next tithi typically ends next day
+      if (showNextTithiToday) {
+        // Build next tithi shraddha name
+        if (ntIsAmavasya || ntIsPurnima) {
+          nextTithiShraddha = '$amantaName $ntTithiName ಶ್ರಾದ್ಧ';
+        } else {
+          nextTithiShraddha = '$amantaName $ntPakshaName $ntTithiName ಶ್ರಾದ್ಧ';
+        }
+
+        nextTithiEndTime = Ephemeris.formatTimeFromJd(nextTithiEndJd, tzOffset: tzOffset);
+
+        if (isNextTithiKshaya) {
+          nextTithiStatus = '⚠️ $ntPakshaName $ntTithiName — ಕ್ಷಯ ತಿಥಿ\n📜 ಕ್ಷಯೇ ಪೂರ್ವ — ಇಂದು (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+        } else {
+          nextTithiStatus = '✅ $ntPakshaName $ntTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
+        }
+      }
     }
 
     String ruleText;
