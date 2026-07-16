@@ -73,9 +73,15 @@ class PanchangaCalculator {
     final karanaGhati = _computeGhati(sunriseJd, karanaEnd['startJd']!, karanaEnd['endJd']!);
 
     // 11b. Compute ghati at current time (live) with anga transition detection
+    // For non-today dates, use sunrise as the reference point
     final nowDt = DateTime.now();
-    final nowJd = Ephemeris.julday(nowDt.year, nowDt.month, nowDt.day,
+    final realNowJd = Ephemeris.julday(nowDt.year, nowDt.month, nowDt.day,
         nowDt.hour + nowDt.minute / 60.0 + nowDt.second / 3600.0 - tzOffset);
+    // If the real "now" is within the viewed day (sunrise to next sunrise), use it.
+    // Otherwise clamp to sunrise (avoids absurd ghati values for past/future dates).
+    final nowJd = (realNowJd >= sunriseJd && realNowJd <= sunriseJd + 1.0)
+        ? realNowJd
+        : sunriseJd;
 
     // For each anga: if nowJd > endJd, the sunrise anga has ended — find current one
     final tithiNowResult = _computeCurrentAnga(nowJd, tithiEnd, tithiIndex, 'tithi', lat, lon, ayanamsaMode, trueNode);
