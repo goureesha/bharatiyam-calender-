@@ -619,22 +619,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   child: Text('🙏 ${info.aparahnaShraddha}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
                 ),
                 if (info.nextTithiShraddha.isNotEmpty) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF7C4DFF).withAlpha(12),
+                      color: kGold.withAlpha(12),
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: const Color(0xFF7C4DFF).withAlpha(40)),
+                      border: Border.all(color: kGold.withAlpha(40)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('📌 ಮುಂದಿನ ತಿಥಿ ಶ್ರಾದ್ಧ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFF7C4DFF))),
-                        const SizedBox(height: 4),
-                        Text('🙏 ${info.nextTithiShraddha}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
-                        const SizedBox(height: 2),
+                        Text('🙏 ${info.nextTithiShraddha} ಮಾಡಬಹುದು', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
+                        const SizedBox(height: 3),
                         Text(info.nextTithiStatus, style: TextStyle(fontSize: 9, color: kMuted)),
                       ],
                     ),
