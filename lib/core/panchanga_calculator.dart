@@ -93,14 +93,21 @@ class PanchangaCalculator {
     // 12. Udayadi Ghati
     final udayadiGhatis = (nowJd - sunriseJd) * 60; // JD diff * 60 = ghatis
 
-    // 13. Next day flags — compare against local midnight, not next sunrise
-    // Sunrise is ~6AM local, so midnight of the same date ≈ sunriseJd - (sunrise_hour/24)
-    // More precisely: compute JD of local midnight (00:00 of next calendar day)
-    final localMidnightJd = sunriseJd + ((24.0 - (((sunriseJd + tzOffset / 24.0) % 1.0) * 24.0)) / 24.0);
-    final tithiNextDay = tithiEnd['endJd']! > localMidnightJd;
-    final nakNextDay = nakEnd['endJd']! > localMidnightJd;
-    final yogaNextDay = yogaEnd['endJd']! > localMidnightJd;
-    final karanaNextDay = karanaEnd['endJd']! > localMidnightJd;
+    // 13. Next day flags — compare local calendar dates
+    DateTime _jdToLocal(double jd) {
+      final ms = ((jd - 2440587.5) * 86400000).round();
+      return DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true)
+          .add(Duration(milliseconds: (tzOffset * 3600000).round()));
+    }
+    final sunriseDt = _jdToLocal(sunriseJd);
+    bool _isNextDay(double endJd) {
+      final endDt = _jdToLocal(endJd);
+      return endDt.day != sunriseDt.day || endDt.month != sunriseDt.month;
+    }
+    final tithiNextDay = _isNextDay(tithiEnd['endJd']!);
+    final nakNextDay = _isNextDay(nakEnd['endJd']!);
+    final yogaNextDay = _isNextDay(yogaEnd['endJd']!);
+    final karanaNextDay = _isNextDay(karanaEnd['endJd']!);
 
     // 14. Divamana / Ratrimana
     final dayHours = (sunsetJd - sunriseJd) * 24;
