@@ -315,31 +315,25 @@ class ShraddhaCalculator {
       aparahnaShraddha = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
     }
 
-    // ── Kshaya Tithi detection ──
-    // If tithi started after yesterday's Kutupa AND ends before today's Kutupa
-    // → it misses Kutupa on both days → Kshaya Tithi
+    // ── Kshaya Tithi detection (for sunrise tithi) ──
     final isKshayaTithi = !isTithiPresent &&
         tithiStartJd > yesterdayKutupaEndJd &&
         tithiEndJd < kutupaStartJd;
 
+    // ── Status: based on Kutupa tithi ──
     String tithiStatus;
-    if (isKshayaTithi) {
-      // Kshaye Purva: shraddha on the first day (when tithi begins)
-      tithiStatus = '⚠️ $pakshaName $tithiName — ಕ್ಷಯ ತಿಥಿ (ಕುತುಪ ಕಾಲ ಇಲ್ಲ)\n📜 ಕ್ಷಯೇ ಪೂರ್ವ — ತಿಥಿ ಆರಂಭ ದಿನ (ಹಿಂದಿನ ದಿನ) ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
-    } else if (isSecondDay) {
-      tithiStatus = '⚠️ $pakshaName $tithiName — ಎರಡು ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ\n📌 ಹಿಂದಿನ ದಿನ (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
-    } else if (isFirstDay) {
-      tithiStatus = '✅ $pakshaName $tithiName — ಎರಡು ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ\n📌 ಇಂದು (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
-    } else if (tithiEndJd >= kutupaEndJd) {
-      tithiStatus = '✅ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಾಚೆಗೂ ಇದೆ';
-    } else if (isTithiPresent) {
-      tithiStatus = '✅ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
+    if (kutupaTithiIdx == tithiIndex) {
+      // Sunrise tithi IS at Kutupa
+      if (isFirstDay) {
+        tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ (ಪ್ರಥಮ ದಿನ)';
+      } else if (isSecondDay) {
+        tithiStatus = '⚠️ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ (ದ್ವಿತೀಯ ದಿನ)\n📌 ಹಿಂದಿನ ದಿನ (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
+      } else {
+        tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
+      }
     } else {
-      tithiStatus = '⚠️ $pakshaName $tithiName — ಕುತುಪ ಕಾಲಕ್ಕೆ ಮೊದಲೇ ಮುಗಿಯುತ್ತದೆ';
-    }
-
-    if (!isTithiPresent && kutupaTithiIdx != tithiIndex) {
-      tithiStatus += '\n📌 ಕುತುಪ ಕಾಲದಲ್ಲಿ $kpPakshaName $kpTithiName ಇದೆ';
+      // Sunrise tithi ended before Kutupa, next tithi is at Kutupa
+      tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
     }
 
     // ── Next Tithi Shraddha ──
