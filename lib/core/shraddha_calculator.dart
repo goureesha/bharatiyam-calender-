@@ -253,7 +253,17 @@ class ShraddhaCalculator {
     final kutupaEndTime = Ephemeris.formatTimeFromJd(kutupaEndJd, tzOffset: tzOffset);
     final aparahnaStartTimeStr = Ephemeris.formatTimeFromJd(aparahnaStartJd, tzOffset: tzOffset);
     final aparahnaEndTimeStr = Ephemeris.formatTimeFromJd(aparahnaEndJd, tzOffset: tzOffset);
-    final tithiEndTimeForRule = Ephemeris.formatTimeFromJd(tithiEndJd, tzOffset: tzOffset);
+    final tithiEndTimeStr = Ephemeris.formatTimeFromJd(tithiEndJd, tzOffset: tzOffset);
+    // Check if tithi ends today or tomorrow (compare local dates)
+    final sunriseMs = ((sunriseJd - 2440587.5) * 86400000).round();
+    final sunriseDt = DateTime.fromMillisecondsSinceEpoch(sunriseMs, isUtc: true)
+        .add(Duration(milliseconds: (tzOffset * 3600000).round()));
+    final endMs = ((tithiEndJd - 2440587.5) * 86400000).round();
+    final endDt = DateTime.fromMillisecondsSinceEpoch(endMs, isUtc: true)
+        .add(Duration(milliseconds: (tzOffset * 3600000).round()));
+    final tithiEndDayLabel = (endDt.day != sunriseDt.day || endDt.month != sunriseDt.month)
+        ? ' (ಮರುದಿನ)' : '';
+    final tithiEndTimeForRule = '$tithiEndTimeStr$tithiEndDayLabel';
 
     // Kutupa start in ghati from sunrise
     final kutupaStartGhati = (kutupaStartJd - sunriseJd) * 60.0;
