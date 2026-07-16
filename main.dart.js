@@ -46720,7 +46720,7 @@ k=B.ef(B.Z(40,k.n()>>>16&255,k.n()>>>8&255,k.n()&255),1)
 A.m.L(h,B.b([A.c9,B.bY(d,B.bm(B.b([B.a6("\ud83d\ude4f "+r+" \u0cae\u0cbe\u0ca1\u0cac\u0cb9\u0cc1\u0ca6\u0cc1",d,d,d,d,B.aa(d,d,B.G().f,d,d,d,d,d,d,d,d,10,d,d,A.a5,d,d,!0,d,d,d,d,d,d,d,d),d,d,d),A.cV,B.a6(g.dy,d,d,d,d,B.aa(d,d,B.G().x,d,d,d,d,d,d,d,d,9,d,d,d,d,d,!0,d,d,d,d,d,d,d,d),d,d,d)],s),A.av,A.L,A.M),A.T,d,d,new B.bC(m,d,k,l,d,d,A.ag),d,d,d,A.j4,d,d,1/0)],s))}c.push(B.di(B.bm(B.b([new B.da(A.u8,"\u0cb6\u0ccd\u0cb0\u0cbe\u0ca6\u0ccd\u0ca7 \u0ca8\u0cbf\u0cb0\u0ccd\u0ca3\u0caf",d,d),A.b7,A.JT,b,A.bS,q,A.c9,B.bY(d,B.bm(h,A.av,A.L,A.M),A.T,d,d,new B.bC(p,d,n,o,d,d,A.ag),d,d,d,A.dR,d,d,1/0)],s),A.av,A.L,A.M),d))
 return new B.bA(A.j2,B.bm(c,A.P,A.L,A.M),d)},
 xB(a,b,c,d,e,f,g){var s=null,r=t.p,q=B.bW(B.bm(B.b([B.a6(a,s,s,s,s,B.aa(s,s,B.G().x,s,s,s,s,s,s,s,s,9,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s,s),B.a6(b,s,s,s,s,B.aa(s,s,B.G().w,s,s,s,s,s,s,s,s,13,s,s,A.a5,s,s,!0,s,s,s,s,s,s,s,s),s,s,s)],r),A.av,A.L,A.M),2),p=B.a6(B.a1("endLabel"),s,s,s,s,B.aa(s,s,B.G().x,s,s,s,s,s,s,s,s,8,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s,s),o=B.b([B.a6(c,s,s,s,s,B.aa(s,s,B.G().f,s,s,s,s,s,s,s,s,11,s,s,A.a5,s,s,!0,s,s,s,s,s,s,s,s),s,s,s)],r)
-if(d)o.push(B.a6(" +1",s,s,s,s,B.aa(s,s,B.G().z,s,s,s,s,s,s,s,s,8,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s,s))
+if(d)o.push(B.a6(" (\u0cae\u0cb0\u0cc1\u0ca6\u0cbf\u0ca8)",s,s,s,s,B.aa(s,s,B.G().z,s,s,s,s,s,s,s,s,8,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s,s))
 return B.bm(B.b([B.bw(B.b([q,B.bW(B.bm(B.b([p,B.bw(o,A.P,A.l4,A.M,0)],r),A.eA,A.L,A.M),1)],r),A.P,A.L,A.M,0),A.bS,B.bw(B.b([this.FC("G",e),A.ch,this.FC("S",f),A.ch,this.FC("P",g)],r),A.P,A.L,A.M,0)],r),A.av,A.L,A.M)},
 FC(a,b){var s=null
 return B.bw(B.b([B.a6(a+": ",s,s,s,s,B.aa(s,s,B.G().x,s,s,s,s,s,s,s,s,8,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s,s),B.a6(b,s,s,s,s,B.aa(s,s,B.G().r,s,s,s,s,s,s,s,s,9,s,s,A.a5,s,s,!0,s,s,s,s,s,s,s,s),s,s,s)],t.p),A.P,A.L,A.ce,0)},
@@ -47046,7 +47046,7 @@ r=B.Z(26,r.n()>>>16&255,r.n()>>>8&255,r.n()&255)
 r=B.ef(B.Z(51,r.n()>>>16&255,r.n()>>>8&255,r.n()&255),1)
 q=t.p
 p=B.b([B.a6(a0,k,k,k,k,B.aa(k,k,B.G().x,k,k,k,k,k,k,k,k,11,k,k,A.a5,k,k,!0,k,k,k,k,k,k,k,k),k,k,k),A.ch,B.bW(B.a6(a4,k,k,k,k,B.aa(k,k,B.G().w,k,k,k,k,k,k,k,k,13,k,k,A.a5,k,k,!0,k,k,k,k,k,k,k,k),k,k,k),1),B.a6(e,k,k,k,k,B.aa(k,k,B.G().f,k,k,k,k,k,k,k,k,11,k,k,A.a5,k,k,!0,k,k,k,k,k,k,k,k),k,k,k)],q)
-if(f)p.push(B.a6(" (+1)",k,k,k,k,B.aa(k,k,B.G().z,k,k,k,k,k,k,k,k,9,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),k,k,k))
+if(f)p.push(B.a6(" (\u0cae\u0cb0\u0cc1\u0ca6\u0cbf\u0ca8)",k,k,k,k,B.aa(k,k,B.G().z,k,k,k,k,k,k,k,k,9,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),k,k,k))
 if(d.length!==0)A.m.L(p,B.b([B.a6(" (",k,k,k,k,B.aa(k,k,B.G().x,k,k,k,k,k,k,k,k,9,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),k,k,k),B.a6(d,k,k,k,k,B.aa(k,k,B.G().x,k,k,k,k,k,k,k,k,9,k,k,A.a5,k,k,!0,k,k,k,k,k,k,k,k),k,k,k),B.a6(" \u0c98)",k,k,k,k,B.aa(k,k,B.G().x,k,k,k,k,k,k,k,k,9,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),k,k,k)],q))
 p=B.bw(p,A.P,A.L,A.M,0)
 o=j?"(\u0c89\u0ca6\u0caf \u0c95\u0cbe\u0cb2)  ":"\u2600  "
