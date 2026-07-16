@@ -9,9 +9,11 @@ class MasaCalculator {
     'cm6', 'cm7', 'cm8', 'cm9', 'cm10', 'cm11',
   ];
 
-  // Chandra Masa: Chaitra(0), Vaishakha(1), ... Phalguna(11)
-  // Mapped from Sun's rashi at Amavasya: Mesha→Chaitra, Vrishabha→Vaishakha, etc.
-  static int _masaFromSunRashi(int sunRashi) => sunRashi; // Direct mapping
+  // Chandra Masa mapping from Sun's rashi at Amavasya:
+  // Mesha(0)→Vaishakha(cm1), Vrishabha(1)→Jyeshtha(cm2), ... Meena(11)→Chaitra(cm0)
+  // Reference: knChandraMasa[rashiIdx] where array is [Vaishakha, Jyeshtha, Ashadha, ...]
+  // Our cm0=Chaitra, cm1=Vaishakha, so we add 1
+  static int _masaFromSunRashi(int sunRashi) => (sunRashi + 1) % 12;
 
   /// Calculate Amanta (Amavasyanta) month name
   /// Month runs from Amavasya to Amavasya
@@ -204,19 +206,12 @@ class MasaCalculator {
   }
 
   /// Check if Sun's Sankranti (rashi change) occurs between two JDs
+  /// Reference approach: simply compare Sun's rashi at both boundary points
   static bool _hasSankranti(double jd1, double jd2, String mode, bool tn) {
     final p1 = Ephemeris.calcAll(jd1, mode, tn);
     final r1 = (p1['Sun']![0] / 30).floor() % 12;
-
-    // Check each day between jd1 and jd2
-    final days = ((jd2 - jd1).abs()).ceil();
-    for (int i = 1; i <= days; i++) {
-      final checkJd = jd1 + i;
-      if (checkJd > jd2) break;
-      final p = Ephemeris.calcAll(checkJd, mode, tn);
-      final r = (p['Sun']![0] / 30).floor() % 12;
-      if (r != r1) return true; // Sankranti found
-    }
-    return false;
+    final p2 = Ephemeris.calcAll(jd2, mode, tn);
+    final r2 = (p2['Sun']![0] / 30).floor() % 12;
+    return r1 != r2;
   }
 }
