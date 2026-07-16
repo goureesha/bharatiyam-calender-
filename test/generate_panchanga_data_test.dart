@@ -48,12 +48,17 @@ void main() {
               final soura = MasaCalculator.calculateSoura(
                 jdSunrise: p.sunriseJd, lat: lat, lon: lon, tzOffset: tz,
               );
-              final sam = SamvatsaraCalculator.calculate(y, m);
+              final amantaKey = amanta['masa'] as String;
+              final sam = SamvatsaraCalculator.calculate(y, m, chandraMasaKey: amantaKey);
+              // Compute rutu from Sun's sidereal longitude
+              final sunPlanets = Ephemeris.calcAll(p.sunriseJd, 'lahiri', true);
+              final sunDeg = sunPlanets['Sun']![0];
+              final rutu = SamvatsaraCalculator.calculateRutu(sunDeg);
               p = p.copyWith(
                 amantaMasa: '${amanta["isAdhika"] == true ? "Adhika " : ""}${amanta["masa"]}',
                 pournimantaMasa: '${pour["isAdhika"] == true ? "Adhika " : ""}${pour["masa"]}',
                 samvatsara: sam['samvatsara'] ?? '',
-                rutu: sam['rutuKn'] ?? '',
+                rutu: rutu,
               );
             } catch (_) {}
 

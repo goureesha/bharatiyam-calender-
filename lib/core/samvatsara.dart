@@ -18,17 +18,32 @@ class SamvatsaraCalculator {
     'sam55', 'sam56', 'sam57', 'sam58', 'sam59',
   ];
 
-  /// Calculate Samvatsara for a given Gregorian year and month
-  /// Shaka year = Gregorian - 78, changes at Ugadi (~March/April)
-  static Map<String, dynamic> calculate(int year, int month) {
-    // Shaka year changes at Chaitra Shukla Pratipada (Ugadi)
-    // Approximate: if before April, use previous year
-    int shakaYear = year - 78;
-    if (month < 4) shakaYear -= 1;
+  /// Chandra Masa names that belong to the "old" Shaka year
+  /// (Margashira through Phalguna = months before Ugadi)
+  static const List<String> _oldYearMasaKeys = [
+    'cm7',  // Margashira
+    'cm8',  // Pushya
+    'cm9',  // Magha
+    'cm10', // Phalguna
+  ];
 
-    // Samvatsara index in the 60-year cycle
-    // South Indian tradition: Prabhava(0) started at a specific Shaka year
-    // Offset +11 aligns with the traditional mapping
+  /// Calculate Samvatsara for a given Gregorian year and month.
+  /// [chandraMasaKey] is the Amanta masa key (e.g. 'cm7' for Margashira).
+  /// If provided, uses lunar month for accurate Ugadi detection.
+  static Map<String, dynamic> calculate(int year, int month, {String chandraMasaKey = ''}) {
+    int shakaYear = year - 78;
+
+    // Ugadi (Chaitra Shukla Pratipada) typically falls in March/April.
+    // If the lunar month is before Chaitra AND we're in the first half of the Gregorian year,
+    // this date belongs to the previous Shaka year.
+    if (chandraMasaKey.isNotEmpty) {
+      final beforeUgadi = month <= 5 && _oldYearMasaKeys.contains(chandraMasaKey);
+      if (beforeUgadi) shakaYear -= 1;
+    } else {
+      // Fallback: simple approximation
+      if (month < 4) shakaYear -= 1;
+    }
+
     final samIdx = ((shakaYear + 11) % 60 + 60) % 60;
 
     return {
@@ -37,12 +52,30 @@ class SamvatsaraCalculator {
     };
   }
 
-  /// Calculate Rutu (season) from Sun's sidereal longitude
-  /// Each Rutu spans 2 rashis (60°)
+  /// Calculate Rutu (season) from Sun's sidereal longitude.
+  /// Traditional mapping (per Surya Siddhanta):
+  ///   Mesha(0)=Vasanta, Vrishabha(1)=Grishma, Mithuna(2)=Grishma,
+  ///   Karka(3)=Varsha, Simha(4)=Varsha, Kanya(5)=Sharad,
+  ///   Tula(6)=Sharad, Vrischika(7)=Hemanta, Dhanu(8)=Hemanta,
+  ///   Makara(9)=Shishira, Kumbha(10)=Shishira, Meena(11)=Vasanta
+  static const List<String> _rutuMap = [
+    'rutu0', // 0  Mesha     → Vasanta
+    'rutu1', // 1  Vrishabha → Grishma
+    'rutu1', // 2  Mithuna   → Grishma
+    'rutu2', // 3  Karka     → Varsha
+    'rutu2', // 4  Simha     → Varsha
+    'rutu3', // 5  Kanya     → Sharad
+    'rutu3', // 6  Tula      → Sharad
+    'rutu4', // 7  Vrischika → Hemanta
+    'rutu4', // 8  Dhanu     → Hemanta
+    'rutu5', // 9  Makara    → Shishira
+    'rutu5', // 10 Kumbha    → Shishira
+    'rutu0', // 11 Meena     → Vasanta
+  ];
+
   static String calculateRutu(double sunDeg) {
-    final rashiPair = ((sunDeg / 60).floor()) % 6;
-    // Mesha-Vrishabha(0-1) → Vasanta, Mithuna-Karka(2-3) → Grishma, etc.
-    return 'rutu$rashiPair';
+    final rashiIdx = (sunDeg / 30).floor() % 12;
+    return _rutuMap[rashiIdx];
   }
 
   /// Calculate Ayana from Sun's sidereal longitude

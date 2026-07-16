@@ -69,13 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
         tzOffset: LocationService.tzOffset,
       );
 
-      // Fill Samvatsara & Rutu
-      final samData = SamvatsaraCalculator.calculate(_selectedDate.year, _selectedDate.month);
-      final sunPlanets = Ephemeris.calcAll(data.sunriseJd, 'lahiri', true);
-      final sunDeg = sunPlanets['Sun']![0];
-      final rutu = SamvatsaraCalculator.calculateRutu(sunDeg);
-
-      // Fill Amanta & Pournimanta Masa
+      // Fill Amanta & Pournimanta Masa (needed before Samvatsara for Ugadi detection)
       final amanta = MasaCalculator.calculateAmanta(
         jdSunrise: data.sunriseJd, lat: LocationService.lat, lon: LocationService.lon,
         tzOffset: LocationService.tzOffset,
@@ -85,10 +79,20 @@ class _HomeScreenState extends State<HomeScreen> {
         tzOffset: LocationService.tzOffset,
       );
 
-      String amantaName = amanta['masa'] as String;
+      String amantaKey = amanta['masa'] as String;
+      String amantaName = amantaKey;
       if (amanta['isAdhika'] == true) amantaName = 'adhika_$amantaName';
       String pourniName = pournimanta['masa'] as String;
       if (pournimanta['isAdhika'] == true) pourniName = 'adhika_$pourniName';
+
+      // Fill Samvatsara & Rutu (using amanta masa for Ugadi detection)
+      final samData = SamvatsaraCalculator.calculate(
+        _selectedDate.year, _selectedDate.month,
+        chandraMasaKey: amantaKey,
+      );
+      final sunPlanets = Ephemeris.calcAll(data.sunriseJd, 'lahiri', true);
+      final sunDeg = sunPlanets['Sun']![0];
+      final rutu = SamvatsaraCalculator.calculateRutu(sunDeg);
 
       // Fill Ghati (Visha/Amruta)
       final vishaData = GhatiCalculator.calculateVishaGhati(
