@@ -29569,7 +29569,7 @@ k=B.adT(l,h9,g9,"tithi",i5,i6,f4,!0)
 j=B.adT(l,i0,h0,"nak",i5,i6,f4,!0)
 i=B.adT(l,i1,h3,"yoga",i5,i6,f4,!0)
 h=B.adT(l,i2,h4,"karana",i5,i6,f4,!0)
-g=g2+1
+g=g2+(24-A.n.X(g2+i8/24,1)*24)/24
 i3=h9.h(0,f6)
 i3.toString
 s=i0.h(0,f6)
