@@ -1,6 +1,7 @@
 /// Mahiti (Info) Screen — Astronomical information: Grahana, Guru/Shukra Asta, etc.
 import 'package:flutter/material.dart';
 import '../core/asta_calculator.dart';
+import '../core/adhika_masa_calculator.dart';
 import '../widgets/common.dart';
 
 class MahitiScreen extends StatefulWidget {
@@ -13,6 +14,7 @@ class MahitiScreen extends StatefulWidget {
 class _MahitiScreenState extends State<MahitiScreen> {
   List<AstaPeriod> _guruAsta = [];
   List<AstaPeriod> _shukraAsta = [];
+  List<MasaPeriodInfo> _masaPeriods = [];
   bool _loading = true;
   int _year = DateTime.now().year;
 
@@ -24,20 +26,22 @@ class _MahitiScreenState extends State<MahitiScreen> {
 
   Future<void> _computeAsta() async {
     setState(() => _loading = true);
-    await Future.delayed(Duration.zero); // Allow UI to render loading
+    await Future.delayed(Duration.zero);
     try {
       final guru = AstaCalculator.calculateGuruAsta(_year);
       final shukra = AstaCalculator.calculateShukraAsta(_year);
+      final masas = AdhikaMasaCalculator.calculateForYear(_year);
       if (mounted) {
         setState(() {
           _guruAsta = guru;
           _shukraAsta = shukra;
+          _masaPeriods = masas;
           _loading = false;
         });
       }
     } catch (e) {
       if (mounted) setState(() => _loading = false);
-      debugPrint('Asta calc error: $e');
+      debugPrint('Mahiti calc error: $e');
     }
   }
 
@@ -158,42 +162,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
               ],
             ),
 
-            // ── Adhika Masa ──
-            _InfoSection(
-              icon: Icons.add_circle_outline_rounded,
-              title: 'ಅಧಿಕ ಮಾಸ (Leap Month)',
-              color: const Color(0xFF26A69A),
-              items: const [
-                _InfoItem(
-                  title: 'ಅಧಿಕ ಮಾಸ ವಿವರ',
-                  details: [
-                    'ℹ️ ಅಧಿಕ ಮಾಸ ಎಂದರೆ:',
-                    '   • ಎರಡು ಅಮಾವಾಸ್ಯೆಗಳ ನಡುವೆ ಸಂಕ್ರಾಂತಿ ಇಲ್ಲದಿದ್ದರೆ',
-                    '   • ಆ ಮಾಸವನ್ನು ಅಧಿಕ ಮಾಸ ಎಂದು ಕರೆಯುತ್ತಾರೆ',
-                    '   • ಅಧಿಕ ಮಾಸದಲ್ಲಿ ಶುಭ ಕಾರ್ಯ ಮಾಡಬಾರದು',
-                    '   • ದಾನ, ಜಪ, ತಪಸ್ಸಿಗೆ ವಿಶೇಷ ಫಲ',
-                  ],
-                ),
-              ],
-            ),
-
-            // ── Kshaya Masa ──
-            _InfoSection(
-              icon: Icons.remove_circle_outline_rounded,
-              title: 'ಕ್ಷಯ ಮಾಸ (Lost Month)',
-              color: const Color(0xFFEF5350),
-              items: const [
-                _InfoItem(
-                  title: 'ಕ್ಷಯ ಮಾಸ ವಿವರ',
-                  details: [
-                    'ℹ️ ಕ್ಷಯ ಮಾಸ ಎಂದರೆ:',
-                    '   • ಎರಡು ಅಮಾವಾಸ್ಯೆಗಳ ನಡುವೆ ಎರಡು ಸಂಕ್ರಾಂತಿ ಬಂದರೆ',
-                    '   • ಒಂದು ಮಾಸ ಕ್ಷಯವಾಗುತ್ತದೆ (ಬಿಡುತ್ತದೆ)',
-                    '   • ಇದು ಬಹಳ ಅಪರೂಪ (19-141 ವರ್ಷಕ್ಕೊಮ್ಮೆ)',
-                  ],
-                ),
-              ],
-            ),
+            // ── Adhika / Kshaya Masa (Dynamic) ──
+            _buildMasaSection(),
 
             // ── Uttarayana / Dakshinayana ──
             _InfoSection(
@@ -351,6 +321,168 @@ class _MahitiScreenState extends State<MahitiScreen> {
         ),
       ),
     );
+  }
+
+  /// Build dynamic Adhika/Kshaya Masa section
+  Widget _buildMasaSection() {
+    final adhikaPeriods = _masaPeriods.where((m) => m.masaType == 'adhika').toList();
+    final kshayaPeriods = _masaPeriods.where((m) => m.masaType == 'kshaya').toList();
+    final hasAdhika = adhikaPeriods.isNotEmpty;
+    final hasKshaya = kshayaPeriods.isNotEmpty;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: kCard.withAlpha(178),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF26A69A).withAlpha(60)),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+          childrenPadding: const EdgeInsets.only(left: 14, right: 14, bottom: 12),
+          leading: Icon(Icons.calendar_month_outlined, color: const Color(0xFF26A69A), size: 20),
+          title: Text(
+            'ಅಧಿಕ / ಕ್ಷಯ ಮಾಸ  $_year',
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF26A69A)),
+          ),
+          iconColor: const Color(0xFF26A69A),
+          collapsedIconColor: const Color(0xFF26A69A).withAlpha(150),
+          children: [
+            // Summary
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xFF26A69A).withAlpha(10),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFF26A69A).withAlpha(30)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (hasAdhika) ...[
+                    Text('✨ ಅಧಿಕ ಮಾಸ (Leap Month)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xFF26A69A))),
+                    const SizedBox(height: 4),
+                    ...adhikaPeriods.map((p) => Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('   📅 ಅಧಿಕ ${p.masaName}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kText)),
+                          Text('   📆 ${AdhikaMasaCalculator.formatDateFull(p.amavasya1)} — ${AdhikaMasaCalculator.formatDateFull(p.amavasya2)}',
+                            style: TextStyle(fontSize: 10, color: kMuted)),
+                          Text('   ⚡ ಸಂಕ್ರಾಂತಿ: ಈ ಅವಧಿಯಲ್ಲಿ ಯಾವ ಸಂಕ್ರಾಂತಿಯೂ ಇಲ್ಲ',
+                            style: TextStyle(fontSize: 10, color: kMuted)),
+                        ],
+                      ),
+                    )),
+                    const SizedBox(height: 6),
+                  ] else ...[
+                    Text('✅ $_year ರಲ್ಲಿ ಅಧಿಕ ಮಾಸ ಇಲ್ಲ', style: TextStyle(fontSize: 11, color: kMuted)),
+                    const SizedBox(height: 6),
+                  ],
+
+                  if (hasKshaya) ...[
+                    Text('⚠️ ಕ್ಷಯ ಮಾಸ (Lost Month)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kAshubha)),
+                    const SizedBox(height: 4),
+                    ...kshayaPeriods.map((p) => Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('   📅 ಕ್ಷಯ ${p.masaName}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kAshubha)),
+                          Text('   📆 ${AdhikaMasaCalculator.formatDateFull(p.amavasya1)} — ${AdhikaMasaCalculator.formatDateFull(p.amavasya2)}',
+                            style: TextStyle(fontSize: 10, color: kMuted)),
+                          Text('   ⚡ ಎರಡು ಸಂಕ್ರಾಂತಿ: ${p.sankrantiDetails.join(", ")}',
+                            style: TextStyle(fontSize: 10, color: kMuted)),
+                        ],
+                      ),
+                    )),
+                    const SizedBox(height: 6),
+                  ] else ...[
+                    Text('✅ $_year ರಲ್ಲಿ ಕ್ಷಯ ಮಾಸ ಇಲ್ಲ', style: TextStyle(fontSize: 11, color: kMuted)),
+                    const SizedBox(height: 6),
+                  ],
+                ],
+              ),
+            ),
+
+            // Full masa table
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: kBg.withAlpha(100),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: kBorder.withAlpha(40)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('📋 ಮಾಸ ಪಟ್ಟಿ $_year', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kText)),
+                  const SizedBox(height: 8),
+                  ..._masaPeriods.map((p) {
+                    final isAdhika = p.masaType == 'adhika';
+                    final isKshaya = p.masaType == 'kshaya';
+                    final color = isAdhika ? const Color(0xFF26A69A)
+                        : isKshaya ? kAshubha
+                        : kMuted;
+                    final prefix = isAdhika ? 'ಅಧಿಕ ' : isKshaya ? 'ಕ್ಷಯ ' : '';
+                    final badge = isAdhika ? ' ✨' : isKshaya ? ' ⚠️' : '';
+
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: isAdhika || isKshaya ? color.withAlpha(15) : Colors.transparent,
+                        borderRadius: BorderRadius.circular(6),
+                        border: isAdhika || isKshaya
+                            ? Border.all(color: color.withAlpha(40))
+                            : null,
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            child: Text(
+                              '$prefix${p.masaName}$badge',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: isAdhika || isKshaya ? FontWeight.bold : FontWeight.normal,
+                                color: isAdhika || isKshaya ? color : kText,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              '${_shortDate(p.amavasya1)} — ${_shortDate(p.amavasya2)}',
+                              style: TextStyle(fontSize: 9, color: kMuted),
+                            ),
+                          ),
+                          Text(
+                            '${p.sankrantiCount} ಸಂ',
+                            style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _shortDate(DateTime dt) {
+    const m = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${m[dt.month]} ${dt.day}';
   }
 }
 
