@@ -661,7 +661,47 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: kGold.withAlpha(40)),
                   ),
-                  child: Text('🙏 ${info.aparahnaShraddha}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
+                  child: Row(
+                    children: [
+                      Text('🙏 ', style: TextStyle(fontSize: 10)),
+                      Text('ಅಮಾಂತ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Expanded(child: Text(info.varshikaChandraAmanta, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: kGold.withAlpha(12),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: kGold.withAlpha(40)),
+                  ),
+                  child: Row(
+                    children: [
+                      Text('🙏 ', style: TextStyle(fontSize: 10)),
+                      Text('ಪೌರ್ಣಿಮಾಂತ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Expanded(child: Text(info.varshikaChandraPournimanta, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: kGold.withAlpha(12),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: kGold.withAlpha(40)),
+                  ),
+                  child: Row(
+                    children: [
+                      Text('🙏 ', style: TextStyle(fontSize: 10)),
+                      Text('ಸೌರಮಾನ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Expanded(child: Text(info.varshikaSoura, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                    ],
+                  ),
                 ),
                 if (info.nextTithiShraddha.isNotEmpty) ...[
                   const SizedBox(height: 6),
