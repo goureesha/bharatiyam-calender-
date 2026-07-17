@@ -224,19 +224,10 @@ class ShraddhaCalculator {
     final pournimantaName = _resolveChandraMasa(pournimantaMasa);
     final souraName = _resolveSouraMasa(souraMasa);
 
+    // Varshika strings will be built after kutupa tithi is determined
     String varshikaChandraAmanta;
     String varshikaChandraPournimanta;
     String varshikaSoura;
-
-    if (isAmavasya || isPurnima) {
-      varshikaChandraAmanta = '$amantaName $tithiName ಶ್ರಾದ್ಧ';
-      varshikaChandraPournimanta = '$pournimantaName $tithiName ಶ್ರಾದ್ಧ';
-      varshikaSoura = '$souraName $tithiName ಶ್ರಾದ್ಧ';
-    } else {
-      varshikaChandraAmanta = '$amantaName $pakshaName $tithiName ಶ್ರಾದ್ಧ';
-      varshikaChandraPournimanta = '$pournimantaName $pakshaName $tithiName ಶ್ರಾದ್ಧ';
-      varshikaSoura = '$souraName $pakshaName $tithiName ಶ್ರಾದ್ಧ';
-    }
 
     // ── Kutupa Kala Rule ──
     // Kutupa = 8th of 15 day muhurtas
@@ -320,11 +311,19 @@ class ShraddhaCalculator {
       kpTithiName = (kpTithiInPaksha >= 0 && kpTithiInPaksha < 14) ? _tithiNames[kpTithiInPaksha] : '';
     }
 
+    // Build varshika and aparahna shraddha using Kutupa-determined tithi
+    // (tithi and paksha are same across all 3 calendar systems, only masa changes)
     String aparahnaShraddha;
     if (kpIsAmavasya || kpIsPurnima) {
       aparahnaShraddha = '$amantaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
+      varshikaChandraAmanta = '$amantaName $kpTithiName ಶ್ರಾದ್ಧ';
+      varshikaChandraPournimanta = '$pournimantaName $kpTithiName ಶ್ರಾದ್ಧ';
+      varshikaSoura = '$souraName $kpTithiName ಶ್ರಾದ್ಧ';
     } else {
       aparahnaShraddha = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
+      varshikaChandraAmanta = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
+      varshikaChandraPournimanta = '$pournimantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
+      varshikaSoura = '$souraName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
     }
 
     // ── Kshaya Tithi detection (for sunrise tithi) ──
