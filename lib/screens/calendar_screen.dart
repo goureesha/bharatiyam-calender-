@@ -82,24 +82,69 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     for (int d = 1; d <= daysInMonth; d++) {
       try {
-        final p = PanchangaCalculator.calculate(
+        var p = PanchangaCalculator.calculate(
           year: _currentMonth.year, month: _currentMonth.month, day: d,
           lat: LocationService.lat, lon: LocationService.lon,
           tzOffset: LocationService.tzOffset,
         );
-        data[d] = p;
+
+        // Fill masa, samvatsara, rutu, ghati (same as home_screen)
         try {
           final amanta = MasaCalculator.calculateAmanta(
             jdSunrise: p.sunriseJd, lat: LocationService.lat,
             lon: LocationService.lon, tzOffset: LocationService.tzOffset,
           );
-          final masaName = EventCalculator.masaKeyToKannada(amanta['masa'] as String);
+          final pournimanta = MasaCalculator.calculatePournimanta(
+            jdSunrise: p.sunriseJd, lat: LocationService.lat,
+            lon: LocationService.lon, tzOffset: LocationService.tzOffset,
+          );
+          String amantaKey = amanta['masa'] as String;
+          String amantaName = amantaKey;
+          if (amanta['isAdhika'] == true) amantaName = 'adhika_$amantaName';
+          String pourniName = pournimanta['masa'] as String;
+          if (pournimanta['isAdhika'] == true) pourniName = 'adhika_$pourniName';
+
+          final samData = SamvatsaraCalculator.calculate(
+            _currentMonth.year, _currentMonth.month,
+            chandraMasaKey: amantaKey,
+          );
+          final sunPlanets = Ephemeris.calcAll(p.sunriseJd, 'lahiri', true);
+          final sunDeg = sunPlanets['Sun']![0];
+          final rutu = SamvatsaraCalculator.calculateRutu(sunDeg);
+
+          final vishaData = GhatiCalculator.calculateVishaGhati(
+            nakshatraIndex: p.nakshatraIndex,
+            sunriseJd: p.sunriseJd,
+            nakStartJd: p.sunriseJd - 0.5,
+            nakEndJd: p.sunriseJd + 0.5,
+            tzOffset: LocationService.tzOffset,
+          );
+          final amrutaData = GhatiCalculator.calculateAmrutaGhati(
+            nakshatraIndex: p.nakshatraIndex,
+            sunriseJd: p.sunriseJd,
+            nakStartJd: p.sunriseJd - 0.5,
+            nakEndJd: p.sunriseJd + 0.5,
+            tzOffset: LocationService.tzOffset,
+          );
+
+          p = p.copyWith(
+            samvatsara: samData['samvatsara'] as String,
+            rutu: rutu,
+            amantaMasa: amantaName,
+            pournimantaMasa: pourniName,
+            vishaPraghati: '${vishaData['start'] ?? ''} - ${vishaData['end'] ?? ''}',
+            amrutaPraghati: '${amrutaData['start'] ?? ''} - ${amrutaData['end'] ?? ''}',
+          );
+
+          final masaName = EventCalculator.masaKeyToKannada(amantaKey);
           final ev = EventCalculator.getEvents(
             masa: masaName, tIdx: p.tithiIndex,
             isAdhika: amanta['isAdhika'] as bool,
           );
           if (ev.isNotEmpty) events[d] = ev;
         } catch (_) {}
+
+        data[d] = p;
       } catch (_) {}
       if (d % 2 == 0) await Future.delayed(Duration.zero);
     }
