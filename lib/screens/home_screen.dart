@@ -15,6 +15,7 @@ import '../widgets/common.dart';
 import 'panchanga_screen.dart';
 import 'settings_screen.dart';
 import 'calendar_screen.dart';
+import 'mahiti_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -182,7 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ? _buildHome()
             : _navIndex == 1
               ? const CalendarScreen()
-              : _buildSettings(),
+              : _navIndex == 2
+                ? const MahitiScreen()
+                : _buildSettings(),
         ),
       ),
       bottomNavigationBar: Container(
@@ -195,6 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
           items: [
             BottomNavigationBarItem(icon: const Icon(Icons.home_rounded), label: AppLocale.t('home')),
             BottomNavigationBarItem(icon: const Icon(Icons.calendar_month_rounded), label: 'Calendar'),
+            BottomNavigationBarItem(icon: const Icon(Icons.info_outline_rounded), label: 'ಮಾಹಿತಿ'),
             BottomNavigationBarItem(icon: const Icon(Icons.settings_rounded), label: AppLocale.t('settings')),
           ],
         ),
