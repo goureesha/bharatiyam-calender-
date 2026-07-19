@@ -97,8 +97,12 @@ class GrahanaCalculator {
   static const double _sunRadiusKm = 696000.0;
   static const double _moonRadiusKm = 1737.4;
 
-  /// Calculate all eclipses for a given year
-  static List<GrahanaInfo> calculateForYear(int year, {double tzOffset = 5.5}) {
+  /// Calculate all eclipses for a given year at user's location
+  static List<GrahanaInfo> calculateForYear(int year, {
+    double lat = 12.9716,
+    double lon = 77.5946,
+    double tzOffset = 5.5,
+  }) {
     final results = <GrahanaInfo>[];
 
     // Find all New Moons (potential solar eclipses) and Full Moons (potential lunar eclipses)
@@ -107,13 +111,13 @@ class GrahanaCalculator {
 
     // Check each New Moon for solar eclipse
     for (final nmJd in newMoons) {
-      final info = _checkSolarEclipse(nmJd, tzOffset);
+      final info = _checkSolarEclipse(nmJd, lat, lon, tzOffset);
       if (info != null) results.add(info);
     }
 
     // Check each Full Moon for lunar eclipse
     for (final fmJd in fullMoons) {
-      final info = _checkLunarEclipse(fmJd, tzOffset);
+      final info = _checkLunarEclipse(fmJd, lat, lon, tzOffset);
       if (info != null) results.add(info);
     }
 
@@ -172,7 +176,7 @@ class GrahanaCalculator {
   }
 
   /// Check if a New Moon produces a solar eclipse
-  static GrahanaInfo? _checkSolarEclipse(double syzygyJd, double tzOffset) {
+  static GrahanaInfo? _checkSolarEclipse(double syzygyJd, double lat, double lon, double tzOffset) {
     // Step 1: Check proximity to Mean Node (Rahu/Ketu)
     if (!_isNearNode(syzygyJd)) return null;
 
@@ -188,8 +192,7 @@ class GrahanaCalculator {
     final sunAngDiam = 2 * atan(_sunRadiusKm / sunDist) * 180 / pi * 3600;
 
     // Eclipse magnitude: ratio of apparent diameters
-    // Simplified: magnitude based on latitude
-    final gamma = moonLat.abs(); // simplified
+    final gamma = moonLat.abs();
     final magnitude = 1.0 - (gamma / _solarLatLimit);
 
     // Determine subtype
@@ -209,12 +212,12 @@ class GrahanaCalculator {
     // Calculate phases
     final phases = _calculateSolarPhases(syzygyJd, moonLat, moonAngDiam, sunAngDiam, tzOffset);
 
-    // Check India visibility (approximate: lat 8-37°N, lon 68-97°E)
-    final visibility = _checkIndiaVisibility(syzygyJd, tzOffset, isSolar: true);
+    // Check visibility at user's location
+    final visibility = _checkLocalVisibility(syzygyJd, lat, lon, isSolar: true);
 
     final dt = _jdToLocal(syzygyJd, tzOffset);
     final dur = _calcDuration(phases);
-    final indiaWin = _calcIndiaWindow(phases, tzOffset, isSolar: true);
+    final localWin = _calcLocalWindow(phases, lat, lon, tzOffset, isSolar: true);
     return GrahanaInfo(
       type: GrahanaType.surya,
       subtype: subtype,
@@ -229,41 +232,38 @@ class GrahanaCalculator {
       summary: '$typeKn — ${_formatDateKn(dt)}',
       totalDurationMin: dur['min'] as int,
       durationText: dur['text'] as String,
-      indiaVisibleFrom: indiaWin['from'] as String,
-      indiaVisibleTo: indiaWin['to'] as String,
-      indiaVisibleMin: indiaWin['min'] as int,
-      indiaVisibleText: indiaWin['text'] as String,
+      indiaVisibleFrom: localWin['from'] as String,
+      indiaVisibleTo: localWin['to'] as String,
+      indiaVisibleMin: localWin['min'] as int,
+      indiaVisibleText: localWin['text'] as String,
     );
   }
 
   /// Check if a Full Moon produces a lunar eclipse
-  static GrahanaInfo? _checkLunarEclipse(double syzygyJd, double tzOffset) {
+  static GrahanaInfo? _checkLunarEclipse(double syzygyJd, double lat, double lon, double tzOffset) {
     // Step 1: Check proximity to Mean Node (Rahu/Ketu)
     if (!_isNearNode(syzygyJd)) return null;
 
     // Step 2: Check Moon's latitude
     final moonLat = _getMoonLatitude(syzygyJd);
-    if (moonLat.abs() > _lunarLatLimit * 1.5) return null; // Allow penumbral check
+    if (moonLat.abs() > _lunarLatLimit * 1.5) return null;
 
     // Calculate Earth's shadow cone at Moon's distance
     final moonDist = _getMoonDistance(syzygyJd);
     final sunDist = _getSunDistance(syzygyJd);
 
     final moonAngDiam = 2 * atan(_moonRadiusKm / moonDist) * 180 / pi * 3600;
-    // Earth's umbra angular radius at Moon distance
     final umbralRadius = atan((_earthRadiusKm - _moonRadiusKm * 0.273) / moonDist) * 180 / pi * 3600;
-    final penumbralRadius = umbralRadius * 1.6; // approximate
+    final penumbralRadius = umbralRadius * 1.6;
 
-    final gamma = moonLat.abs() * 3600; // convert to arcseconds for comparison
+    final gamma = moonLat.abs() * 3600;
 
-    // Determine subtype
     GrahanaSubtype subtype;
     String typeKn;
     if (gamma > penumbralRadius + moonAngDiam / 2) {
-      return null; // No eclipse at all
+      return null;
     } else if (gamma > umbralRadius + moonAngDiam / 2) {
-      // Penumbral only
-      if (gamma > penumbralRadius - moonAngDiam / 2) return null; // Skip marginal penumbral
+      if (gamma > penumbralRadius - moonAngDiam / 2) return null;
       subtype = GrahanaSubtype.penumbral;
       typeKn = 'ಉಪಛಾಯಾ ಚಂದ್ರ ಗ್ರಹಣ';
     } else if (gamma + moonAngDiam / 2 <= umbralRadius) {
@@ -276,15 +276,14 @@ class GrahanaCalculator {
 
     final magnitude = (umbralRadius - gamma + moonAngDiam / 2) / moonAngDiam;
 
-    // Calculate phases
     final phases = _calculateLunarPhases(syzygyJd, moonLat, moonAngDiam, umbralRadius, tzOffset);
 
-    // Lunar eclipses visible from anywhere the Moon is above horizon
-    final visibility = _checkIndiaVisibility(syzygyJd, tzOffset, isSolar: false);
+    // Check visibility at user's location
+    final visibility = _checkLocalVisibility(syzygyJd, lat, lon, isSolar: false);
 
     final dt = _jdToLocal(syzygyJd, tzOffset);
     final dur = _calcDuration(phases);
-    final indiaWin = _calcIndiaWindow(phases, tzOffset, isSolar: false);
+    final localWin = _calcLocalWindow(phases, lat, lon, tzOffset, isSolar: false);
     return GrahanaInfo(
       type: GrahanaType.chandra,
       subtype: subtype,
@@ -299,10 +298,10 @@ class GrahanaCalculator {
       summary: '$typeKn — ${_formatDateKn(dt)}',
       totalDurationMin: dur['min'] as int,
       durationText: dur['text'] as String,
-      indiaVisibleFrom: indiaWin['from'] as String,
-      indiaVisibleTo: indiaWin['to'] as String,
-      indiaVisibleMin: indiaWin['min'] as int,
-      indiaVisibleText: indiaWin['text'] as String,
+      indiaVisibleFrom: localWin['from'] as String,
+      indiaVisibleTo: localWin['to'] as String,
+      indiaVisibleMin: localWin['min'] as int,
+      indiaVisibleText: localWin['text'] as String,
     );
   }
 
@@ -376,47 +375,27 @@ class GrahanaCalculator {
     );
   }
 
-  /// Check if eclipse is visible from India (approximate)
-  static Map<String, dynamic> _checkIndiaVisibility(double syzygyJd, double tzOffset, {required bool isSolar}) {
-    // India center: ~22°N, 78°E
-    const indiaLat = 22.0;
-    const indiaLon = 78.0;
-
+  /// Check if eclipse is visible from user's location
+  static Map<String, dynamic> _checkLocalVisibility(double syzygyJd, double lat, double lon, {required bool isSolar}) {
     if (isSolar) {
-      // Solar eclipse: Sun must be above horizon at eclipse time
-      final sunAlt = Ephemeris.getAltitudeManual(syzygyJd, indiaLat, indiaLon);
+      final sunAlt = Ephemeris.getAltitudeManual(syzygyJd, lat, lon);
       if (sunAlt > 0) {
-        return {'visible': true, 'note': 'ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಹೌದು'};
+        return {'visible': true, 'note': 'ಗೋಚರ: ಹೌದು'};
       } else if (sunAlt > -10) {
-        return {'visible': false, 'note': 'ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಭಾಗಶಃ (ಉದಯ/ಅಸ್ತ ಸಮಯ)'};
+        return {'visible': false, 'note': 'ಗೋಚರ: ಭಾಗಶಃ (ಉದಯ/ಅಸ್ತ ಸಮಯ)'};
       } else {
-        return {'visible': false, 'note': 'ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಇಲ್ಲ'};
+        return {'visible': false, 'note': 'ಗೋಚರ: ಇಲ್ಲ'};
       }
     } else {
-      // Lunar eclipse: Moon must be above horizon
-      // Check Moon's altitude at key eclipse times
-      final flags = SwephFlag.SEFLG_EQUATORIAL | SwephFlag.SEFLG_SWIEPH;
-      final moonRes = Sweph.swe_calc_ut(syzygyJd, HeavenlyBody.SE_MOON, flags);
-      final moonRa = moonRes.longitude;
-      final moonDec = moonRes.latitude;
-      final gmst = Sweph.swe_sidtime(syzygyJd);
-      final lst = gmst + (indiaLon / 15.0);
-      double haDeg = ((lst * 15.0) - moonRa + 360) % 360;
-      if (haDeg > 180) haDeg -= 360;
-      final haRad = haDeg * pi / 180;
-      final latRad = indiaLat * pi / 180;
-      final decRad = moonDec * pi / 180;
-      final sinAlt = sin(latRad) * sin(decRad) + cos(latRad) * cos(decRad) * cos(haRad);
-      final moonAlt = asin(sinAlt) * 180 / pi;
-
+      final moonAlt = _getMoonAltitude(syzygyJd, lat, lon);
       if (moonAlt > 10) {
-        return {'visible': true, 'note': 'ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಹೌದು (ಪೂರ್ಣ)'};
+        return {'visible': true, 'note': 'ಗೋಚರ: ಹೌದು (ಪೂರ್ಣ)'};
       } else if (moonAlt > 0) {
-        return {'visible': true, 'note': 'ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಹೌದು (ಭಾಗಶಃ)'};
+        return {'visible': true, 'note': 'ಗೋಚರ: ಹೌದು (ಭಾಗಶಃ)'};
       } else if (moonAlt > -10) {
-        return {'visible': false, 'note': 'ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಭಾಗಶಃ (ಉದಯ/ಅಸ್ತ ಸಮಯ)'};
+        return {'visible': false, 'note': 'ಗೋಚರ: ಭಾಗಶಃ (ಉದಯ/ಅಸ್ತ ಸಮಯ)'};
       } else {
-        return {'visible': false, 'note': 'ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಇಲ್ಲ'};
+        return {'visible': false, 'note': 'ಗೋಚರ: ಇಲ್ಲ'};
       }
     }
   }
@@ -440,17 +419,13 @@ class GrahanaCalculator {
     return {'min': durationMin, 'text': text};
   }
 
-  /// Calculate India-specific visibility window
-  /// Checks when Sun (solar) or Moon (lunar) is above horizon from India during eclipse
-  static Map<String, dynamic> _calcIndiaWindow(List<GrahanaPhase> phases, double tzOffset, {required bool isSolar}) {
+  /// Calculate local visibility window at user's location
+  static Map<String, dynamic> _calcLocalWindow(List<GrahanaPhase> phases, double lat, double lon, double tzOffset, {required bool isSolar}) {
     if (phases.length < 2) return {'from': '', 'to': '', 'min': 0, 'text': 'ಗೋಚರ ಇಲ್ಲ'};
 
-    const indiaLat = 22.0;
-    const indiaLon = 78.0;
     final sparshaJd = phases.first.jd;
     final mokshaJd = phases.last.jd;
 
-    // Sample every 5 minutes during eclipse to find when body is above horizon
     final step = 5.0 / (24 * 60); // 5 minutes in JD
     double? visStart;
     double? visEnd;
@@ -459,11 +434,9 @@ class GrahanaCalculator {
       final clampedJd = jd > mokshaJd ? mokshaJd : jd;
       double alt;
       if (isSolar) {
-        // For solar eclipse: check Sun altitude
-        alt = Ephemeris.getAltitudeManual(clampedJd, indiaLat, indiaLon);
+        alt = Ephemeris.getAltitudeManual(clampedJd, lat, lon);
       } else {
-        // For lunar eclipse: check Moon altitude
-        alt = _getMoonAltitude(clampedJd, indiaLat, indiaLon);
+        alt = _getMoonAltitude(clampedJd, lat, lon);
       }
 
       if (alt > 0) {
@@ -474,7 +447,7 @@ class GrahanaCalculator {
     }
 
     if (visStart == null || visEnd == null) {
-      return {'from': '', 'to': '', 'min': 0, 'text': 'ಭಾರತದಲ್ಲಿ ಗೋಚರ ಇಲ್ಲ'};
+      return {'from': '', 'to': '', 'min': 0, 'text': 'ಈ ಸ್ಥಳದಲ್ಲಿ ಗೋಚರ ಇಲ್ಲ'};
     }
 
     final visMin = ((visEnd - visStart) * 24 * 60).round();

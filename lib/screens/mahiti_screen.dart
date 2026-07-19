@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/asta_calculator.dart';
 import '../core/adhika_masa_calculator.dart';
 import '../core/grahana_calculator.dart';
+import '../services/location_service.dart';
 import '../widgets/common.dart';
 
 class MahitiScreen extends StatefulWidget {
@@ -33,7 +34,12 @@ class _MahitiScreenState extends State<MahitiScreen> {
       final guru = AstaCalculator.calculateGuruAsta(_year);
       final shukra = AstaCalculator.calculateShukraAsta(_year);
       final masas = AdhikaMasaCalculator.calculateForYear(_year);
-      final grahanas = GrahanaCalculator.calculateForYear(_year);
+      final grahanas = GrahanaCalculator.calculateForYear(
+        _year,
+        lat: LocationService.lat,
+        lon: LocationService.lon,
+        tzOffset: LocationService.tzOffset,
+      );
       if (mounted) {
         setState(() {
           _guruAsta = guru;
@@ -384,7 +390,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
               style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,
                 color: g.visibleInIndia ? const Color(0xFF388E3C) : kMuted)),
           ),
-          // India viewing window
+          // Local viewing window
           if (g.indiaVisibleMin > 0) ...[
             const SizedBox(height: 4),
             Container(
@@ -398,7 +404,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('🇮🇳 ಭಾರತದಲ್ಲಿ ಗೋಚರ ಸಮಯ:', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFF1565C0))),
+                  Text('📍 ${LocationService.cityNameKn} ಗೋಚರ ಸಮಯ:', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFF1565C0))),
                   const SizedBox(height: 2),
                   Text('   ${g.indiaVisibleText}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                 ],
@@ -406,7 +412,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
             ),
           ] else if (g.indiaVisibleText.isNotEmpty) ...[
             const SizedBox(height: 4),
-            Text('🇮🇳 ${g.indiaVisibleText}', style: TextStyle(fontSize: 9, color: kMuted)),
+            Text('📍 ${LocationService.cityNameKn}: ${g.indiaVisibleText}', style: TextStyle(fontSize: 9, color: kMuted)),
           ],
         ],
       ),
