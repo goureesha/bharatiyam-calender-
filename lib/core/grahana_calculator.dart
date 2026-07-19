@@ -104,7 +104,7 @@ class GrahanaInfo {
 }
 
 class GrahanaCalculator {
-  /// Calculate all eclipses for a given year at user's location
+  /// Calculate all eclipses for the Hindu year (Ugadi to Ugadi) at user's location
   /// Uses Ketaki Drig Ganita — Swiss Ephemeris Besselian eclipse functions
   static List<GrahanaInfo> calculateForYear(int year, {
     double lat = 12.9716,
@@ -113,8 +113,10 @@ class GrahanaCalculator {
   }) {
     final results = <GrahanaInfo>[];
     final geoPos = GeoPosition(lon, lat);
-    final startJd = Sweph.swe_julday(year, 1, 1, 0, CalendarType.SE_GREG_CAL);
-    final endJd = Sweph.swe_julday(year + 1, 1, 1, 0, CalendarType.SE_GREG_CAL);
+
+    // Use Ugadi-to-Ugadi range (Hindu year: Chaitra Shukla Pratipada)
+    final startJd = _findUgadiJd(year);
+    final endJd = _findUgadiJd(year + 1);
 
     // ── Solar Eclipses ──
     _findSolarEclipses(startJd, endJd, geoPos, lat, lon, tzOffset, results);
@@ -125,6 +127,57 @@ class GrahanaCalculator {
     // Sort by date
     results.sort((a, b) => a.syzygyJd.compareTo(b.syzygyJd));
     return results;
+  }
+
+  /// Find Julian Day of Ugadi (Chaitra Shukla Pratipada) for a given year
+  /// Ugadi = first New Moon after Sun enters sidereal Meena Rashi (330°)
+  static double _findUgadiJd(int year) {
+    // Sun enters Meena around mid-March. Search from March 1.
+    final searchStart = Sweph.swe_julday(year, 3, 1, 0, CalendarType.SE_GREG_CAL);
+
+    // Set Lahiri ayanamsha for sidereal longitude
+    Sweph.swe_set_sid_mode(SiderealMode.SE_SIDM_LAHIRI);
+    final flags = SwephFlag.SEFLG_SWIEPH | SwephFlag.SEFLG_SIDEREAL;
+
+    // Find when Sun enters Meena (330°) - search day by day
+    double meenaSankrantiJd = searchStart;
+    for (double jd = searchStart; jd < searchStart + 60; jd += 0.5) {
+      final sun = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_SUN, flags);
+      if (sun.longitude >= 330 && sun.longitude < 360) {
+        meenaSankrantiJd = jd;
+        break;
+      }
+    }
+
+    // Find the next New Moon after Meena Sankranti
+    // Use tropical for syzygy detection
+    final tropFlags = SwephFlag.SEFLG_SWIEPH;
+    for (double jd = meenaSankrantiJd; jd < meenaSankrantiJd + 45; jd += 1.0) {
+      final sun1 = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_SUN, tropFlags);
+      final moon1 = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_MOON, tropFlags);
+      final sun2 = Sweph.swe_calc_ut(jd + 1, HeavenlyBody.SE_SUN, tropFlags);
+      final moon2 = Sweph.swe_calc_ut(jd + 1, HeavenlyBody.SE_MOON, tropFlags);
+      final elong1 = ((moon1.longitude - sun1.longitude) + 360) % 360;
+      final elong2 = ((moon2.longitude - sun2.longitude) + 360) % 360;
+
+      // New Moon: elongation crosses 0° (wraps from ~350° to ~10°)
+      if (elong1 > 300 && elong2 < 60) {
+        // Binary search for exact New Moon
+        double lo = jd, hi = jd + 1;
+        for (int i = 0; i < 25; i++) {
+          final mid = (lo + hi) / 2;
+          final s = Sweph.swe_calc_ut(mid, HeavenlyBody.SE_SUN, tropFlags);
+          final m = Sweph.swe_calc_ut(mid, HeavenlyBody.SE_MOON, tropFlags);
+          final e = ((m.longitude - s.longitude) + 360) % 360;
+          if (e > 180) lo = mid; else hi = mid;
+        }
+        // Ugadi = day after Amavasya
+        return (lo + hi) / 2 + 0.5;
+      }
+    }
+
+    // Fallback: April 1
+    return Sweph.swe_julday(year, 4, 1, 0, CalendarType.SE_GREG_CAL);
   }
 
   /// Find all solar eclipses in the year using swe_sol_eclipse_when_glob + local check
