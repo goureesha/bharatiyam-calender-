@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../core/asta_calculator.dart';
 import '../core/adhika_masa_calculator.dart';
+import '../core/grahana_calculator.dart';
 import '../widgets/common.dart';
 
 class MahitiScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
   List<AstaPeriod> _guruAsta = [];
   List<AstaPeriod> _shukraAsta = [];
   List<MasaPeriodInfo> _masaPeriods = [];
+  List<GrahanaInfo> _grahanas = [];
   bool _loading = true;
   int _year = DateTime.now().year;
 
@@ -31,11 +33,13 @@ class _MahitiScreenState extends State<MahitiScreen> {
       final guru = AstaCalculator.calculateGuruAsta(_year);
       final shukra = AstaCalculator.calculateShukraAsta(_year);
       final masas = AdhikaMasaCalculator.calculateForYear(_year);
+      final grahanas = GrahanaCalculator.calculateForYear(_year);
       if (mounted) {
         setState(() {
           _guruAsta = guru;
           _shukraAsta = shukra;
           _masaPeriods = masas;
+          _grahanas = grahanas;
           _loading = false;
         });
       }
@@ -124,43 +128,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
               ],
             ),
 
-            // ── Grahana (Eclipses) ──
-            _InfoSection(
-              icon: Icons.dark_mode_rounded,
-              title: 'ಗ್ರಹಣ (Eclipses)',
-              color: const Color(0xFFE53935),
-              items: const [
-                _InfoItem(
-                  title: 'ಸೂರ್ಯ ಗ್ರಹಣ — 2026',
-                  details: [
-                    '🌑 ಫೆಬ್ರವರಿ 17, 2026 — ಕಂಕಣ ಸೂರ್ಯ ಗ್ರಹಣ',
-                    '   ⏰ ಸ್ಪರ್ಶ: 12:52 PM IST',
-                    '   ⏰ ಮಧ್ಯ: 02:24 PM IST',
-                    '   ⏰ ಮೋಕ್ಷ: 03:56 PM IST',
-                    '   📍 ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಹೌದು (ಭಾಗಶಃ)',
-                    '',
-                    '🌑 ಆಗಸ್ಟ್ 12, 2026 — ಪೂರ್ಣ ಸೂರ್ಯ ಗ್ರಹಣ',
-                    '   ⏰ ಸ್ಪರ್ಶ: 11:17 PM IST',
-                    '   📍 ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಇಲ್ಲ',
-                  ],
-                ),
-                _InfoItem(
-                  title: 'ಚಂದ್ರ ಗ್ರಹಣ — 2026',
-                  details: [
-                    '🌕 ಮಾರ್ಚ್ 03, 2026 — ಪೂರ್ಣ ಚಂದ್ರ ಗ್ರಹಣ',
-                    '   ⏰ ಸ್ಪರ್ಶ: 09:20 PM IST',
-                    '   ⏰ ಗ್ರಾಸ: 10:39 PM IST',
-                    '   ⏰ ಮಧ್ಯ: 11:33 PM IST',
-                    '   ⏰ ಮೋಕ್ಷ: 01:47 AM IST (ಮರುದಿನ)',
-                    '   📍 ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಹೌದು (ಪೂರ್ಣ)',
-                    '',
-                    '🌕 ಆಗಸ್ಟ್ 28, 2026 — ಭಾಗಶಃ ಚಂದ್ರ ಗ್ರಹಣ',
-                    '   ⏰ ಸ್ಪರ್ಶ: 07:35 AM IST',
-                    '   📍 ಭಾರತದಲ್ಲಿ ಗೋಚರ: ಇಲ್ಲ',
-                  ],
-                ),
-              ],
-            ),
+            // ── Grahana (Eclipses — Dynamic) ──
+            _buildGrahanaSection(),
 
             // ── Adhika / Kshaya Masa (Dynamic) ──
             _buildMasaSection(),
@@ -324,6 +293,100 @@ class _MahitiScreenState extends State<MahitiScreen> {
   }
 
   /// Build dynamic Adhika/Kshaya Masa section
+  /// Build dynamic Grahana (Eclipse) section
+  Widget _buildGrahanaSection() {
+    const color = Color(0xFFE53935);
+    final suryaGrahanas = _grahanas.where((g) => g.type == GrahanaType.surya).toList();
+    final chandraGrahanas = _grahanas.where((g) => g.type == GrahanaType.chandra).toList();
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: kCard.withAlpha(178),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withAlpha(60)),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+          childrenPadding: const EdgeInsets.only(left: 14, right: 14, bottom: 12),
+          leading: Icon(Icons.dark_mode_rounded, color: color, size: 20),
+          title: Text('ಗ್ರಹಣ (Eclipses) $_year', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: color)),
+          iconColor: color,
+          collapsedIconColor: color.withAlpha(150),
+          children: [
+            if (_grahanas.isEmpty)
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: color.withAlpha(10),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: color.withAlpha(30)),
+                ),
+                child: Text('✅ $_year ರಲ್ಲಿ ಗ್ರಹಣ ಇಲ್ಲ', style: TextStyle(fontSize: 11, color: kMuted)),
+              )
+            else ...[
+              // Solar eclipses
+              if (suryaGrahanas.isNotEmpty)
+                ...suryaGrahanas.map((g) => _buildEclipseCard(g, '🌑')),
+              // Lunar eclipses
+              if (chandraGrahanas.isNotEmpty)
+                ...chandraGrahanas.map((g) => _buildEclipseCard(g, '🌕')),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEclipseCard(GrahanaInfo g, String emoji) {
+    const color = Color(0xFFE53935);
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: color.withAlpha(10),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: g.visibleInIndia ? color.withAlpha(60) : color.withAlpha(20)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title
+          Text('$emoji ${g.summary}', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: g.visibleInIndia ? color : kMuted)),
+          const SizedBox(height: 6),
+          // Phases
+          ...g.phases.map((p) => Padding(
+            padding: const EdgeInsets.only(bottom: 2),
+            child: Text('   ⏰ ${p.name}: ${p.time}', style: TextStyle(fontSize: 10, color: kMuted)),
+          )),
+          const SizedBox(height: 4),
+          // Moon latitude
+          Text('   🌙 ಚಂದ್ರ ಅಕ್ಷಾಂಶ: ${g.moonLatitude.toStringAsFixed(3)}°', style: TextStyle(fontSize: 9, color: kMuted)),
+          // Magnitude
+          Text('   📏 ಪ್ರಮಾಣ: ${(g.magnitude * 100).toStringAsFixed(1)}%', style: TextStyle(fontSize: 9, color: kMuted)),
+          const SizedBox(height: 4),
+          // Visibility
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+            decoration: BoxDecoration(
+              color: g.visibleInIndia ? const Color(0xFF388E3C).withAlpha(15) : kMuted.withAlpha(15),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: g.visibleInIndia ? const Color(0xFF388E3C).withAlpha(40) : kMuted.withAlpha(30)),
+            ),
+            child: Text('📍 ${g.visibilityNote}',
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,
+                color: g.visibleInIndia ? const Color(0xFF388E3C) : kMuted)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildMasaSection() {
     final adhikaPeriods = _masaPeriods.where((m) => m.masaType == 'adhika').toList();
     final kshayaPeriods = _masaPeriods.where((m) => m.masaType == 'kshaya').toList();
