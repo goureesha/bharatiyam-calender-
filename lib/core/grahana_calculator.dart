@@ -256,6 +256,7 @@ class GrahanaCalculator {
 
     double searchJd = startJd;
     int safety = 0;
+    final foundJds = <double>[]; // Track found eclipses to prevent duplicates
 
     while (searchJd < endJd && safety < 10) {
       safety++;
@@ -271,7 +272,22 @@ class GrahanaCalculator {
         final maxJd = globInfo.times![0];
         if (maxJd >= endJd) break;
 
+        // Dedup: skip if we already found an eclipse within 2 days
+        if (foundJds.any((jd) => (jd - maxJd).abs() < 2)) {
+          searchJd = maxJd + 20;
+          continue;
+        }
+        foundJds.add(maxJd);
+
         final globalType = globInfo.eclipseType!;
+
+        // Skip penumbral eclipses (not considered real grahana in panchanga)
+        if (_hasFlag(globalType, EclipseFlag.SE_ECL_PENUMBRAL) &&
+            !_hasFlag(globalType, EclipseFlag.SE_ECL_PARTIAL) &&
+            !_hasFlag(globalType, EclipseFlag.SE_ECL_TOTAL)) {
+          searchJd = maxJd + 20;
+          continue;
+        }
 
         // Get local circumstances
         final localInfo = Sweph.swe_lun_eclipse_how(
