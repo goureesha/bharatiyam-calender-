@@ -1,11 +1,12 @@
 /// Grahana (Eclipse) Calculator — Precise eclipse computation using Swiss Ephemeris.
 ///
-/// Implements the full algorithm:
-/// 1. Find exact syzygy (New Moon / Full Moon) moments
-/// 2. Check lunar latitude at syzygy for eclipse possibility
-/// 3. Calculate angular diameters (Bimba) for eclipse type
-/// 4. Compute contact phases: Sparsha → Sammilana → Madhya → Unmilana → Moksha
-/// 5. Determine local visibility for Indian coordinates
+/// Implements the full algorithm (Sayana coordinates, Mean Node for Rahu):
+/// 1. Find exact syzygy (New Moon / Full Moon) moments using tropical longitudes
+/// 2. Check nodal proximity — syzygy must be within ~18° of Mean Rahu/Ketu
+/// 3. Check lunar latitude at syzygy for eclipse possibility
+/// 4. Calculate angular diameters (Bimba) for eclipse type
+/// 5. Compute contact phases: Sparsha → Sammilana → Madhya → Unmilana → Moksha
+/// 6. Determine local visibility for Indian coordinates
 
 import 'dart:math';
 import 'package:sweph/sweph.dart';
@@ -74,7 +75,8 @@ class GrahanaInfo {
 class GrahanaCalculator {
   // Eclipse latitude limits (degrees)
   static const double _solarLatLimit = 1.5667;   // ~1°34'
-  static const double _lunarLatLimit = 1.05;     // ~1°03'
+  static const double _lunarLatLimit = 1.05;      // ~1°03'
+  static const double _nodeProximityLimit = 18.0;  // degrees from Mean Node
 
   // Mean radii for angular diameter calculations
   static const double _earthRadiusKm = 6371.0;
@@ -157,7 +159,10 @@ class GrahanaCalculator {
 
   /// Check if a New Moon produces a solar eclipse
   static GrahanaInfo? _checkSolarEclipse(double syzygyJd, double tzOffset) {
-    // Get Moon's latitude at syzygy
+    // Step 1: Check proximity to Mean Node (Rahu/Ketu)
+    if (!_isNearNode(syzygyJd)) return null;
+
+    // Step 2: Get Moon's latitude at syzygy
     final moonLat = _getMoonLatitude(syzygyJd);
     if (moonLat.abs() > _solarLatLimit) return null; // No eclipse
 
@@ -211,6 +216,10 @@ class GrahanaCalculator {
 
   /// Check if a Full Moon produces a lunar eclipse
   static GrahanaInfo? _checkLunarEclipse(double syzygyJd, double tzOffset) {
+    // Step 1: Check proximity to Mean Node (Rahu/Ketu)
+    if (!_isNearNode(syzygyJd)) return null;
+
+    // Step 2: Check Moon's latitude
     final moonLat = _getMoonLatitude(syzygyJd);
     if (moonLat.abs() > _lunarLatLimit * 1.5) return null; // Allow penumbral check
 
@@ -392,11 +401,30 @@ class GrahanaCalculator {
     return ((moon.longitude - sun.longitude) + 360) % 360;
   }
 
-  /// Moon's celestial latitude at JD
+  /// Moon's celestial latitude at JD (sayana/tropical)
   static double _getMoonLatitude(double jd) {
     final flags = SwephFlag.SEFLG_SWIEPH;
     final moon = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_MOON, flags);
     return moon.latitude;
+  }
+
+  /// Check if syzygy is near Mean Node (Rahu/Ketu) within limit
+  /// Uses Mean Node (SE_MEAN_NODE) as per traditional calculation
+  static bool _isNearNode(double jd) {
+    final flags = SwephFlag.SEFLG_SWIEPH; // tropical
+    final sun = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_SUN, flags);
+    final node = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_MEAN_NODE, flags);
+    final rahuLon = node.longitude;
+    final ketuLon = (rahuLon + 180) % 360;
+    final sunLon = sun.longitude;
+
+    // Check distance from both Rahu and Ketu
+    double distRahu = (sunLon - rahuLon).abs();
+    if (distRahu > 180) distRahu = 360 - distRahu;
+    double distKetu = (sunLon - ketuLon).abs();
+    if (distKetu > 180) distKetu = 360 - distKetu;
+
+    return distRahu <= _nodeProximityLimit || distKetu <= _nodeProximityLimit;
   }
 
   /// Moon's distance in km
