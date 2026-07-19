@@ -59,6 +59,12 @@ class GrahanaInfo {
   final int totalDurationMin;      // Total duration (Sparsha to Moksha) in minutes
   final String durationText;       // Formatted duration text
 
+  // India-specific visibility window
+  final String indiaVisibleFrom;   // Start time visible from India
+  final String indiaVisibleTo;     // End time visible from India
+  final int indiaVisibleMin;       // Minutes visible from India
+  final String indiaVisibleText;   // Formatted India visibility duration
+
   GrahanaInfo({
     required this.type,
     required this.subtype,
@@ -73,6 +79,10 @@ class GrahanaInfo {
     required this.summary,
     required this.totalDurationMin,
     required this.durationText,
+    this.indiaVisibleFrom = '',
+    this.indiaVisibleTo = '',
+    this.indiaVisibleMin = 0,
+    this.indiaVisibleText = '',
   });
 }
 
@@ -204,6 +214,7 @@ class GrahanaCalculator {
 
     final dt = _jdToLocal(syzygyJd, tzOffset);
     final dur = _calcDuration(phases);
+    final indiaWin = _calcIndiaWindow(phases, tzOffset, isSolar: true);
     return GrahanaInfo(
       type: GrahanaType.surya,
       subtype: subtype,
@@ -218,6 +229,10 @@ class GrahanaCalculator {
       summary: '$typeKn — ${_formatDateKn(dt)}',
       totalDurationMin: dur['min'] as int,
       durationText: dur['text'] as String,
+      indiaVisibleFrom: indiaWin['from'] as String,
+      indiaVisibleTo: indiaWin['to'] as String,
+      indiaVisibleMin: indiaWin['min'] as int,
+      indiaVisibleText: indiaWin['text'] as String,
     );
   }
 
@@ -269,6 +284,7 @@ class GrahanaCalculator {
 
     final dt = _jdToLocal(syzygyJd, tzOffset);
     final dur = _calcDuration(phases);
+    final indiaWin = _calcIndiaWindow(phases, tzOffset, isSolar: false);
     return GrahanaInfo(
       type: GrahanaType.chandra,
       subtype: subtype,
@@ -283,6 +299,10 @@ class GrahanaCalculator {
       summary: '$typeKn — ${_formatDateKn(dt)}',
       totalDurationMin: dur['min'] as int,
       durationText: dur['text'] as String,
+      indiaVisibleFrom: indiaWin['from'] as String,
+      indiaVisibleTo: indiaWin['to'] as String,
+      indiaVisibleMin: indiaWin['min'] as int,
+      indiaVisibleText: indiaWin['text'] as String,
     );
   }
 
@@ -419,6 +439,77 @@ class GrahanaCalculator {
     }
     return {'min': durationMin, 'text': text};
   }
+
+  /// Calculate India-specific visibility window
+  /// Checks when Sun (solar) or Moon (lunar) is above horizon from India during eclipse
+  static Map<String, dynamic> _calcIndiaWindow(List<GrahanaPhase> phases, double tzOffset, {required bool isSolar}) {
+    if (phases.length < 2) return {'from': '', 'to': '', 'min': 0, 'text': 'ಗೋಚರ ಇಲ್ಲ'};
+
+    const indiaLat = 22.0;
+    const indiaLon = 78.0;
+    final sparshaJd = phases.first.jd;
+    final mokshaJd = phases.last.jd;
+
+    // Sample every 5 minutes during eclipse to find when body is above horizon
+    final step = 5.0 / (24 * 60); // 5 minutes in JD
+    double? visStart;
+    double? visEnd;
+
+    for (double jd = sparshaJd; jd <= mokshaJd + step; jd += step) {
+      final clampedJd = jd > mokshaJd ? mokshaJd : jd;
+      double alt;
+      if (isSolar) {
+        // For solar eclipse: check Sun altitude
+        alt = Ephemeris.getAltitudeManual(clampedJd, indiaLat, indiaLon);
+      } else {
+        // For lunar eclipse: check Moon altitude
+        alt = _getMoonAltitude(clampedJd, indiaLat, indiaLon);
+      }
+
+      if (alt > 0) {
+        visStart ??= clampedJd;
+        visEnd = clampedJd;
+      }
+      if (clampedJd >= mokshaJd) break;
+    }
+
+    if (visStart == null || visEnd == null) {
+      return {'from': '', 'to': '', 'min': 0, 'text': 'ಭಾರತದಲ್ಲಿ ಗೋಚರ ಇಲ್ಲ'};
+    }
+
+    final visMin = ((visEnd - visStart) * 24 * 60).round();
+    final fromDt = _jdToLocal(visStart, tzOffset);
+    final toDt = _jdToLocal(visEnd, tzOffset);
+    final fromStr = _formatTime(fromDt);
+    final toStr = _formatTime(toDt);
+    final hours = visMin ~/ 60;
+    final mins = visMin % 60;
+    String durText;
+    if (hours > 0) {
+      durText = '$fromStr — $toStr ($hours ಗಂಟೆ $mins ನಿಮಿಷ)';
+    } else {
+      durText = '$fromStr — $toStr ($mins ನಿಮಿಷ)';
+    }
+    return {'from': fromStr, 'to': toStr, 'min': visMin, 'text': durText};
+  }
+
+  /// Get Moon's altitude from a location
+  static double _getMoonAltitude(double jd, double lat, double lon) {
+    final flags = SwephFlag.SEFLG_EQUATORIAL | SwephFlag.SEFLG_SWIEPH;
+    final moon = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_MOON, flags);
+    final ra = moon.longitude;
+    final dec = moon.latitude;
+    final gmst = Sweph.swe_sidtime(jd);
+    final lst = gmst + (lon / 15.0);
+    double haDeg = ((lst * 15.0) - ra + 360) % 360;
+    if (haDeg > 180) haDeg -= 360;
+    final haRad = haDeg * pi / 180;
+    final latRad = lat * pi / 180;
+    final decRad = dec * pi / 180;
+    final sinAlt = sin(latRad) * sin(decRad) + cos(latRad) * cos(decRad) * cos(haRad);
+    return asin(sinAlt) * 180 / pi;
+  }
+
   /// Moon-Sun elongation (tropical, 0-360°)
   static double _moonSunElong(double jd) {
     final flags = SwephFlag.SEFLG_SWIEPH;

@@ -384,6 +384,30 @@ class _MahitiScreenState extends State<MahitiScreen> {
               style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,
                 color: g.visibleInIndia ? const Color(0xFF388E3C) : kMuted)),
           ),
+          // India viewing window
+          if (g.indiaVisibleMin > 0) ...[
+            const SizedBox(height: 4),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1565C0).withAlpha(12),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: const Color(0xFF1565C0).withAlpha(40)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('🇮🇳 ಭಾರತದಲ್ಲಿ ಗೋಚರ ಸಮಯ:', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFF1565C0))),
+                  const SizedBox(height: 2),
+                  Text('   ${g.indiaVisibleText}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+                ],
+              ),
+            ),
+          ] else if (g.indiaVisibleText.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text('🇮🇳 ${g.indiaVisibleText}', style: TextStyle(fontSize: 9, color: kMuted)),
+          ],
         ],
       ),
     );
