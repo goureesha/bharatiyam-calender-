@@ -17,7 +17,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
   List<AstaPeriod> _guruAsta = [];
   List<AstaPeriod> _shukraAsta = [];
   List<MasaPeriodInfo> _masaPeriods = [];
-  List<GrahanaInfo> _grahanas = [];
+  // List<GrahanaInfo> _grahanas = []; // Grahana removed for now
   bool _loading = true;
   int _year = DateTime.now().year;
 
@@ -34,18 +34,18 @@ class _MahitiScreenState extends State<MahitiScreen> {
       final guru = AstaCalculator.calculateGuruAsta(_year);
       final shukra = AstaCalculator.calculateShukraAsta(_year);
       final masas = AdhikaMasaCalculator.calculateForYear(_year);
-      final grahanas = GrahanaCalculator.calculateForYear(
-        _year,
-        lat: LocationService.lat,
-        lon: LocationService.lon,
-        tzOffset: LocationService.tzOffset,
-      );
+      // final grahanas = GrahanaCalculator.calculateForYear(
+      //   _year,
+      //   lat: LocationService.lat,
+      //   lon: LocationService.lon,
+      //   tzOffset: LocationService.tzOffset,
+      // );
       if (mounted) {
         setState(() {
           _guruAsta = guru;
           _shukraAsta = shukra;
           _masaPeriods = masas;
-          _grahanas = grahanas;
+          // _grahanas = grahanas;
           _loading = false;
         });
       }
@@ -134,8 +134,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
               ],
             ),
 
-            // ── Grahana (Eclipses — Dynamic) ──
-            _buildGrahanaSection(),
+            // ── Grahana (Eclipses — Dynamic) — removed for now ──
+            // _buildGrahanaSection(),
 
             // ── Adhika / Kshaya Masa (Dynamic) ──
             _buildMasaSection(),
