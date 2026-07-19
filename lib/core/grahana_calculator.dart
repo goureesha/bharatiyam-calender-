@@ -56,6 +56,8 @@ class GrahanaInfo {
   final String visibilityNote;     // Visibility details
   final String typeKannada;        // Type in Kannada
   final String summary;            // One-line summary
+  final int totalDurationMin;      // Total duration (Sparsha to Moksha) in minutes
+  final String durationText;       // Formatted duration text
 
   GrahanaInfo({
     required this.type,
@@ -69,6 +71,8 @@ class GrahanaInfo {
     required this.visibilityNote,
     required this.typeKannada,
     required this.summary,
+    required this.totalDurationMin,
+    required this.durationText,
   });
 }
 
@@ -199,6 +203,7 @@ class GrahanaCalculator {
     final visibility = _checkIndiaVisibility(syzygyJd, tzOffset, isSolar: true);
 
     final dt = _jdToLocal(syzygyJd, tzOffset);
+    final dur = _calcDuration(phases);
     return GrahanaInfo(
       type: GrahanaType.surya,
       subtype: subtype,
@@ -211,6 +216,8 @@ class GrahanaCalculator {
       visibilityNote: visibility['note'] as String,
       typeKannada: typeKn,
       summary: '$typeKn — ${_formatDateKn(dt)}',
+      totalDurationMin: dur['min'] as int,
+      durationText: dur['text'] as String,
     );
   }
 
@@ -261,6 +268,7 @@ class GrahanaCalculator {
     final visibility = _checkIndiaVisibility(syzygyJd, tzOffset, isSolar: false);
 
     final dt = _jdToLocal(syzygyJd, tzOffset);
+    final dur = _calcDuration(phases);
     return GrahanaInfo(
       type: GrahanaType.chandra,
       subtype: subtype,
@@ -273,6 +281,8 @@ class GrahanaCalculator {
       visibilityNote: visibility['note'] as String,
       typeKannada: typeKn,
       summary: '$typeKn — ${_formatDateKn(dt)}',
+      totalDurationMin: dur['min'] as int,
+      durationText: dur['text'] as String,
     );
   }
 
@@ -393,6 +403,22 @@ class GrahanaCalculator {
 
   // ── Helper functions ──
 
+  /// Calculate duration from first phase (Sparsha) to last phase (Moksha)
+  static Map<String, dynamic> _calcDuration(List<GrahanaPhase> phases) {
+    if (phases.length < 2) return {'min': 0, 'text': '—'};
+    final sparshaJd = phases.first.jd;
+    final mokshaJd = phases.last.jd;
+    final durationMin = ((mokshaJd - sparshaJd) * 24 * 60).round();
+    final hours = durationMin ~/ 60;
+    final mins = durationMin % 60;
+    String text;
+    if (hours > 0) {
+      text = '$hours ಗಂಟೆ $mins ನಿಮಿಷ';
+    } else {
+      text = '$mins ನಿಮಿಷ';
+    }
+    return {'min': durationMin, 'text': text};
+  }
   /// Moon-Sun elongation (tropical, 0-360°)
   static double _moonSunElong(double jd) {
     final flags = SwephFlag.SEFLG_SWIEPH;

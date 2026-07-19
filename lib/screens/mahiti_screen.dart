@@ -369,6 +369,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
           Text('   🌙 ಚಂದ್ರ ಅಕ್ಷಾಂಶ: ${g.moonLatitude.toStringAsFixed(3)}°', style: TextStyle(fontSize: 9, color: kMuted)),
           // Magnitude
           Text('   📏 ಪ್ರಮಾಣ: ${(g.magnitude * 100).toStringAsFixed(1)}%', style: TextStyle(fontSize: 9, color: kMuted)),
+          // Duration
+          Text('   ⏱️ ಅವಧಿ: ${g.durationText} (${g.totalDurationMin} ನಿಮಿಷ)', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
           const SizedBox(height: 4),
           // Visibility
           Container(
