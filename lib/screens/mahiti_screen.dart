@@ -17,7 +17,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
   List<AstaPeriod> _guruAsta = [];
   List<AstaPeriod> _shukraAsta = [];
   List<MasaPeriodInfo> _masaPeriods = [];
-  // List<GrahanaInfo> _grahanas = []; // Grahana removed for now
+  List<GrahanaInfo> _grahanas = []; // Grahana section hidden for now
   bool _loading = true;
   int _year = DateTime.now().year;
 
