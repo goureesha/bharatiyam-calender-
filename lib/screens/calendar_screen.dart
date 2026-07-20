@@ -28,6 +28,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   bool _loading = false;
   int? _selectedDay;
   List<KalaTiming>? _selectedKalas;
+  final ScrollController _scrollCtrl = ScrollController();
+  final GlobalKey _detailKey = GlobalKey();
 
   // In-memory cache
   static final Map<String, Map<int, PanchangaData>> _dataCache = {};
@@ -40,6 +42,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _currentMonth = DateTime(now.year, now.month, 1);
     _selectedDay = now.day;
     _loadMonth();
+  }
+
+  @override
+  void dispose() {
+    _scrollCtrl.dispose();
+    super.dispose();
   }
 
   String _monthKey(int y, int m) => '$y-$m';
@@ -194,6 +202,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return _loading
       ? Center(child: CircularProgressIndicator(color: kGold))
       : SingleChildScrollView(
+          controller: _scrollCtrl,
           padding: const EdgeInsets.only(bottom: 24),
           child: Column(
             children: [
@@ -202,7 +211,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
               _buildCalendarGrid(),
               if (_selectedDay != null && _monthData.containsKey(_selectedDay)) ...[
                 const SizedBox(height: 8),
-                _buildFullDetail(_monthData[_selectedDay]!),
+                Container(
+                  key: _detailKey,
+                  child: _buildFullDetail(_monthData[_selectedDay]!),
+                ),
               ],
             ],
           ),
@@ -316,6 +328,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
           onTap: () {
             setState(() => _selectedDay = d);
             _computeKalas();
+            // Auto-scroll to detail section after frame renders
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (_detailKey.currentContext != null) {
+                Scrollable.ensureVisible(
+                  _detailKey.currentContext!,
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                );
+              }
+            });
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
