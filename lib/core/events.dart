@@ -186,8 +186,8 @@ class EventCalculator {
         events.add(AstroEvent(name: 'ರಥ ಸಪ್ತಮಿ', description: 'ಸೂರ್ಯ ದೇವನ ಆರಾಧನೆ.', shloka: 'ರಥಸ್ಥಂ ರಥಸಪ್ತಮ್ಯಾಂ ತ್ವಾಂ ದೃಷ್ಟ್ವಾ ಯಾದವಪ್ರಭೋ |', source: 'ಆದಿತ್ಯ ಹೃದಯ'));
       } else if (tIdx == 10) {
         events.add(AstroEvent(name: 'ಭೀಷ್ಮ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುಸಹಸ್ರನಾಮ ಉಪದೇಶಿಸಿದ ದಿನ.', shloka: 'ಮಾಘಮಾಸೇ ಸಿತೇ ಪಕ್ಷೇ ಏಕಾದಶ್ಯಾಂ ಮಹಾಮತಿಃ |', source: 'ಮಹಾಭಾರತ'));
-      } else if (tIdx == 28 || tIdx == 27) {
-        events.add(AstroEvent(name: 'ಮಹಾ ಶಿವರಾತ್ರಿ', description: 'ಶಿವನ ಆರಾಧನೆ. ಉಪವಾಸ ಮತ್ತು ಜಾಗರಣೆ.', shloka: 'ಮಾಘ ಕೃಷ್ಣ ಚತುರ್ದಶ್ಯಾಂ ಆದಿದೇವೋ ಮಹಾನಿಶಿ |', source: 'ಈಶಾನ ಸಂಹಿತೆ'));
+      } else if (tIdx == 28) {
+        events.add(AstroEvent(name: 'ಮಹಾ ಶಿವರಾತ್ರಿ', description: 'ಶಿವನ ಆರಾಧನೆ. ಉಪವಾಸ ಮತ್ತು ಜಾಗರಣೆ. ನಿಶೀಥ ಕಾಲದಲ್ಲಿ (ಮಧ್ಯರಾತ್ರಿ) ಚತುರ್ದಶಿ ಇರಬೇಕು.', shloka: 'ಮಾಘ ಕೃಷ್ಣ ಚತುರ್ದಶ್ಯಾಂ ಆದಿದೇವೋ ಮಹಾನಿಶಿ |', source: 'ಈಶಾನ ಸಂಹಿತೆ'));
       }
     }
 
