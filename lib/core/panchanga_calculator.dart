@@ -10,6 +10,16 @@ class PanchangaCalculator {
   static const double _yogaSpan = 13.333333333;      // 360/27
   static const double _karanaSpan = 6.0;             // 360/60
 
+  /// Calculate tithi index (0-29) at any given Julian Day
+  /// Useful for checking which tithi prevails at sunset, moonrise, etc.
+  static int tithiAtJd(double jd, {String ayanamsaMode = 'lahiri', bool trueNode = true}) {
+    final planets = Ephemeris.calcAll(jd, ayanamsaMode, trueNode);
+    final sunDeg = planets['Sun']![0];
+    final moonDeg = planets['Moon']![0];
+    final tithiDeg = Ephemeris.normDeg(moonDeg - sunDeg);
+    return (tithiDeg / _tithiSpan).floor().clamp(0, 29);
+  }
+
   /// Calculate complete Panchanga for a given date and location
   static PanchangaData calculate({
     required int year,

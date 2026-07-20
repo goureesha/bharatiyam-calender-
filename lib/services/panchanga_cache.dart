@@ -95,9 +95,11 @@ class PanchangaCache {
               final masaKey = amanta['masa'] as String;
               final isAdhika = amanta['isAdhika'] as bool;
               final masaName = EventCalculator.masaKeyToKannada(masaKey);
+              final sunsetTithi = PanchangaCalculator.tithiAtJd(data.sunsetJd);
               final events = EventCalculator.getEvents(
                 masa: masaName,
                 tIdx: data.tithiIndex,
+                sunsetTithiIdx: sunsetTithi,
                 isAdhika: isAdhika,
               );
               if (events.isNotEmpty) _eventCache[key] = events;

@@ -20,11 +20,13 @@ class AstroEvent {
 class EventCalculator {
   /// Returns events for a given Chandra Masa (Kannada name) and tithi index.
   /// masa: Kannada masa name (e.g., 'ಚೈತ್ರ', 'ವೈಶಾಖ')
-  /// tIdx: 0-29 (0=Shukla Pratipada...14=Pournami...29=Amavasya)
+  /// tIdx: 0-29 (0=Shukla Pratipada...14=Pournami...29=Amavasya) — tithi at SUNRISE
+  /// sunsetTithiIdx: tithi at SUNSET (for Pradosha etc.)
   /// isAdhika: true if Adhika Masa — all events are skipped
   static List<AstroEvent> getEvents({
     required String masa,
     required int tIdx,
+    int? sunsetTithiIdx,
     bool isAdhika = false,
   }) {
     final List<AstroEvent> events = [];
@@ -207,9 +209,11 @@ class EventCalculator {
       events.add(AstroEvent(name: 'ಏಕಾದಶಿ ವ್ರತ', description: 'ಮಹಾವಿಷ್ಣುವಿನ ಆರಾಧನೆಗಾಗಿ ಉಪವಾಸ.', shloka: 'ಏಕಾದಶ್ಯಾಂ ನ ಭುಂಜೀತ ಪಕ್ಷಯೋರುಭಯೋರಪಿ |', source: 'ವೈಷ್ಣವ ಸಂಪ್ರದಾಯ'));
     }
 
-    // ಪ್ರದೋಷ (both pakshas)
-    if (tIdx == 12 || tIdx == 27) {
-      events.add(AstroEvent(name: 'ಪ್ರದೋಷ ವ್ರತ', description: 'ಶಿವನ ಆರಾಧನೆ ಸರ್ವ ಪಾಪ ನಾಶಕ.', shloka: 'ತ್ರಯೋದಶ್ಯಾಂ ನಿಶಾಮುಖೇ ಪ್ರದೋಷಸಮಯೇ ಹರಮ್ |', source: 'ಸ್ಕಂದ ಪುರಾಣ'));
+    // ಪ್ರದೋಷ (both pakshas) — Trayodashi must prevail at SUNSET (Sandhya Kala)
+    // Rule: If Trayodashi tithi is running at sunset time, it is Pradosha
+    final pradoshaTithi = sunsetTithiIdx ?? tIdx; // fallback to sunrise if sunset not provided
+    if (pradoshaTithi == 12 || pradoshaTithi == 27) {
+      events.add(AstroEvent(name: 'ಪ್ರದೋಷ ವ್ರತ', description: 'ಶಿವನ ಆರಾಧನೆ ಸರ್ವ ಪಾಪ ನಾಶಕ. ಸಂಧ್ಯಾ ಕಾಲದಲ್ಲಿ (ಸೂರ್ಯಾಸ್ತ ಸಮಯ) ತ್ರಯೋದಶಿ ಇರಬೇಕು.', shloka: 'ತ್ರಯೋದಶ್ಯಾಂ ನಿಶಾಮುಖೇ ಪ್ರದೋಷಸಮಯೇ ಹರಮ್ |', source: 'ಸ್ಕಂದ ಪುರಾಣ'));
     }
 
     // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ (Krishna Chaturthi)

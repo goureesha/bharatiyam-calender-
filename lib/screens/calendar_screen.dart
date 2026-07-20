@@ -145,8 +145,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           );
 
           final masaName = EventCalculator.masaKeyToKannada(amantaKey);
+          final sunsetTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd);
           final ev = EventCalculator.getEvents(
             masa: masaName, tIdx: p.tithiIndex,
+            sunsetTithiIdx: sunsetTithi,
             isAdhika: amanta['isAdhika'] as bool,
           );
           if (ev.isNotEmpty) events[d] = ev;
