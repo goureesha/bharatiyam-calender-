@@ -43,7 +43,7 @@ class EventCalculator {
       } else if (tIdx == 8) {
         events.add(AstroEvent(name: 'ಶ್ರೀರಾಮ ನವಮಿ', description: 'ಶ್ರೀರಾಮಚಂದ್ರನ ಜನ್ಮದಿನ. ಅಭಿಷೇಕ, ಪುಣ್ಯಕಾಲ.', shloka: 'ಚೈತ್ರೇ ನವಮ್ಯಾಂ ಪ್ರಾಕ್ಪಕ್ಷೇ ದಿವಾ ಪುಣ್ಯೇ ಪುನರ್ವಸೌ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
       } else if (tIdx == 10) {
-        events.add(AstroEvent(name: 'ಕಾಮದಾ ಏಕಾದಶಿ', description: 'ಸರ್ವ ಕಾಮನೆಗಳನ್ನು ಪೂರೈಸುವ ಏಕಾದಶಿ.', shloka: 'ಚೈತ್ರೇ ಶುಕ್ಲಪಕ್ಷೇ ಏಕಾದಶ್ಯಾಂ ಕಾಮದಾ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಕಾಮದಾ ಏಕಾದಶಿ', description: 'ಸರ್ವ ಕಾಮನೆಗಳನ್ನು ಪೂರೈಸುವ ಏಕಾದಶಿ.', shloka: 'ಕಾಮದಾ ಚ ತತಃ ಪಶ್ಚಾದ್ವೈ ವೈಶಾಖೀ ವಾರುಣೀ ತಥಾ |', source: 'ಶ್ರೀ ಗರ್ಗ ಸಂಹಿತಾ'));
       } else if (tIdx == 14) {
         events.add(AstroEvent(name: 'ಹನುಮಜ್ಜಯಂತಿ / ಚಿತ್ರಾ ಪೌರ್ಣಿಮೆ', description: 'ಹನುಮಂತನ ಅವತಾರ ದಿನ. ಚಿತ್ರಗುಪ್ತ ಪೂಜೆ.', shloka: 'ಚೈತ್ರೇಮಾಸಿ ಸಿತೇ ಪಕ್ಷೇ ಪೌರ್ಣಮಾಸ್ಯಾಂ ಕುಜೇಽಹನಿ |', source: 'ಆಗಮ ಗ್ರಂಥಗಳು'));
       } else if (tIdx == 27) {
@@ -56,7 +56,7 @@ class EventCalculator {
       if (tIdx == 2) {
         events.add(AstroEvent(name: 'ಅಕ್ಷಯ ತೃತೀಯಾ / ಪರಶುರಾಮ ಜಯಂತಿ', description: 'ಅತ್ಯಂತ ಶುಭದಿನ. ದಾನ, ಜಪಗಳು ಅಕ್ಷಯ ಫಲ ನೀಡುತ್ತವೆ. ಪರಶುರಾಮ ಅವತಾರ ದಿನ.', shloka: 'ವೈಶಾಖಸ್ಯ ಸಿತೇ ಪಕ್ಷೇ ತೃತೀಯಾಯಾಮುಪೋಷಿತಃ |', source: 'ಧರ್ಮಸಿಂಧು'));
       } else if (tIdx == 4) {
-        events.add(AstroEvent(name: 'ಶಂಕರಾಚಾರ್ಯ ಜಯಂತಿ', description: 'ಆದಿ ಶಂಕರಾಚಾರ್ಯರ ಅವತಾರ ದಿನ.', shloka: 'ವೈಶಾಖೇ ಶುಕ್ಲಪಂಚಮ್ಯಾಂ ಶಂಕರೋ ಭಗವಾನ್ ಜನಿಃ |', source: 'ಶಂಕರ ವಿಜಯ'));
+        events.add(AstroEvent(name: 'ಶಂಕರಾಚಾರ್ಯ ಜಯಂತಿ', description: 'ಆದಿ ಶಂಕರಾಚಾರ್ಯರ ಅವತಾರ ದಿನ.', shloka: 'ಶ್ರುತಿಸ್ಮೃತಿಪುರಾಣಾನಾಮಾಲಯಂ ಕರುಣಾಲಯಮ್ | ನಮಾಮಿ ಭಗವತ್ಪಾದಶಂಕರಂ ಲೋಕಶಂಕರಮ್ ||', source: 'ತೋಟಕಾಷ್ಟಕ'));
       } else if (tIdx == 6) {
         events.add(AstroEvent(name: 'ಗಂಗೋತ್ಪತ್ತಿ / ಜಹ್ನು ಸಪ್ತಮಿ', description: 'ಗಂಗಾದೇವಿಯ ಅವತರಣ ದಿನ.', shloka: 'ವೈಶಾಖೇ ಶುಕ್ಲಸಪ್ತಮ್ಯಾಂ ಗಂಗಾ ಸಾಗರಮಾಗತಾ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
       } else if (tIdx == 10) {
@@ -66,20 +66,20 @@ class EventCalculator {
       } else if (tIdx == 14) {
         events.add(AstroEvent(name: 'ಬುದ್ಧ ಪೌರ್ಣಿಮೆ / ಕೂರ್ಮ ಜಯಂತಿ', description: 'ಬುದ್ಧ ಮತ್ತು ಕೂರ್ಮಾವತಾರದ ಜನ್ಮದಿನ.', shloka: 'ವೈಶಾಖೇ ಪೌರ್ಣಮಾಸ್ಯಾಂ ತು ಕೂರ್ಮರೂಪೀ ಜನಾರ್ದನಃ |', source: 'ಪುರಾಣೋಕ್ತ'));
       } else if (tIdx == 29) {
-        events.add(AstroEvent(name: 'ಶನೈಶ್ಚರ ಜಯಂತಿ', description: 'ಶನಿ ದೇವನ ಜನ್ಮ ದಿನ. ತೈಲಾಭಿಷೇಕ.', shloka: 'ವೈಶಾಖೇ ಅಮಾವಾಸ್ಯಾಯಾಂ ಶನೈಶ್ಚರಜನ್ಮ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಶನೈಶ್ಚರ ಜಯಂತಿ', description: 'ಶನಿ ದೇವನ ಜನ್ಮ ದಿನ. ತೈಲಾಭಿಷೇಕ.', shloka: 'ನೀಲಾಂಜನಸಮಾಭಾಸಂ ರವಿಪುತ್ರಂ ಯಮಾಗ್ರಜಮ್ | ಛಾಯಾಮಾರ್ತಾಂಡಸಂಭೂತಂ ತಂ ನಮಾಮಿ ಶನೈಶ್ಚರಮ್ ||', source: 'ನವಗ್ರಹ ಸ್ತೋತ್ರ'));
       }
     }
 
     // 3. ಜ್ಯೇಷ್ಠ ಮಾಸ (Jyeshtha)
     if (masa == 'ಜ್ಯೇಷ್ಠ') {
       if (tIdx == 9) {
-        events.add(AstroEvent(name: 'ಗಂಗಾ ದಶಹರಾ', description: 'ಗಂಗಾ ನದಿಯ ಭೂಮಿಗೆ ಅವತರಣ ದಿನ. ಗಂಗಾ ಸ್ನಾನ ವಿಶೇಷ.', shloka: 'ಜ್ಯೇಷ್ಠೇ ಶುಕ್ಲೇ ದಶಮ್ಯಾಂ ತು ಗಂಗಾ ದಶಹರಾ ಸ್ಮೃತಾ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಗಂಗಾ ದಶಹರಾ', description: 'ಗಂಗಾ ನದಿಯ ಭೂಮಿಗೆ ಅವತರಣ ದಿನ. ಗಂಗಾ ಸ್ನಾನ ವಿಶೇಷ.', shloka: 'ನಮಃ ಶಿವಾಯೈ ಗಂಗಾಯೈ ಶಿವದಾಯೈ ನಮೋ ನಮಃ | ನಮಸ್ತೇ ವಿಷ್ಣುರೂಪಿಣ್ಯೈ ಬ್ರಹ್ಮಮೂರ್ತ್ಯೈ ನಮೋಽಸ್ತು ತೇ ||', source: 'ಸ್ಕಂದ ಪುರಾಣ (ಗಂಗಾ ದಶಹರಾ ಸ್ತೋತ್ರ)'));
       } else if (tIdx == 10) {
         events.add(AstroEvent(name: 'ನಿರ್ಜಲಾ ಏಕಾದಶಿ', description: '೨೪ ಏಕಾದಶಿಗಳ ಫಲ ನೀಡುವ ಕಠಿಣ ವ್ರತ. ಜಲ ಸಹಿತ ಸಂಪೂರ್ಣ ಉಪವಾಸ.', shloka: 'ಜ್ಯೇಷ್ಠೇ ಮಾಸಿ ಸಿತೇ ಪಕ್ಷೇ ಏಕಾದಶ್ಯಾಂ ನಿರಂಬುಕಃ |', source: 'ಧರ್ಮಸಿಂಧು'));
       } else if (tIdx == 14) {
         events.add(AstroEvent(name: 'ವಟ ಸಾವಿತ್ರಿ ವ್ರತ / ಜ್ಯೇಷ್ಠ ಪೌರ್ಣಿಮೆ', description: 'ಪತಿಯ ದೀರ್ಘಾಯುಷ್ಯಕ್ಕಾಗಿ ವ್ರತ.', shloka: 'ಜ್ಯೇಷ್ಟೇ ಮಾಸಿ ಸಿತೇ ಪಕ್ಷೇ ಪೌರ್ಣಮಾಸ್ಯಾಂ ವಿಶೇಷತಃ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
       } else if (tIdx == 29) {
-        events.add(AstroEvent(name: 'ಜ್ಯೇಷ್ಠ ಅಮಾವಾಸ್ಯೆ / ಶನಿ ಅಮಾವಾಸ್ಯೆ', description: 'ಪಿತೃ ತರ್ಪಣ. ಶನಿ ಪ್ರೀತಿಗಾಗಿ ತೈಲಾಭಿಷೇಕ.', shloka: 'ಜ್ಯೇಷ್ಠೇ ಅಮಾವಾಸ್ಯಾಯಾಂ ಪಿತೃಪೂಜಾ ವಿಶೇಷತಃ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಜ್ಯೇಷ್ಠ ಅಮಾವಾಸ್ಯೆ / ಶನಿ ಅಮಾವಾಸ್ಯೆ', description: 'ಪಿತೃ ತರ್ಪಣ. ಶನಿ ಪ್ರೀತಿಗಾಗಿ ತೈಲಾಭಿಷೇಕ.', shloka: 'ದೇವತಾಭ್ಯಃ ಪಿತೃಭ್ಯಶ್ಚ ಮಹಾಯೋಗಿಭ್ಯ ಏವ ಚ | ನಮಃ ಸ್ವಧಾಯೈ ಸ್ವಾಹಾಯೈ ನಿತ್ಯಮೇವ ನಮೋ ನಮಃ ||', source: 'ಮಾರ್ಕಂಡೇಯ ಪುರಾಣ'));
       }
     }
 
@@ -99,7 +99,7 @@ class EventCalculator {
     // 5. ಶ್ರಾವಣ ಮಾಸ (Shravana)
     if (masa == 'ಶ್ರಾವಣ') {
       if (tIdx == 2) {
-        events.add(AstroEvent(name: 'ಮಂಗಳ ಗೌರಿ ವ್ರತ ಆರಂಭ', description: 'ಶ್ರಾವಣ ಮಾಸದ ಪ್ರಾರಂಭದಲ್ಲಿ ಗೌರಿ ವ್ರತ.', shloka: 'ಶ್ರಾವಣೇ ಶುಕ್ಲಪಕ್ಷೇ ತೃತೀಯಾಯಾಂ ಗೌರೀಪೂಜಾ |', source: 'ವ್ರತ ಪರಂಪರೆ'));
+        events.add(AstroEvent(name: 'ಮಂಗಳ ಗೌರಿ ವ್ರತ ಆರಂಭ', description: 'ಶ್ರಾವಣ ಮಾಸದ ಪ್ರಾರಂಭದಲ್ಲಿ ಗೌರಿ ವ್ರತ.', shloka: 'ಸರ್ವಮಂಗಲಮಾಂಗಲ್ಯೇ ಶಿವೇ ಸರ್ವಾರ್ಥಸಾಧಿಕೇ | ಶರಣ್ಯೇ ತ್ರ್ಯಂಬಕೇ ಗೌರಿ ನಾರಾಯಣಿ ನಮೋಽಸ್ತು ತೇ ||', source: 'ದುರ್ಗಾ ಸಪ್ತಶತೀ (11.10)'));
       } else if (tIdx == 4) {
         events.add(AstroEvent(name: 'ನಾಗ ಪಂಚಮಿ', description: 'ನಾಗ ದೇವತೆಗಳ ಆರಾಧನೆ. ಹಾಲು ಅರ್ಪಣೆ.', shloka: 'ಶ್ರಾವಣೇ ಶುಕ್ಲಪಂಚಮ್ಯಾಂ ಸ್ನಾತ್ವಾ ನಾಗಾನ್ ಪ್ರಪೂಜಯೇತ್ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
       } else if (tIdx == 14) {
@@ -109,7 +109,7 @@ class EventCalculator {
       } else if (tIdx == 22) {
         events.add(AstroEvent(name: 'ಶ್ರೀ ಕೃಷ್ಣ ಜನ್ಮಾಷ್ಟಮಿ', description: 'ಭಗವಾನ್ ಶ್ರೀಕೃಷ್ಣನ ಅವತಾರ ದಿನ. ಅರ್ಧರಾತ್ರಿ ಪುಣ್ಯಕಾಲ.', shloka: 'ಶ್ರಾವಣೇ ಬಹುಳೇಽಷ್ಟಮ್ಯಾಂ ರೋಹಿಣ್ಯಾಮರ್ಧರಾತ್ರಕೇ |', source: 'ಧರ್ಮಸಿಂಧು'));
       } else if (tIdx == 25) {
-        events.add(AstroEvent(name: 'ಅಜಾ ಏಕಾದಶಿ', description: 'ಶ್ರಾವಣ ಕೃಷ್ಣ ಏಕಾದಶಿ. ಪಾಪ ವಿಮೋಚನ.', shloka: 'ಶ್ರಾವಣೇ ಕೃಷ್ಣಪಕ್ಷೇ ಏಕಾದಶ್ಯಾಂ ಅಜಾ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಅಜಾ ಏಕಾದಶಿ', description: 'ಶ್ರಾವಣ ಕೃಷ್ಣ ಏಕಾದಶಿ. ಪಾಪ ವಿಮೋಚನ.', shloka: 'ಪವಿತ್ರಾ ಚಾಪ್ಯಜಾ ಪದ್ಮಾ ಇಂದಿರಾ ಚ ತತಃ ಪರಮ್ |', source: 'ಶ್ರೀ ಗರ್ಗ ಸಂಹಿತಾ'));
       }
     }
 
@@ -122,13 +122,13 @@ class EventCalculator {
       } else if (tIdx == 4) {
         events.add(AstroEvent(name: 'ಋಷಿ ಪಂಚಮಿ', description: 'ಸಪ್ತ ಋಷಿಗಳ ಆರಾಧನೆ.', shloka: 'ಭಾದ್ರೇ ಶುಕ್ಲೇ ಪಂಚಮ್ಯಾಂ ತು ಸಪ್ತರ್ಷೀನ್ ಪೂಜಯೇತ್ ಸದಾ |', source: 'ಧರ್ಮಸಿಂಧು'));
       } else if (tIdx == 6) {
-        events.add(AstroEvent(name: 'ಲಲಿತಾ ಸಪ್ತಮಿ', description: 'ಲಲಿತಾ ದೇವಿ ಆರಾಧನೆ.', shloka: 'ಭಾದ್ರೇ ಶುಕ್ಲೇ ಸಪ್ತಮ್ಯಾಂ ಲಲಿತಾ ಸಂಪೂಜನಮ್ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಲಲಿತಾ ಸಪ್ತಮಿ', description: 'ಲಲಿತಾ ದೇವಿ ಆರಾಧನೆ.', shloka: 'ಲಲಿತೇ ಪರಮೇಶಾನಿ ಸರ್ವಶಕ್ತಿಸ್ವರೂಪಿಣಿ | ಪೂಜಾಂ ಗೃಹಾಣ ದೇವೇಶಿ ಸರ್ವಸಿದ್ಧಿಪ್ರದಾಯಿನಿ ||', source: 'ಲಲಿತಾ ಸಹಸ್ರನಾಮ'));
       } else if (tIdx == 10) {
-        events.add(AstroEvent(name: 'ಪರಿವರ್ತಿನೀ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುವಿನ ಶಯನ ಪರಿವರ್ತನ.', shloka: 'ಭಾದ್ರೇ ಶುಕ್ಲೇ ಏಕಾದಶ್ಯಾಂ ಪರಿವರ್ತಿನೀ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಪರಿವರ್ತಿನೀ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುವಿನ ಶಯನ ಪರಿವರ್ತನ.', shloka: 'ಪಾಪಾಂಕುಶಾ ರಮಾ ಚೈವ ತತಃ ಪ್ರಬೋಧಿನೀ |', source: 'ಶ್ರೀ ಗರ್ಗ ಸಂಹಿತಾ'));
       } else if (tIdx == 13) {
         events.add(AstroEvent(name: 'ಅನಂತ ಚತುರ್ದಶಿ (ಗಣೇಶ ವಿಸರ್ಜನ)', description: 'ಗಣೇಶ ವಿಸರ್ಜನೆ. ಅನಂತ ಪದ್ಮನಾಭ ವ್ರತ.', shloka: 'ಭಾದ್ರಪದ ಶುಕ್ಲ ಚತುರ್ದಶ್ಯಾಂ ಅನಂತವ್ರತಮಾಚರೇತ್ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
       } else if (tIdx == 14) {
-        events.add(AstroEvent(name: 'ಮಹಾಲಯಾರಂಭ', description: 'ಪಿತೃಪಕ್ಷದ ಆರಂಭ. ೧೫ ದಿನ ಪಿತೃ ಶ್ರಾದ್ಧ.', shloka: 'ಪೌರ್ಣಮಾಸ್ಯಾಂ ಚ ಪಿತೃಭ್ಯೋ ಶ್ರಾದ್ಧಮಾರಭೇತ್ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಮಹಾಲಯಾರಂಭ', description: 'ಪಿತೃಪಕ್ಷದ ಆರಂಭ. ೧೫ ದಿನ ಪಿತೃ ಶ್ರಾದ್ಧ.', shloka: 'ಆಯುಃ ಪ್ರಜಾಂ ಧನಂ ವಿದ್ಯಾಂ ಸ್ವರ್ಗಂ ಮೋಕ್ಷಂ ಸುಖಾನಿ ಚ | ಪ್ರಯಚ್ಛತಿ ಪಿತೃಭ್ಯೋ ಮಹಾಲಯೇ ಸದಾ ||', source: 'ಯಾಜ್ಞವಲ್ಕ್ಯ ಸ್ಮೃತಿ'));
       } else if (tIdx == 29) {
         events.add(AstroEvent(name: 'ಮಹಾಲಯ ಅಮಾವಾಸ್ಯೆ', description: 'ಸರ್ವ ಪಿತೃಗಳಿಗೂ ತರ್ಪಣ. ಪಿತೃಪಕ್ಷ ಸಮಾಪ್ತಿ.', shloka: 'ಆಯುಃ ಪ್ರಜಾಂ ಧನಂ ವಿದ್ಯಾಂ ಸ್ವರ್ಗಂ ಮೋಕ್ಷಂ ಸುಖಾನಿ ಚ |', source: 'ಯಾಜ್ಞವಲ್ಕ್ಯ ಸ್ಮೃತಿ'));
       }
@@ -145,7 +145,7 @@ class EventCalculator {
       } else if (tIdx == 3) {
         events.add(AstroEvent(name: 'ನವರಾತ್ರಿ ೪ನೇ ದಿನ - ಕೂಷ್ಮಾಂಡಾ', description: 'ಕೂಷ್ಮಾಂಡಾ ದೇವಿ ಪೂಜೆ.', shloka: 'ಸುರಾಸಂಪೂರ್ಣಕಲಶಂ ರುಧಿರಾಪ್ಲುತಮೇವ ಚ |', source: 'ದುರ್ಗಾ ಸಪ್ತಶತೀ'));
       } else if (tIdx == 4) {
-        events.add(AstroEvent(name: 'ಲಲಿತಾ ಪಂಚಮಿ / ನವರಾತ್ರಿ ೫ನೇ ದಿನ - ಸ್ಕಂದಮಾತಾ', description: 'ಸ್ಕಂದಮಾತಾ ಪೂಜೆ.', shloka: 'ಪಂಚಮ್ಯಾಂ ಲಲಿತಾಂ ದೇವೀಂ ಪೂಜಯೇತ್ ಸರ್ವಸಿದ್ಧಿದಾಮ್ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಲಲಿತಾ ಪಂಚಮಿ / ನವರಾತ್ರಿ ೫ನೇ ದಿನ - ಸ್ಕಂದಮಾತಾ', description: 'ಸ್ಕಂದಮಾತಾ ಪೂಜೆ.', shloka: 'ಸಿಂಹಾಸನಗತಾ ನಿತ್ಯಂ ಪದ್ಮಾಶ್ರಿತಕರದ್ವಯಾ | ಶುಭದಾಸ್ತು ಸದಾ ದೇವೀ ಸ್ಕಂದಮಾತಾ ಯಶಸ್ವಿನೀ ||', source: 'ನವದುರ್ಗಾ ಧ್ಯಾನ'));
       } else if (tIdx == 5) {
         events.add(AstroEvent(name: 'ನವರಾತ್ರಿ ೬ನೇ ದಿನ - ಕಾತ್ಯಾಯನಿ', description: 'ಕಾತ್ಯಾಯನಿ ದೇವಿ ಪೂಜೆ.', shloka: 'ಚಂದ್ರಹಾಸೋಜ್ಜ್ವಲಕರಾ ಶಾರ್ದೂಲವರವಾಹನಾ |', source: 'ದುರ್ಗಾ ಸಪ್ತಶತೀ'));
       } else if (tIdx == 6) {
@@ -157,7 +157,7 @@ class EventCalculator {
       } else if (tIdx == 9) {
         events.add(AstroEvent(name: 'ವಿಜಯದಶಮಿ (ದಸರಾ)', description: 'ಬನ್ನಿ ಮರಕ್ಕೆ ಪೂಜೆ. ಸೀಮೋಲ್ಲಂಘನ. ಶಮಿ ಪೂಜೆ.', shloka: 'ಶಮೀ ಶಮಯತೇ ಪಾಪಂ ಶಮೀ ಶತ್ರುವಿನಾಶಿನೀ |', source: 'ಪರಂಪರಾಗತ ಶ್ಲೋಕ'));
       } else if (tIdx == 18) {
-        events.add(AstroEvent(name: 'ಕರ್ವಾ ಚೌತ್', description: 'ಪತಿಯ ದೀರ್ಘಾಯುಷ್ಯಕ್ಕಾಗಿ ಚಂದ್ರೋದಯ ವ್ರತ.', shloka: 'ಆಶ್ವಿನೇ ಕೃಷ್ಣಪಕ್ಷೇ ಚತುರ್ಥ್ಯಾಂ ಕರ್ವಾ |', source: 'ವ್ರತ ಪರಂಪರೆ'));
+        events.add(AstroEvent(name: 'ಕರ್ವಾ ಚೌತ್', description: 'ಪತಿಯ ದೀರ್ಘಾಯುಷ್ಯಕ್ಕಾಗಿ ಚಂದ್ರೋದಯ ವ್ರತ.', shloka: 'ಕೃಷ್ಣಪಕ್ಷೇ ಚತುರ್ಥ್ಯಾಂ ಚಂದ್ರೋದಯೇ ವ್ರತಂ ಚರೇತ್ | ಪತಿವ್ರತಾ ಚ ಯಾ ನಾರೀ ಅಖಂಡಸೌಭಾಗ್ಯಮಾಪ್ನುಯಾತ್ ||', source: 'ನಿರ್ಣಯಸಿಂಧು'));
       } else if (tIdx == 28) {
         events.add(AstroEvent(name: 'ನರಕ ಚತುರ್ದಶಿ', description: 'ನರಕಾಸುರ ಸಂಹಾರ. ಅಭ್ಯಂಜನ ಸ್ನಾನ. ಅರುಣೋದಯ ಪುಣ್ಯಕಾಲ.', shloka: 'ಆಶ್ವಿನೇ ಕೃಷ್ಣಪಕ್ಷೇ ತು ಚತುರ್ದಶ್ಯಾಂ ವಿಧೂದಯೇ |', source: 'ಧರ್ಮಸಿಂಧು'));
       } else if (tIdx == 29) {
@@ -172,15 +172,15 @@ class EventCalculator {
       } else if (tIdx == 1) {
         events.add(AstroEvent(name: 'ಯಮ ದ್ವಿತೀಯಾ (ಭಾತೃ ದ್ವಿತೀಯಾ)', description: 'ಸಹೋದರ ಬಾಂಧವ್ಯದ ಹಬ್ಬ. ಭಾವನ ಮನೆಗೆ ಭೇಟಿ.', shloka: 'ಕಾರ್ತಿಕೇ ಶುಕ್ಲಪಕ್ಷೇ ತು ದ್ವಿತೀಯಾಯಾಂ ವಿಶೇಷತಃ |', source: 'ಧರ್ಮಸಿಂಧು'));
       } else if (tIdx == 8) {
-        events.add(AstroEvent(name: 'ಗೋಪಾಷ್ಟಮೀ', description: 'ಗೋವುಗಳ ಪೂಜೆ. ಕೃಷ್ಣನ ಗೋ ಸೇವೆ ಸ್ಮರಣೆ.', shloka: 'ಕಾರ್ತಿಕೇ ಶುಕ್ಲಪಕ್ಷೇ ಅಷ್ಟಮ್ಯಾಂ ಗೋಪೂಜನಮ್ |', source: 'ವೈಷ್ಣವ ಸಂಪ್ರದಾಯ'));
+        events.add(AstroEvent(name: 'ಗೋಪಾಷ್ಟಮೀ', description: 'ಗೋವುಗಳ ಪೂಜೆ. ಕೃಷ್ಣನ ಗೋ ಸೇವೆ ಸ್ಮರಣೆ.', shloka: 'ಗಾವೋ ಮೇ ಅಗ್ರತಃ ಸಂತು ಗಾವೋ ಮೇ ಸಂತು ಪೃಷ್ಠತಃ | ಗಾವೋ ಮೇ ಸರ್ವತಃ ಸಂತು ಗವಾಂ ಮಧ್ಯೇ ವಸಾಮ್ಯಹಮ್ ||', source: 'ಗೋ ಸೂಕ್ತ (ಋಗ್ವೇದ)'));
       } else if (tIdx == 10) {
-        events.add(AstroEvent(name: 'ಪ್ರಬೋಧಿನೀ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುವಿನ ನಿದ್ರೆಯಿಂದ ಎಚ್ಚರ.', shloka: 'ಕಾರ್ತಿಕೇ ಶುಕ್ಲಪಕ್ಷೇ ಏಕಾದಶ್ಯಾಂ ಪ್ರಬೋಧಿನೀ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಪ್ರಬೋಧಿನೀ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುವಿನ ನಿದ್ರೆಯಿಂದ ಎಚ್ಚರ.', shloka: 'ಪಾಪಾಂಕುಶಾ ರಮಾ ಚೈವ ತತಃ ಪ್ರಬೋಧಿನೀ |', source: 'ಶ್ರೀ ಗರ್ಗ ಸಂಹಿತಾ'));
       } else if (tIdx == 11) {
         events.add(AstroEvent(name: 'ಉತ್ಥಾನ ದ್ವಾದಶಿ / ತುಳಸಿ ವಿವಾಹ', description: 'ಚಾತುರ್ಮಾಸ್ಯ ಸಮಾಪ್ತಿ. ತುಳಸೀ ವಿವಾಹ.', shloka: 'ಉತ್ತಿಷ್ಠೋತ್ತಿಷ್ಠ ಗೋವಿಂದ ತ್ಯಜ ನಿದ್ರಾಂ ಜಗತ್ಪತೇ |', source: 'ಪದ್ಮ ಪುರಾಣ'));
       } else if (tIdx == 14) {
         events.add(AstroEvent(name: 'ಕಾರ್ತಿಕ ಪೌರ್ಣಿಮೆ / ಜ್ವಾಲಾತೋರಣ / ಗುರು ನಾನಕ್ ಜಯಂತಿ', description: 'ಶಿವನಿಗೆ ದೀಪೋತ್ಸವ.', shloka: 'ಕಾರ್ತಿಕ್ಯಾಂ ಪೌರ್ಣಮಾಸ್ಯಾಂ ತು ಕೃತ್ತಿಕಾಂ ಶಿವದರ್ಶನಮ್ |', source: 'ಸ್ಕಂದ ಪುರಾಣ'));
       } else if (tIdx == 26) {
-        events.add(AstroEvent(name: 'ಗೋವತ್ಸ ದ್ವಾದಶಿ (ವಸು ಬಾರಸ್)', description: 'ಗೋವು ಮತ್ತು ಕರುವಿನ ಪೂಜೆ.', shloka: 'ಕಾರ್ತಿಕೇ ಕೃಷ್ಣಪಕ್ಷೇ ದ್ವಾದಶ್ಯಾಂ ಗೋವತ್ಸ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಗೋವತ್ಸ ದ್ವಾದಶಿ (ವಸು ಬಾರಸ್)', description: 'ಗೋವು ಮತ್ತು ಕರುವಿನ ಪೂಜೆ.', shloka: 'ಗಾವೋ ಭಾಗ್ಯಂ ಪ್ರಯಚ್ಛಂತು ಗಾವೋ ಧನಕರೀ ಸದಾ | ಗಾವಸ್ತಿಷ್ಠಂತಿ ಯತ್ರೈವ ತತ್ರ ಸರ್ವಂ ಪ್ರತಿಷ್ಠಿತಮ್ ||', source: 'ವಿಷ್ಣು ಪುರಾಣ'));
       } else if (tIdx == 27) {
         events.add(AstroEvent(name: 'ಧನ ತ್ರಯೋದಶಿ (ಧನ್ತೇರಸ್)', description: 'ಧನ್ವಂತರಿ ಜಯಂತಿ. ಹೊಸ ಪಾತ್ರೆ/ಬಂಗಾರ ಖರೀದಿ.', shloka: 'ಕಾರ್ತಿಕೇ ಕೃಷ್ಣಪಕ್ಷೇ ತು ತ್ರಯೋದಶ್ಯಾಂ ಧನಂ ಯಜೇತ್ |', source: 'ಧರ್ಮಸಿಂಧು'));
       }
@@ -202,13 +202,13 @@ class EventCalculator {
     // 10. ಪುಷ್ಯ ಮಾಸ (Pushya)
     if (masa == 'ಪುಷ್ಯ') {
       if (tIdx == 10) {
-        events.add(AstroEvent(name: 'ಪುತ್ರದಾ ಏಕಾದಶಿ', description: 'ಪುತ್ರಸಂತಾನಕ್ಕಾಗಿ ಏಕಾದಶಿ.', shloka: 'ಪುಷ್ಯೇ ಶುಕ್ಲಪಕ್ಷೇ ಏಕಾದಶ್ಯಾಂ ಪುತ್ರದಾ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಪುತ್ರದಾ ಏಕಾದಶಿ', description: 'ಪುತ್ರಸಂತಾನಕ್ಕಾಗಿ ಏಕಾದಶಿ.', shloka: 'ಪುತ್ರದಾ ಷಟ್ತಿಲಾ ಚೈವ ಜಯಾ ಚ ವಿಜಯಾ ತಥಾ |', source: 'ಶ್ರೀ ಗರ್ಗ ಸಂಹಿತಾ'));
       } else if (tIdx == 14) {
-        events.add(AstroEvent(name: 'ಪುಷ್ಯ ಪೌರ್ಣಿಮೆ', description: 'ದೇವಿ ಆರಾಧನೆಗೆ ಶ್ರೇಷ್ಠ.', shloka: 'ಪುಷ್ಯೇ ಪೌರ್ಣಮಾಸ್ಯಾಂ ತು ಸ್ನಾನಂ ಪುಣ್ಯಫಲಪ್ರದಮ್ |', source: 'ಸಾಮಾನ್ಯ ನಿಯಮ'));
+        events.add(AstroEvent(name: 'ಪುಷ್ಯ ಪೌರ್ಣಿಮೆ', description: 'ದೇವಿ ಆರಾಧನೆಗೆ ಶ್ರೇಷ್ಠ.', shloka: 'ಪೌರ್ಣಮಾಸ್ಯಾಂ ಚ ಸಂಪೂಜ್ಯ ದೇವಂ ನಾರಾಯಣಂ ಪ್ರಭುಮ್ | ಸತ್ಯನಾರಾಯಣ ಪೂಜಾ ಪುಷ್ಯೇ ಚ ವಿಶೇಷತಃ ||', source: 'ಸ್ಕಂದ ಪುರಾಣ'));
       } else if (tIdx == 18) {
-        events.add(AstroEvent(name: 'ತಿಲ ಚತುರ್ಥಿ', description: 'ಎಳ್ಳಿನೊಂದಿಗೆ ಗಣೇಶ ಪೂಜೆ.', shloka: 'ಪುಷ್ಯೇ ಕೃಷ್ಣಪಕ್ಷೇ ಚತುರ್ಥ್ಯಾಂ ತಿಲೈರ್ಯಜೇತ್ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ತಿಲ ಚತುರ್ಥಿ', description: 'ಎಳ್ಳಿನೊಂದಿಗೆ ಗಣೇಶ ಪೂಜೆ.', shloka: 'ಕೃಷ್ಣಪಕ್ಷೇ ಚತುರ್ಥ್ಯಾಂ ತು ಸಂಪೂಜ್ಯ ಗಣನಾಯಕಮ್ | ತಿಲೈರ್ಯಜೇದ್ದೇವಂ ವಿಘ್ನರಾಜಂ ಗಜಾನನಮ್ ||', source: 'ಗಣೇಶ ಪುರಾಣ'));
       } else if (tIdx == 29) {
-        events.add(AstroEvent(name: 'ಮೌನ ಅಮಾವಾಸ್ಯೆ', description: 'ಮೌನ ವ್ರತ ಮತ್ತು ಪಿತೃತರ್ಪಣ.', shloka: 'ಪುಷ್ಯೇ ಅಮಾವಾಸ್ಯಾಯಾಂ ಮೌನವ್ರತಂ ವಿಶೇಷತಃ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಮೌನ ಅಮಾವಾಸ್ಯೆ', description: 'ಮೌನ ವ್ರತ ಮತ್ತು ಪಿತೃತರ್ಪಣ.', shloka: 'ಅಮಾವಾಸ್ಯಾಯಾಂ ಪಿತೃಭ್ಯೋ ದದ್ಯಾಚ್ಚ ತಿಲತರ್ಪಣಮ್ |', source: 'ಧರ್ಮಸಿಂಧು'));
       }
     }
 
@@ -219,24 +219,24 @@ class EventCalculator {
       } else if (tIdx == 6) {
         events.add(AstroEvent(name: 'ರಥ ಸಪ್ತಮಿ', description: 'ಸೂರ್ಯ ದೇವನ ಆರಾಧನೆ. ಎಕ್ಕೆ ಎಲೆ ಸ್ನಾನ. ಮಾಘ ಸ್ನಾನ ಸಮಾಪ್ತಿ.', shloka: 'ರಥಸ್ಥಂ ರಥಸಪ್ತಮ್ಯಾಂ ತ್ವಾಂ ದೃಷ್ಟ್ವಾ ಯಾದವಪ್ರಭೋ |', source: 'ಆದಿತ್ಯ ಹೃದಯ'));
       } else if (tIdx == 7) {
-        events.add(AstroEvent(name: 'ಭೀಷ್ಮ ಅಷ್ಟಮಿ', description: 'ಭೀಷ್ಮಾಚಾರ್ಯರ ಸ್ಮರಣೆ.', shloka: 'ಮಾಘೇ ಶುಕ್ಲೇ ಅಷ್ಟಮ್ಯಾಂ ಭೀಷ್ಮ ನಿರ್ವಾಣಮ್ |', source: 'ಮಹಾಭಾರತ'));
+        events.add(AstroEvent(name: 'ಭೀಷ್ಮ ಅಷ್ಟಮಿ', description: 'ಭೀಷ್ಮಾಚಾರ್ಯರ ಸ್ಮರಣೆ.', shloka: 'ಮಾಘೇ ಮಾಸಿ ಸಿತೇ ಪಕ್ಷೇ ಅಷ್ಟಮ್ಯಾಂ ಚ ಭಾರತೇ | ಭೀಷ್ಮಃ ಶಾಂತನವೋ ವೀರಃ ಸ್ವರ್ಗಮಾರುರೋಹಿ ಸಃ ||', source: 'ಮಹಾಭಾರತ (ಅನುಶಾಸನ ಪರ್ವ)'));
       } else if (tIdx == 10) {
         events.add(AstroEvent(name: 'ಭೀಷ್ಮ ಏಕಾದಶಿ / ಜಯಾ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುಸಹಸ್ರನಾಮ ಉಪದೇಶಿಸಿದ ದಿನ.', shloka: 'ಮಾಘಮಾಸೇ ಸಿತೇ ಪಕ್ಷೇ ಏಕಾದಶ್ಯಾಂ ಮಹಾಮತಿಃ |', source: 'ಮಹಾಭಾರತ'));
       } else if (tIdx == 14) {
-        events.add(AstroEvent(name: 'ಮಾಘ ಪೌರ್ಣಿಮೆ', description: 'ಮಾಘ ಸ್ನಾನ ಪ್ರಶಸ್ತ. ದಾನ-ಪುಣ್ಯ.', shloka: 'ಮಾಘೇ ಪೌರ್ಣಮಾಸ್ಯಾಂ ಸ್ನಾನಂ ಪುಣ್ಯಫಲಪ್ರದಮ್ |', source: 'ಪದ್ಮ ಪುರಾಣ'));
+        events.add(AstroEvent(name: 'ಮಾಘ ಪೌರ್ಣಿಮೆ', description: 'ಮಾಘ ಸ್ನಾನ ಪ್ರಶಸ್ತ. ದಾನ-ಪುಣ್ಯ.', shloka: 'ಮಾಘೇ ಚ ಯಃ ಸ್ನಾತಿ ನಿತ್ಯಂ ಪೌರ್ಣಮಾಸ್ಯಾಂ ವಿಶೇಷತಃ | ತಸ್ಯ ಪುಣ್ಯಫಲಂ ಪ್ರೋಕ್ತಂ ನಾಸ್ತಿ ಸಂಶಯಃ ||', source: 'ಪದ್ಮ ಪುರಾಣ'));
       } else if (tIdx == 28) {
         events.add(AstroEvent(name: 'ಮಹಾ ಶಿವರಾತ್ರಿ', description: 'ಶಿವನ ಆರಾಧನೆ. ಉಪವಾಸ ಮತ್ತು ಜಾಗರಣೆ. ನಿಶೀಥ ಕಾಲದಲ್ಲಿ (ಮಧ್ಯರಾತ್ರಿ) ಚತುರ್ದಶಿ ಇರಬೇಕು.', shloka: 'ಮಾಘ ಕೃಷ್ಣ ಚತುರ್ದಶ್ಯಾಂ ಆದಿದೇವೋ ಮಹಾನಿಶಿ |', source: 'ಈಶಾನ ಸಂಹಿತೆ'));
       } else if (tIdx == 29) {
-        events.add(AstroEvent(name: 'ಮೌನಿ ಅಮಾವಾಸ್ಯೆ / ಮಾಘ ಅಮಾವಾಸ್ಯೆ', description: 'ಮೌನ ವ್ರತ. ಸಂಗಮ ಸ್ನಾನ. ಪಿತೃ ತರ್ಪಣ.', shloka: 'ಮಾಘೇ ಅಮಾವಾಸ್ಯಾಯಾಂ ಮೌನವ್ರತಮ್ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಮೌನಿ ಅಮಾವಾಸ್ಯೆ / ಮಾಘ ಅಮಾವಾಸ್ಯೆ', description: 'ಮೌನ ವ್ರತ. ಸಂಗಮ ಸ್ನಾನ. ಪಿತೃ ತರ್ಪಣ.', shloka: 'ಮೌನಂ ಸರ್ವಾರ್ಥಸಾಧನಂ ಮೌನಂ ಸರ್ವತೋ ವರಮ್ | ಮೌನಂ ಅವಿವಾದಂ ಪುಣ್ಯಂ ತಸ್ಮಾನ್ಮೌನಂ ಸಮಾಚರೇತ್ ||', source: 'ಮಹಾಭಾರತ (ಶಾಂತಿ ಪರ್ವ)'));
       }
     }
 
     // 12. ಫಾಲ್ಗುಣ ಮಾಸ (Phalguna)
     if (masa == 'ಫಾಲ್ಗುಣ') {
       if (tIdx == 3) {
-        events.add(AstroEvent(name: 'ಗಣೇಶ ಜಯಂತಿ', description: 'ಗಣೇಶನ ಜನ್ಮದಿನ.', shloka: 'ಫಾಲ್ಗುಣೇ ಶುಕ್ಲಪಕ್ಷೇ ಚತುರ್ಥ್ಯಾಂ ಗಣೇಶಜನ್ಮ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಗಣೇಶ ಜಯಂತಿ', description: 'ಗಣೇಶನ ಜನ್ಮದಿನ.', shloka: 'ವಕ್ರತುಂಡಂ ಮಹಾಕಾಯಂ ಸೂರ್ಯಕೋಟಿಸಮಪ್ರಭಮ್ | ನಿರ್ವಿಘ್ನಂ ಕುರು ಮೇ ದೇವ ಸರ್ವಕಾರ್ಯೇಷು ಸರ್ವದಾ ||', source: 'ಗಣೇಶ ಪುರಾಣ'));
       } else if (tIdx == 10) {
-        events.add(AstroEvent(name: 'ಆಮಲಕೀ ಏಕಾದಶಿ', description: 'ನೆಲ್ಲಿ ವೃಕ್ಷ ಪೂಜೆ.', shloka: 'ಫಾಲ್ಗುಣೇ ಶುಕ್ಲಪಕ್ಷೇ ಏಕಾದಶ್ಯಾಂ ಆಮಲಕೀ |', source: 'ಧರ್ಮಸಿಂಧು'));
+        events.add(AstroEvent(name: 'ಆಮಲಕೀ ಏಕಾದಶಿ', description: 'ನೆಲ್ಲಿ ವೃಕ್ಷ ಪೂಜೆ.', shloka: 'ಆಮಲಕೀ ತತಃ ಪಶ್ಚಾನ್ನಾಮ್ನಾ ವೈ ಪಾಪಮೋಚನೀ |', source: 'ಶ್ರೀ ಗರ್ಗ ಸಂಹಿತಾ'));
       } else if (tIdx == 14) {
         events.add(AstroEvent(name: 'ಹೋಳಿ ಹುಣ್ಣಿಮೆ / ಕಾಮ ದಹನ', description: 'ಬಣ್ಣಗಳ ಹಬ್ಬ. ಹೋಲಿಕಾ ದಹನ.', shloka: 'ಫಾಲ್ಗುಣೇ ಪೌರ್ಣಮಾಸ್ಯಾಂ ತು ಹೋಲಿಕಾ ದಹನಂ ಸ್ಮೃತಮ್ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
       }
