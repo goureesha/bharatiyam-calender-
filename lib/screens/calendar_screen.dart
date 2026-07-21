@@ -302,12 +302,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   // ─── CALENDAR GRID ─────────────────────────────────────
+  // Dynamically fills available screen space using MediaQuery.
+  // Calculates cell height based on: (screenHeight - topReserved - bottomNav) / numRows
+  // This ensures full-screen look on ALL phone sizes (small 5", medium 6.5", large 7"+).
 
   Widget _buildCalendarGrid() {
     final daysInMonth = DateUtils.getDaysInMonth(_currentMonth.year, _currentMonth.month);
     final firstWeekday = DateTime(_currentMonth.year, _currentMonth.month, 1).weekday % 7;
     final today = DateTime.now();
     final isCurrentMonth = today.year == _currentMonth.year && today.month == _currentMonth.month;
+
+    // Calculate number of rows needed (weeks)
+    final totalCells = firstWeekday + daysInMonth;
+    final numRows = (totalCells / 7).ceil();
 
     final cells = <Widget>[];
     for (int i = 0; i < firstWeekday; i++) {
@@ -388,13 +395,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
       );
     }
 
-    return GridView.count(
-      crossAxisCount: 7,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      childAspectRatio: 0.85,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      children: cells,
+    // Use LayoutBuilder to adapt grid to available screen space
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final mq = MediaQuery.of(context);
+        final screenHeight = mq.size.height;
+        final topPad = mq.padding.top; // status bar
+        final bottomPad = mq.padding.bottom; // nav bar safe area
+
+        // Reserve: status bar + appBar(~56) + monthBar(~52) + weekdayHeader(~24) + bottomNav(~80)
+        final reserved = topPad + 56 + 52 + 24 + 80 + bottomPad;
+        final availableHeight = screenHeight - reserved;
+
+        // Each cell: available height / number of rows, with some padding buffer
+        final cellHeight = (availableHeight / numRows).clamp(48.0, 90.0);
+        final cellWidth = (constraints.maxWidth - 16) / 7; // 7 columns, minus padding
+        final aspectRatio = cellWidth / cellHeight;
+
+        return GridView.count(
+          crossAxisCount: 7,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          childAspectRatio: aspectRatio,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: cells,
+        );
+      },
     );
   }
 
