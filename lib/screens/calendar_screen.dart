@@ -407,8 +407,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
         final reserved = topPad + 56 + 52 + 24 + 80 + bottomPad;
         final availableHeight = screenHeight - reserved;
 
-        // Each cell: available height / number of rows, with some padding buffer
-        final cellHeight = (availableHeight / numRows).clamp(48.0, 90.0);
+        // Each cell fills all available height — no max cap, so it fills the ENTIRE screen
+        final cellHeight = (availableHeight / numRows).clamp(48.0, double.infinity);
         final cellWidth = (constraints.maxWidth - 16) / 7; // 7 columns, minus padding
         final aspectRatio = cellWidth / cellHeight;
 
