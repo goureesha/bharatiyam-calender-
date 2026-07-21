@@ -350,7 +350,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            margin: const EdgeInsets.all(2),
+            margin: const EdgeInsets.all(1.5),
+            padding: const EdgeInsets.symmetric(vertical: 2),
             decoration: BoxDecoration(
               color: isSelected
                 ? kGold.withAlpha(30)
@@ -363,30 +364,66 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
               children: [
+                // Day number — large and clear
                 Text(
                   '$d',
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: isToday || isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontSize: 16,
+                    fontWeight: isToday || isSelected ? FontWeight.bold : FontWeight.w500,
                     color: isSelected ? kGold : isToday ? kTeal : dayColor,
                   ),
                 ),
+                // Tithi — readable
                 if (data != null)
-                  Text(
-                    _tithiShort(data.tithiIndex),
-                    style: TextStyle(fontSize: 7, color: isSelected ? kGold.withAlpha(178) : kMuted),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 1),
+                    child: Text(
+                      _tithiShort(data.tithiIndex),
+                      style: TextStyle(
+                        fontSize: 9,
+                        color: isSelected ? kGold.withAlpha(200) : kMuted,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                // Nakshatra — always show
+                if (data != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 1),
+                    child: Text(
+                      _nakShort(data.nakshatraIndex),
+                      style: TextStyle(
+                        fontSize: 7,
+                        color: isSelected ? kGold.withAlpha(140) : kMuted.withAlpha(160),
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                    ),
+                  ),
+                // Event indicator — show name if space allows, else dot
                 if (_monthEvents.containsKey(d))
-                  Container(
-                    width: 5, height: 5,
-                    margin: const EdgeInsets.only(top: 1),
-                    decoration: BoxDecoration(color: Color(0xFFFF9800), shape: BoxShape.circle),
-                  )
-                else if (data != null)
-                  Text(
-                    _nakShort(data.nakshatraIndex),
-                    style: TextStyle(fontSize: 6, color: isSelected ? kGold.withAlpha(127) : kMuted.withAlpha(127)),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        _monthEvents[d]!.first.name.length > 8
+                          ? '● ${_monthEvents[d]!.first.name.substring(0, 6)}..'
+                          : '● ${_monthEvents[d]!.first.name}',
+                        style: TextStyle(
+                          fontSize: 6,
+                          color: Color(0xFFFF9800),
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ),
               ],
             ),
