@@ -261,14 +261,30 @@ class PanchangaCalculator {
     final targetDeg = ((tithiIdx + 1) % 30) * _tithiSpan;
     double lo = jdSunrise - 0.5, hi = jdSunrise + 1.5;
 
-    // Find start of current tithi (search backward)
+    // Find start of current tithi (search backward with coarse then fine)
     double startJd = jdSunrise;
-    for (int i = 0; i < 20; i++) {
-      final checkJd = jdSunrise - i * 0.05;
+    double coarseLo = jdSunrise, coarseHi = jdSunrise;
+    for (int i = 1; i <= 30; i++) {
+      final checkJd = jdSunrise - i * 0.04; // ~58 min steps, up to ~30 hrs back
       final p = Ephemeris.calcAll(checkJd, mode, tn);
       final td = Ephemeris.normDeg(p['Moon']![0] - p['Sun']![0]);
       final ti = (td / _tithiSpan).floor().clamp(0, 29);
-      if (ti != tithiIdx) { startJd = checkJd + 0.05; break; }
+      if (ti != tithiIdx) {
+        coarseLo = checkJd;
+        coarseHi = checkJd + 0.04;
+        break;
+      }
+    }
+    // Binary search refinement for precise start
+    if (coarseLo != coarseHi) {
+      for (int j = 0; j < 20; j++) {
+        final mid = (coarseLo + coarseHi) / 2;
+        final p = Ephemeris.calcAll(mid, mode, tn);
+        final td = Ephemeris.normDeg(p['Moon']![0] - p['Sun']![0]);
+        final ti = (td / _tithiSpan).floor().clamp(0, 29);
+        if (ti != tithiIdx) coarseLo = mid; else coarseHi = mid;
+      }
+      startJd = (coarseLo + coarseHi) / 2;
     }
 
     // Find end of current tithi
@@ -290,11 +306,25 @@ class PanchangaCalculator {
     double lo = jdSunrise - 0.5, hi = jdSunrise + 1.2;
 
     double startJd = jdSunrise;
-    for (int i = 0; i < 20; i++) {
+    double coarseLo = jdSunrise, coarseHi = jdSunrise;
+    for (int i = 1; i <= 30; i++) {
       final checkJd = jdSunrise - i * 0.04;
       final p = Ephemeris.calcAll(checkJd, mode, tn);
       final ni = (p['Moon']![0] / _nakshatraSpan).floor() % 27;
-      if (ni != nakIdx) { startJd = checkJd + 0.04; break; }
+      if (ni != nakIdx) {
+        coarseLo = checkJd;
+        coarseHi = checkJd + 0.04;
+        break;
+      }
+    }
+    if (coarseLo != coarseHi) {
+      for (int j = 0; j < 20; j++) {
+        final mid = (coarseLo + coarseHi) / 2;
+        final p = Ephemeris.calcAll(mid, mode, tn);
+        final ni = (p['Moon']![0] / _nakshatraSpan).floor() % 27;
+        if (ni != nakIdx) coarseLo = mid; else coarseHi = mid;
+      }
+      startJd = (coarseLo + coarseHi) / 2;
     }
 
     for (int i = 0; i < 20; i++) {
@@ -315,12 +345,27 @@ class PanchangaCalculator {
     double lo = jdSunrise - 0.5, hi = jdSunrise + 1.5;
 
     double startJd = jdSunrise;
-    for (int i = 0; i < 20; i++) {
+    double coarseLo = jdSunrise, coarseHi = jdSunrise;
+    for (int i = 1; i <= 30; i++) {
       final checkJd = jdSunrise - i * 0.04;
       final p = Ephemeris.calcAll(checkJd, mode, tn);
       final yd = Ephemeris.normDeg(p['Moon']![0] + p['Sun']![0]);
       final yi = (yd / _yogaSpan).floor() % 27;
-      if (yi != yogaIdx) { startJd = checkJd + 0.04; break; }
+      if (yi != yogaIdx) {
+        coarseLo = checkJd;
+        coarseHi = checkJd + 0.04;
+        break;
+      }
+    }
+    if (coarseLo != coarseHi) {
+      for (int j = 0; j < 20; j++) {
+        final mid = (coarseLo + coarseHi) / 2;
+        final p = Ephemeris.calcAll(mid, mode, tn);
+        final yd = Ephemeris.normDeg(p['Moon']![0] + p['Sun']![0]);
+        final yi = (yd / _yogaSpan).floor() % 27;
+        if (yi != yogaIdx) coarseLo = mid; else coarseHi = mid;
+      }
+      startJd = (coarseLo + coarseHi) / 2;
     }
 
     for (int i = 0; i < 20; i++) {
@@ -341,12 +386,27 @@ class PanchangaCalculator {
     double lo = jdSunrise - 0.3, hi = jdSunrise + 0.8;
 
     double startJd = jdSunrise;
-    for (int i = 0; i < 15; i++) {
-      final checkJd = jdSunrise - i * 0.03;
+    double coarseLo = jdSunrise, coarseHi = jdSunrise;
+    for (int i = 1; i <= 20; i++) {
+      final checkJd = jdSunrise - i * 0.02; // ~29 min steps for karana (shorter anga)
       final p = Ephemeris.calcAll(checkJd, mode, tn);
       final td = Ephemeris.normDeg(p['Moon']![0] - p['Sun']![0]);
       final ki = (td / _karanaSpan).floor();
-      if (ki != karanaRawIdx) { startJd = checkJd + 0.03; break; }
+      if (ki != karanaRawIdx) {
+        coarseLo = checkJd;
+        coarseHi = checkJd + 0.02;
+        break;
+      }
+    }
+    if (coarseLo != coarseHi) {
+      for (int j = 0; j < 20; j++) {
+        final mid = (coarseLo + coarseHi) / 2;
+        final p = Ephemeris.calcAll(mid, mode, tn);
+        final td = Ephemeris.normDeg(p['Moon']![0] - p['Sun']![0]);
+        final ki = (td / _karanaSpan).floor();
+        if (ki != karanaRawIdx) coarseLo = mid; else coarseHi = mid;
+      }
+      startJd = (coarseLo + coarseHi) / 2;
     }
 
     for (int i = 0; i < 20; i++) {
