@@ -99,15 +99,15 @@ class _HomeScreenState extends State<HomeScreen> {
       final vishaData = GhatiCalculator.calculateVishaGhati(
         nakshatraIndex: data.nakshatraIndex,
         sunriseJd: data.sunriseJd,
-        nakStartJd: data.sunriseJd - 0.5,
-        nakEndJd: data.sunriseJd + 0.5,
+        nakStartJd: data.nakStartJd,
+        nakEndJd: data.nakEndJd,
         tzOffset: LocationService.tzOffset,
       );
       final amrutaData = GhatiCalculator.calculateAmrutaGhati(
         nakshatraIndex: data.nakshatraIndex,
         sunriseJd: data.sunriseJd,
-        nakStartJd: data.sunriseJd - 0.5,
-        nakEndJd: data.sunriseJd + 0.5,
+        nakStartJd: data.nakStartJd,
+        nakEndJd: data.nakEndJd,
         tzOffset: LocationService.tzOffset,
       );
 

@@ -108,6 +108,8 @@ class PanchangaData {
   final double sunsetJd;
   final double tithiEndJd;
   final double tithiStartJd;
+  final double nakStartJd;
+  final double nakEndJd;
 
   const PanchangaData({
     required this.tithi,
@@ -192,6 +194,8 @@ class PanchangaData {
     required this.sunsetJd,
     this.tithiEndJd = 0,
     this.tithiStartJd = 0,
+    this.nakStartJd = 0,
+    this.nakEndJd = 0,
   });
 
   PanchangaData copyWith({
@@ -277,6 +281,7 @@ class PanchangaData {
     shakaVarsha: shakaVarsha, paksha: paksha,
     chandraUdaya: chandraUdaya, chandraAsta: chandraAsta,
     sunriseJd: sunriseJd, sunsetJd: sunsetJd, tithiEndJd: tithiEndJd, tithiStartJd: tithiStartJd,
+    nakStartJd: nakStartJd, nakEndJd: nakEndJd,
   );
 
   Map<String, dynamic> toJson() => {
@@ -296,6 +301,7 @@ class PanchangaData {
     'vP': vishaPraghati, 'aP': amrutaPraghati, 'ag': agniVasa,
     'sk': shakaVarsha, 'pk': paksha, 'cu': chandraUdaya, 'ca': chandraAsta,
     'rJ': sunriseJd, 'sJ': sunsetJd, 'tEJ': tithiEndJd, 'tSJ': tithiStartJd,
+    'nSJ': nakStartJd, 'nEJ': nakEndJd,
   };
 
   factory PanchangaData.fromJson(Map<String, dynamic> j) => PanchangaData(
@@ -324,6 +330,7 @@ class PanchangaData {
     shakaVarsha: j['sk'] ?? 0, paksha: j['pk'] ?? '',
     chandraUdaya: j['cu'] ?? '', chandraAsta: j['ca'] ?? '',
     sunriseJd: (j['rJ'] ?? 0).toDouble(), sunsetJd: (j['sJ'] ?? 0).toDouble(), tithiEndJd: (j['tEJ'] ?? 0).toDouble(), tithiStartJd: (j['tSJ'] ?? 0).toDouble(),
+    nakStartJd: (j['nSJ'] ?? 0).toDouble(), nakEndJd: (j['nEJ'] ?? 0).toDouble(),
   );
 }
 

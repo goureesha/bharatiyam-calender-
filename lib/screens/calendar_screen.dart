@@ -129,15 +129,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
           final vishaData = GhatiCalculator.calculateVishaGhati(
             nakshatraIndex: p.nakshatraIndex,
             sunriseJd: p.sunriseJd,
-            nakStartJd: p.sunriseJd - 0.5,
-            nakEndJd: p.sunriseJd + 0.5,
+            nakStartJd: p.nakStartJd,
+            nakEndJd: p.nakEndJd,
             tzOffset: LocationService.tzOffset,
           );
           final amrutaData = GhatiCalculator.calculateAmrutaGhati(
             nakshatraIndex: p.nakshatraIndex,
             sunriseJd: p.sunriseJd,
-            nakStartJd: p.sunriseJd - 0.5,
-            nakEndJd: p.sunriseJd + 0.5,
+            nakStartJd: p.nakStartJd,
+            nakEndJd: p.nakEndJd,
             tzOffset: LocationService.tzOffset,
           );
 
