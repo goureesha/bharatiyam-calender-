@@ -83,15 +83,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Future<void> _computeMonth() async {
-    setState(() => _loading = true);
+    // Show grid immediately (no spinner) — cells fill progressively
+    if (mounted) setState(() => _loading = false);
+
     final data = <int, PanchangaData>{};
     final events = <int, List<AstroEvent>>{};
     final daysInMonth = DateUtils.getDaysInMonth(_currentMonth.year, _currentMonth.month);
+    final savedMonth = DateTime(_currentMonth.year, _currentMonth.month);
 
     for (int d = 1; d <= daysInMonth; d++) {
+      // Abort if user navigated away to a different month
+      if (_currentMonth.year != savedMonth.year || _currentMonth.month != savedMonth.month) return;
+
       try {
         var p = PanchangaCalculator.calculate(
-          year: _currentMonth.year, month: _currentMonth.month, day: d,
+          year: savedMonth.year, month: savedMonth.month, day: d,
           lat: LocationService.lat, lon: LocationService.lon,
           tzOffset: LocationService.tzOffset,
         );
@@ -113,7 +119,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           if (pournimanta['isAdhika'] == true) pourniName = 'adhika_$pourniName';
 
           final samData = SamvatsaraCalculator.calculate(
-            _currentMonth.year, _currentMonth.month,
+            savedMonth.year, savedMonth.month,
             chandraMasaKey: amantaKey,
           );
           final sunPlanets = Ephemeris.calcAll(p.sunriseJd, 'lahiri', true);
@@ -156,10 +162,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
         data[d] = p;
       } catch (_) {}
-      if (d % 2 == 0) await Future.delayed(Duration.zero);
+
+      // Progressive update: refresh UI every 5 days for smooth loading
+      if (d % 5 == 0 || d == daysInMonth) {
+        if (mounted) {
+          setState(() {
+            _monthData = Map.of(data);
+            _monthEvents = Map.of(events);
+          });
+        }
+      }
+      await Future.delayed(Duration.zero); // yield to UI thread every day
     }
 
-    final key = _monthKey(_currentMonth.year, _currentMonth.month);
+    final key = _monthKey(savedMonth.year, savedMonth.month);
     _dataCache[key] = data;
     _eventsCache[key] = events;
 
@@ -167,7 +183,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       setState(() {
         _monthData = data;
         _monthEvents = events;
-        _loading = false;
       });
       _computeKalas();
     }
@@ -201,26 +216,23 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading
-      ? Center(child: CircularProgressIndicator(color: kGold))
-      : SingleChildScrollView(
-          controller: _scrollCtrl,
-          padding: const EdgeInsets.only(bottom: 24),
-          child: Column(
-            children: [
-              _buildMonthBar(),
-              _buildWeekdayHeader(),
-              _buildCalendarGrid(),
-              if (_selectedDay != null && _monthData.containsKey(_selectedDay)) ...[
-                const SizedBox(height: 8),
-                Container(
-                  key: _detailKey,
-                  child: _buildFullDetail(_monthData[_selectedDay]!),
-                ),
-              ],
-            ],
-          ),
-        );
+    return SingleChildScrollView(
+      controller: _scrollCtrl,
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        children: [
+          _buildMonthBar(),
+          _buildTransposedGrid(),
+          if (_selectedDay != null && _monthData.containsKey(_selectedDay)) ...[
+            const SizedBox(height: 8),
+            Container(
+              key: _detailKey,
+              child: _buildFullDetail(_monthData[_selectedDay]!),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 
   // ─── MONTH BAR ─────────────────────────────────────────
@@ -285,177 +297,194 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // ─── WEEKDAY HEADER ────────────────────────────────────
+  // ─── TRANSPOSED CALENDAR GRID ──────────────────────────
+  // Weekdays as ROWS (top→bottom), weeks as COLUMNS (left→right).
+  // This gives wider, more square cells with room for tithi, nak, event info.
+  // Uses LayoutBuilder + MediaQuery for full-screen fit on all devices.
 
-  Widget _buildWeekdayHeader() {
-    final days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        children: days.map((d) => Expanded(
-          child: Center(
-            child: Text(d, style: TextStyle(fontSize: 10, color: kMuted, fontWeight: FontWeight.bold)),
-          ),
-        )).toList(),
-      ),
-    );
-  }
-
-  // ─── CALENDAR GRID ─────────────────────────────────────
-  // Dynamically fills available screen space using MediaQuery.
-  // Calculates cell height based on: (screenHeight - topReserved - bottomNav) / numRows
-  // This ensures full-screen look on ALL phone sizes (small 5", medium 6.5", large 7"+).
-
-  Widget _buildCalendarGrid() {
+  Widget _buildTransposedGrid() {
     final daysInMonth = DateUtils.getDaysInMonth(_currentMonth.year, _currentMonth.month);
-    final firstWeekday = DateTime(_currentMonth.year, _currentMonth.month, 1).weekday % 7;
+    final firstWeekday = DateTime(_currentMonth.year, _currentMonth.month, 1).weekday % 7; // 0=Sun
     final today = DateTime.now();
     final isCurrentMonth = today.year == _currentMonth.year && today.month == _currentMonth.month;
 
-    // Calculate number of rows needed (weeks)
+    // Calculate number of week-columns needed
     final totalCells = firstWeekday + daysInMonth;
-    final numRows = (totalCells / 7).ceil();
+    final numWeeks = (totalCells / 7).ceil();
 
-    final cells = <Widget>[];
-    for (int i = 0; i < firstWeekday; i++) {
-      cells.add(const SizedBox());
-    }
-
+    // Build dayMap[weekday][week] = day number or null
+    final dayMap = List.generate(7, (_) => List<int?>.filled(numWeeks, null));
     for (int d = 1; d <= daysInMonth; d++) {
-      final data = _monthData[d];
-      final isToday = isCurrentMonth && d == today.day;
-      final isSelected = d == _selectedDay;
-
-      Color dayColor = kText;
-      if (data != null) {
-        if (data.tithiIndex == 14) dayColor = const Color(0xFFFFD700);
-        if (data.tithiIndex == 29) dayColor = const Color(0xFF9E9E9E);
-      }
-
-      cells.add(
-        GestureDetector(
-          onTap: () {
-            setState(() => _selectedDay = d);
-            _computeKalas();
-            // Auto-scroll to detail section after frame renders
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (_detailKey.currentContext != null) {
-                Scrollable.ensureVisible(
-                  _detailKey.currentContext!,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeInOut,
-                );
-              }
-            });
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            margin: const EdgeInsets.all(1.5),
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            decoration: BoxDecoration(
-              color: isSelected
-                ? kGold.withAlpha(30)
-                : isToday ? kTeal.withAlpha(20) : Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: isSelected ? kGold : isToday ? kTeal.withAlpha(127) : kBorder.withAlpha(51),
-                width: isSelected ? 2 : 1,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                // Day number — large and clear
-                Text(
-                  '$d',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: isToday || isSelected ? FontWeight.bold : FontWeight.w500,
-                    color: isSelected ? kGold : isToday ? kTeal : dayColor,
-                  ),
-                ),
-                // Tithi — readable
-                if (data != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 1),
-                    child: Text(
-                      _tithiShort(data.tithiIndex),
-                      style: TextStyle(
-                        fontSize: 9,
-                        color: isSelected ? kGold.withAlpha(200) : kMuted,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                // Nakshatra — always show
-                if (data != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 1),
-                    child: Text(
-                      _nakShort(data.nakshatraIndex),
-                      style: TextStyle(
-                        fontSize: 7,
-                        color: isSelected ? kGold.withAlpha(140) : kMuted.withAlpha(160),
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                    ),
-                  ),
-                // Event indicator — show name if space allows, else dot
-                if (_monthEvents.containsKey(d))
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 2),
-                      child: Text(
-                        _monthEvents[d]!.first.name.length > 8
-                          ? '● ${_monthEvents[d]!.first.name.substring(0, 6)}..'
-                          : '● ${_monthEvents[d]!.first.name}',
-                        style: TextStyle(
-                          fontSize: 6,
-                          color: Color(0xFFFF9800),
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      );
+      final cellIdx = firstWeekday + d - 1;
+      final week = cellIdx ~/ 7;
+      final weekday = cellIdx % 7;
+      dayMap[weekday][week] = d;
     }
 
-    // Use LayoutBuilder to adapt grid to available screen space
+    final weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    final weekdayColors = [
+      const Color(0xFFFF6B6B), kMuted, kMuted, kMuted, kMuted, kMuted,
+      const Color(0xFF64B5F6),
+    ];
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final mq = MediaQuery.of(context);
         final screenHeight = mq.size.height;
-        final topPad = mq.padding.top; // status bar
-        final bottomPad = mq.padding.bottom; // nav bar safe area
+        final topPad = mq.padding.top;
+        final bottomPad = mq.padding.bottom;
 
-        // Reserve: status bar + appBar(~56) + monthBar(~52) + weekdayHeader(~24) + bottomNav(~80)
-        final reserved = topPad + 56 + 52 + 24 + 80 + bottomPad;
+        // Reserve: status bar + appBar(~56) + monthBar(~52) + bottomNav(~80)
+        final reserved = topPad + 56 + 52 + 80 + bottomPad;
         final availableHeight = screenHeight - reserved;
+        final rowHeight = (availableHeight / 7).clamp(50.0, double.infinity);
 
-        // Each cell fills all available height — no max cap, so it fills the ENTIRE screen
-        final cellHeight = (availableHeight / numRows).clamp(48.0, double.infinity);
-        final cellWidth = (constraints.maxWidth - 16) / 7; // 7 columns, minus padding
-        final aspectRatio = cellWidth / cellHeight;
+        final labelWidth = 34.0;
+        final availableWidth = constraints.maxWidth - 12 - labelWidth;
+        final cellWidth = availableWidth / numWeeks;
 
-        return GridView.count(
-          crossAxisCount: 7,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          childAspectRatio: aspectRatio,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: cells,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: Column(
+            children: List.generate(7, (weekday) {
+              return SizedBox(
+                height: rowHeight,
+                child: Row(
+                  children: [
+                    // Weekday label column
+                    SizedBox(
+                      width: labelWidth,
+                      child: Center(
+                        child: Text(
+                          weekdayLabels[weekday],
+                          style: TextStyle(
+                            fontSize: 9,
+                            color: weekdayColors[weekday],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Day cells for each week
+                    ...List.generate(numWeeks, (week) {
+                      final day = dayMap[weekday][week];
+                      if (day == null) {
+                        return SizedBox(width: cellWidth);
+                      }
+                      final data = _monthData[day];
+                      final isToday = isCurrentMonth && day == today.day;
+                      final isSelected = day == _selectedDay;
+                      final hasEvent = _monthEvents.containsKey(day);
+
+                      Color dayColor = kText;
+                      if (data != null) {
+                        if (data.tithiIndex == 14) dayColor = const Color(0xFFFFD700); // Purnima
+                        if (data.tithiIndex == 29) dayColor = const Color(0xFF9E9E9E); // Amavasya
+                      }
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() => _selectedDay = day);
+                          _computeKalas();
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (_detailKey.currentContext != null) {
+                              Scrollable.ensureVisible(
+                                _detailKey.currentContext!,
+                                duration: const Duration(milliseconds: 400),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: cellWidth,
+                          margin: const EdgeInsets.all(1.5),
+                          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 2),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                              ? kGold.withAlpha(30)
+                              : isToday ? kTeal.withAlpha(20)
+                              : hasEvent ? const Color(0xFFFF9800).withAlpha(10)
+                              : Colors.transparent,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: isSelected ? kGold
+                                : isToday ? kTeal.withAlpha(127)
+                                : kBorder.withAlpha(51),
+                              width: isSelected ? 2 : 1,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Day number
+                              Text(
+                                '$day',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: isToday || isSelected ? FontWeight.bold : FontWeight.w500,
+                                  color: isSelected ? kGold : isToday ? kTeal : dayColor,
+                                ),
+                              ),
+                              // Tithi
+                              if (data != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 1),
+                                  child: Text(
+                                    _tithiShort(data.tithiIndex),
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      color: isSelected ? kGold.withAlpha(200) : kMuted,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              // Nakshatra
+                              if (data != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 1),
+                                  child: Text(
+                                    _nakShort(data.nakshatraIndex),
+                                    style: TextStyle(
+                                      fontSize: 7,
+                                      color: isSelected ? kGold.withAlpha(140) : kMuted.withAlpha(160),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              // Event name
+                              if (hasEvent)
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 2),
+                                    child: Text(
+                                      _monthEvents[day]!.first.name,
+                                      style: TextStyle(
+                                        fontSize: 6.5,
+                                        color: const Color(0xFFFF9800),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              );
+            }),
+          ),
         );
       },
     );
