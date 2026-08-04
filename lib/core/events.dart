@@ -262,9 +262,10 @@ class EventCalculator {
       events.add(AstroEvent(name: 'ಪ್ರದೋಷ ವ್ರತ', description: 'ಶಿವನ ಆರಾಧನೆ ಸರ್ವ ಪಾಪ ನಾಶಕ. ಸಂಧ್ಯಾ ಕಾಲದಲ್ಲಿ (ಸೂರ್ಯಾಸ್ತ ಸಮಯ) ತ್ರಯೋದಶಿ ಇರಬೇಕು.', shloka: 'ತ್ರಯೋದಶ್ಯಾಂ ನಿಶಾಮುಖೇ ಪ್ರದೋಷಸಮಯೇ ಹರಮ್ |', source: 'ಸ್ಕಂದ ಪುರಾಣ'));
     }
 
-    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ (Krishna Chaturthi)
-    if (tIdx == 18) {
-      events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.', shloka: 'ಕೃಷ್ಣಪಕ್ಷೇ ಚತುರ್ಥ್ಯಾಂ ತು ಸಂಪೂಜ್ಯ ಗಣನಾಯಕಮ್ |', source: 'ಗಣೇಶ ಪುರಾಣ'));
+    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ (Krishna Chaturthi — chandrodaya rule)
+    // Show when Krishna Chaturthi (18) is at sunrise OR arrives by sunset (moonrise)
+    if (tIdx == 18 || (sunsetTithiIdx != null && sunsetTithiIdx == 18 && tIdx <= 17)) {
+      events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.', shloka: '', source: ''));
     }
 
     // ವಿನಾಯಕ ಚತುರ್ಥಿ (Shukla Chaturthi — every month)
