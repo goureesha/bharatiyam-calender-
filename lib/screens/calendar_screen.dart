@@ -129,13 +129,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
             // If tomorrow's sunrise has Chaturthi, Chaturthi arrived at moonrise tonight
             final nextP = data[d + 1]; // null for last day of month
             final nextDayTithi = nextP?.tithiIndex;
+            // DEBUG: Log event matching for Bhadrapada days
+            if (masaName == 'ಭಾದ್ರಪದ' && (p.tithiIndex >= 1 && p.tithiIndex <= 5)) {
+              print('EVENT_DEBUG day=$d masa=$masaName tIdx=${p.tithiIndex} sunset=$sunsetTithi nextDay=$nextDayTithi');
+            }
             final ev = EventCalculator.getEvents(
               masa: masaName, tIdx: p.tithiIndex,
               sunsetTithiIdx: sunsetTithi,
               nextDayTithiIdx: nextDayTithi,
               isAdhika: isAdhika,
             );
-            if (ev.isNotEmpty) events[d] = ev;
+            if (ev.isNotEmpty) {
+              events[d] = ev;
+              for (final e in ev) { print('EVENT_DEBUG   → day=$d: ${e.name}'); }
+            }
           } catch (_) {}
         }
       }
