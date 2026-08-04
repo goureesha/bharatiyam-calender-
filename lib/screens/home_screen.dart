@@ -54,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
     await Ephemeris.initSweph();
     _initDone = true;
     _compute();
+    // Load world cities in background (non-blocking)
+    LocationService.loadWorldCitiesData();
   }
 
   void _compute() {

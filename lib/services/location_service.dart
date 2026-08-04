@@ -94,14 +94,35 @@ class LocationService {
     return (minDist < 1.0) ? nearest : null;
   }
 
-  /// Search cities by name
+  /// Load world cities JSON (call once at app start)
+  static Future<void> loadWorldCitiesData() async {
+    await loadWorldCities();
+  }
+
+  /// Search cities by name — offline Indian cities first, then world cities
   static List<CityData> searchCities(String query) {
     if (query.isEmpty) return indianCities;
     final q = query.toLowerCase();
-    return indianCities.where((c) =>
+
+    // Search offline Indian + world capitals
+    final offlineResults = indianCities.where((c) =>
       c.name.toLowerCase().contains(q) ||
       c.nameKn.contains(query) ||
       c.state.toLowerCase().contains(q)
     ).toList();
+
+    // If few offline results, also search world cities JSON
+    if (offlineResults.length < 10 && worldCitiesLoaded) {
+      final worldResults = searchWorldCitiesDb(query, limit: 20 - offlineResults.length);
+      // Avoid duplicates
+      final existingNames = offlineResults.map((c) => c.name.toLowerCase()).toSet();
+      for (final wc in worldResults) {
+        if (!existingNames.contains(wc.name.toLowerCase())) {
+          offlineResults.add(wc);
+        }
+      }
+    }
+
+    return offlineResults;
   }
 }
