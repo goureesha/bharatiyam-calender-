@@ -35,8 +35,7 @@ class AdhikaMasaCalculator {
 
   /// Calculate all masa periods for a year, identifying Adhika and Kshaya
   static List<MasaPeriodInfo> calculateForYear(int year, {double tzOffset = 5.5}) {
-    // 1. Find all Amavasyas (New Moons) from ~March of prev year to ~April of next year
-    //    to cover all masas that overlap with the given year
+    // 1. Find all Amavasyas (New Moons)
     final amavasyas = _findAllAmavasyas(year, tzOffset);
     if (amavasyas.length < 2) return [];
 
@@ -46,19 +45,36 @@ class AdhikaMasaCalculator {
       final am1Jd = amavasyas[i];
       final am2Jd = amavasyas[i + 1];
 
-      // 2. Find Sankrantis between these two Amavasyas
+      // 2. Primary Adhika detection: compare Sun's rashi at the two Amavasyas
+      //    (Reference app approach — reliable, no boundary scan gaps)
+      final rashi1 = _sunRashi(am1Jd);
+      final rashi2 = _sunRashi(am2Jd);
+      final bool hasSankranti = (rashi1 != rashi2);
+
+      // 3. Scan for Sankranti details (for display: which Sankranti, when)
       final sankrantis = _findSankrantis(am1Jd, am2Jd, tzOffset);
 
-      // 3. Determine masa name from Sun's rashi after the first Amavasya
-      //    The masa is named after the Sankranti that occurs in it
-      //    If no Sankranti → Adhika of the next month
-      final masaName = _determineMasaName(am1Jd, am2Jd, sankrantis);
-      
+      // 4. Determine masa name
+      String masaName;
+      if (!hasSankranti) {
+        // Adhika: Sun stays in same rashi → name from next month
+        masaName = _masaNames[(rashi1 + 1) % 12];
+      } else if (sankrantis.isNotEmpty) {
+        // Normal: use first Sankranti's new rashi for naming
+        final newRashi = sankrantis[0]['rashi'] as int;
+        masaName = _masaNames[newRashi];
+      } else {
+        // Fallback: hasSankranti but scan missed it (boundary edge case)
+        masaName = _masaNames[rashi2];
+      }
+
+      // 5. Determine type: count rashi changes for Kshaya detection
+      final rashiDiff = ((rashi2 - rashi1) % 12 + 12) % 12;
       String masaType;
-      if (sankrantis.isEmpty) {
+      if (!hasSankranti) {
         masaType = 'adhika';
-      } else if (sankrantis.length >= 2) {
-        masaType = 'kshaya';
+      } else if (rashiDiff >= 2) {
+        masaType = 'kshaya'; // Sun crossed 2+ rashis → Kshaya
       } else {
         masaType = 'nija';
       }
@@ -73,7 +89,7 @@ class AdhikaMasaCalculator {
           masaType: masaType,
           amavasya1: am1Dt,
           amavasya2: am2Dt,
-          sankrantiCount: sankrantis.length,
+          sankrantiCount: hasSankranti ? (rashiDiff > 0 ? rashiDiff : 1) : 0,
           sankrantiDetails: sankrantis.map((s) => s['name'] as String).toList(),
         ));
       }
