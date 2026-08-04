@@ -96,10 +96,17 @@ class PanchangaCache {
               final isAdhika = amanta['isAdhika'] as bool;
               final masaName = EventCalculator.masaKeyToKannada(masaKey);
               final sunsetTithi = PanchangaCalculator.tithiAtJd(data.sunsetJd);
+              // Next day tithi for chandrodaya events (Ganesha, Sankashta)
+              int? nextDayTithi;
+              try {
+                final nextDaySunriseJd = data.sunriseJd + 1.0; // approximate next sunrise
+                nextDayTithi = PanchangaCalculator.tithiAtJd(nextDaySunriseJd);
+              } catch (_) {}
               final events = EventCalculator.getEvents(
                 masa: masaName,
                 tIdx: data.tithiIndex,
                 sunsetTithiIdx: sunsetTithi,
+                nextDayTithiIdx: nextDayTithi,
                 isAdhika: isAdhika,
               );
               if (events.isNotEmpty) _eventCache[key] = events;

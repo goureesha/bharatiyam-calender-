@@ -125,9 +125,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
           if (p == null) continue;
           try {
             final sunsetTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd);
+            // Next day's sunrise tithi — for chandrodaya events (Ganesha, Sankashta)
+            // If tomorrow's sunrise has Chaturthi, Chaturthi arrived at moonrise tonight
+            final nextP = data[d + 1]; // null for last day of month
+            final nextDayTithi = nextP?.tithiIndex;
             final ev = EventCalculator.getEvents(
               masa: masaName, tIdx: p.tithiIndex,
-              sunsetTithiIdx: sunsetTithi, isAdhika: isAdhika,
+              sunsetTithiIdx: sunsetTithi,
+              nextDayTithiIdx: nextDayTithi,
+              isAdhika: isAdhika,
             );
             if (ev.isNotEmpty) events[d] = ev;
           } catch (_) {}
