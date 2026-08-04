@@ -155,14 +155,25 @@ class AdhikaMasaCalculator {
   /// Determine masa name from the Sankranti that falls within the period
   static String _determineMasaName(double am1Jd, double am2Jd, List<Map<String, dynamic>> sankrantis) {
     if (sankrantis.isEmpty) {
-      // Adhika: name = the next masa's name (based on Sun's rashi at end)
-      final rashi = _sunRashi(am2Jd);
-      // Masa = rashi where Sun enters: Mesha→Vaishakha, Vrishabha→Jyeshtha...
+      // Adhika: no Sankranti, Sun stays in same rashi.
+      // Sample at mid-month for safety (avoids boundary issues).
+      final midJd = (am1Jd + am2Jd) / 2;
+      final rashi = _sunRashi(midJd);
+      // Sun is in rashi X throughout → Adhika of month X
+      // _masaNames maps: Mesha(0)→Chaitra, Vrishabha(1)→Vaishakha...
+      // But Mesha Sankranti → Chaitra month → _masaNames[0]=Chaitra
+      // For Adhika, the next Sankranti will be from rashi X to X+1
+      // Month name = _masaNames for the NEXT Sankranti's target = (rashi+1)%12
+      // BUT _masaNames[0]=Chaitra (Mesha Sankranti month), so:
+      // Vrishabha(1) Sun → next Sankranti enters Mithuna(2) → Jyeshtha = _masaNames[2]
       return _masaNames[(rashi + 1) % 12];
     }
-    // Use the first Sankranti's rashi to determine masa
-    final rashi = sankrantis[0]['rashi'] as int;
-    return _masaNames[(rashi + 1) % 12];
+    // Normal/Kshaya: use the first Sankranti's NEW rashi.
+    // sankrantis[0]['rashi'] = the rashi Sun ENTERS (e.g., Mithuna=2 for Mithuna Sankranti)
+    // Mithuna(2) Sankranti → Jyeshtha month = _masaNames[2]
+    // Mesha(0) Sankranti → Chaitra month = _masaNames[0]
+    final newRashi = sankrantis[0]['rashi'] as int;
+    return _masaNames[newRashi];
   }
 
   /// Get Moon-Sun elongation (0-360°) sidereal
