@@ -117,16 +117,14 @@ class EventCalculator {
 
     // 6. ಭಾದ್ರಪದ ಮಾಸ (Bhadrapada)
     if (masa == 'ಭಾದ್ರಪದ') {
-      // Swarna Gauri: Tritiya (tIdx=2) at sunrise, sunset, OR next day sunrise
-      // (covers case where Tritiya spans the day)
-      if (tIdx == 2 || (sunsetTithiIdx != null && sunsetTithiIdx == 2) || (nextDayTithiIdx != null && nextDayTithiIdx == 3 && tIdx <= 2)) {
+      // Swarna Gauri + Ganesha Chaturthi: BOTH on Tritiya day (tIdx=2)
+      // Gauri = Tritiya at sunrise. Ganesha = Chaturthi at chandrodaya (same evening).
+      if (tIdx == 2) {
         events.add(AstroEvent(name: 'ಸ್ವರ್ಣಗೌರಿ ವ್ರತ / ಹರ್ತಾಲಿಕಾ ತೃತೀಯಾ', description: 'ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ ಪಾರ್ವತಿ ವ್ರತ. ಹರ್ತಾಲಿಕಾ ಪೂಜೆ.', shloka: '', source: ''));
-      }
-      // Ganesha Chaturthi: Chaturthi at chandrodaya (moonrise).
-      // If NEXT DAY's sunrise has Chaturthi(3), then Chaturthi arrived at moonrise TONIGHT.
-      // This is the definitive chandrodaya check.
-      if (tIdx == 3 || (nextDayTithiIdx != null && nextDayTithiIdx == 3 && tIdx <= 2) || (sunsetTithiIdx != null && sunsetTithiIdx == 3 && tIdx <= 2)) {
         events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಚಂದ್ರೋದಯಕ್ಕೆ ಚತುರ್ಥಿ.', shloka: '', source: ''));
+      } else if (tIdx == 3) {
+        // Fallback for years where Chaturthi is at sunrise
+        events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ.', shloka: '', source: ''));
       }
       if (tIdx == 4) {
         events.add(AstroEvent(name: 'ಋಷಿ ಪಂಚಮಿ', description: 'ಸಪ್ತ ಋಷಿಗಳ ಆರಾಧನೆ.', shloka: 'ಭಾದ್ರೇ ಶುಕ್ಲೇ ಪಂಚಮ್ಯಾಂ ತು ಸಪ್ತರ್ಷೀನ್ ಪೂಜಯೇತ್ ಸದಾ |', source: 'ಧರ್ಮಸಿಂಧು'));
@@ -266,8 +264,9 @@ class EventCalculator {
     }
 
     // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ (Krishna Chaturthi — chandrodaya rule)
-    // Show when Krishna Chaturthi (18) is at sunrise, sunset, OR next day sunrise
-    if (tIdx == 18 || (nextDayTithiIdx != null && nextDayTithiIdx == 18 && tIdx <= 17) || (sunsetTithiIdx != null && sunsetTithiIdx == 18 && tIdx <= 17)) {
+    // Chandrodaya: show on Krishna Tritiya day (17) since Chaturthi arrives by moonrise
+    // Also show on tIdx==18 as fallback for when Chaturthi is at sunrise
+    if (tIdx == 17 || tIdx == 18) {
       events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.', shloka: '', source: ''));
     }
 
