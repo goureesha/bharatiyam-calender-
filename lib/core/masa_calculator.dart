@@ -1,5 +1,8 @@
 // Masa Calculator — 4 calendar systems: Amanta, Pournimanta, Chandra Mana, Soura Mana.
 // Includes Adhika Masa detection.
+// Uses TROPICAL positions for New Moon finding (geometric event),
+// then SIDEREAL Sun for rashi determination — matching reference app approach.
+import 'package:sweph/sweph.dart';
 import 'ephemeris.dart';
 
 class MasaCalculator {
@@ -15,6 +18,15 @@ class MasaCalculator {
   // Our cm0=Chaitra, cm1=Vaishakha, so we add 1
   static int _masaFromSunRashi(int sunRashi) => (sunRashi + 1) % 12;
 
+  /// Get Sun's sidereal rashi at a given JD using tropical + manual ayanamsa
+  /// (matches reference app's approach for maximum accuracy)
+  static int _sunSiderealRashi(double jd, String ayanamsaMode) {
+    final ayn = Ephemeris.getAyanamsa(jd, ayanamsaMode);
+    final sunCalc = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_SUN, SwephFlag.SEFLG_SWIEPH);
+    final sunSid = ((sunCalc.longitude - ayn) % 360 + 360) % 360;
+    return (sunSid / 30).floor() % 12;
+  }
+
   /// Calculate Amanta (Amavasyanta) month name
   /// Month runs from Amavasya to Amavasya
   static Map<String, dynamic> calculateAmanta({
@@ -25,25 +37,17 @@ class MasaCalculator {
     bool trueNode = true,
     double tzOffset = 5.5,
   }) {
-    // Find the previous and next Amavasya (New Moon)
-    final prevAmavasya = _findNewMoon(jdSunrise, -1, ayanamsaMode, trueNode);
-    final nextAmavasya = _findNewMoon(jdSunrise, 1, ayanamsaMode, trueNode);
+    // Find the previous and next Amavasya using TROPICAL positions
+    final prevAmavasya = _findNewMoon(jdSunrise, -1);
+    final nextAmavasya = _findNewMoon(jdSunrise, 1);
 
-    // IMPORTANT: Sample Sun's rashi slightly BEFORE each Amavasya (6 hours before).
-    // This avoids boundary ambiguity when Sankranti occurs at/near the exact conjunction.
-    // The traditional month name is based on the pre-Sankranti rashi, so sampling
-    // before the Amavasya ensures we get the correct rashi even if the Sankranti
-    // happens within hours of the Amavasya.
-    const double offset = 0.25; // 6 hours in Julian Days
-
-    final sunAtPrev = Ephemeris.calcAll(prevAmavasya - offset, ayanamsaMode, trueNode);
-    final prevRashi = (sunAtPrev['Sun']![0] / 30).floor() % 12;
+    // Get Sun's sidereal rashi at EXACT Amavasya times
+    // (tropical Sun - ayanamsa, matching reference app)
+    final prevRashi = _sunSiderealRashi(prevAmavasya, ayanamsaMode);
+    final nextRashi = _sunSiderealRashi(nextAmavasya, ayanamsaMode);
     final masaIdx = _masaFromSunRashi(prevRashi);
 
-    // Check for Adhika Masa: compare Sun's rashi before both Amavasyas.
-    // If the rashi is the SAME at both points, no Sankranti occurred → Adhika.
-    final sunAtNext = Ephemeris.calcAll(nextAmavasya - offset, ayanamsaMode, trueNode);
-    final nextRashi = (sunAtNext['Sun']![0] / 30).floor() % 12;
+    // Adhika: Sun stays in same rashi → no Sankranti occurred
     final isAdhika = (prevRashi == nextRashi);
 
     return {
@@ -65,11 +69,11 @@ class MasaCalculator {
     bool trueNode = true,
     double tzOffset = 5.5,
   }) {
-    // Find previous and next Purnima (Full Moon)
-    final prevPurnima = _findFullMoon(jdSunrise, -1, ayanamsaMode, trueNode);
-    final nextPurnima = _findFullMoon(jdSunrise, 1, ayanamsaMode, trueNode);
+    // Find previous and next Purnima
+    final prevPurnima = _findFullMoon(jdSunrise, -1);
+    final nextPurnima = _findFullMoon(jdSunrise, 1);
 
-    // Determine tithi to check paksha
+    // Determine tithi to check paksha (using sidereal for tithi)
     final planets = Ephemeris.calcAll(jdSunrise, ayanamsaMode, trueNode);
     final tithiDeg = Ephemeris.normDeg(planets['Moon']![0] - planets['Sun']![0]);
     final tithiIdx = (tithiDeg / 12).floor().clamp(0, 29);
@@ -78,22 +82,18 @@ class MasaCalculator {
     // Find the Amavasya within this Pournimanta month for naming
     double refAmavasyaJd;
     if (isKrishnaPaksha) {
-      refAmavasyaJd = _findNewMoon(jdSunrise, 1, ayanamsaMode, trueNode);
+      refAmavasyaJd = _findNewMoon(jdSunrise, 1);
     } else {
-      refAmavasyaJd = _findNewMoon(jdSunrise, -1, ayanamsaMode, trueNode);
+      refAmavasyaJd = _findNewMoon(jdSunrise, -1);
     }
 
-    // Use 6-hour offset before Amavasya for consistent boundary handling
-    const double offset = 0.25;
-    final sunAtRef = Ephemeris.calcAll(refAmavasyaJd - offset, ayanamsaMode, trueNode);
-    final sunRashi = (sunAtRef['Sun']![0] / 30).floor() % 12;
+    // Get Sun's sidereal rashi at exact Amavasya
+    final sunRashi = _sunSiderealRashi(refAmavasyaJd, ayanamsaMode);
     final masaIdx = _masaFromSunRashi(sunRashi);
 
-    // Adhika: compare Sun's rashi before both Purnima boundaries
-    final sunAtPrev = Ephemeris.calcAll(prevPurnima - offset, ayanamsaMode, trueNode);
-    final prevRashi = (sunAtPrev['Sun']![0] / 30).floor() % 12;
-    final sunAtNext = Ephemeris.calcAll(nextPurnima - offset, ayanamsaMode, trueNode);
-    final nextRashi = (sunAtNext['Sun']![0] / 30).floor() % 12;
+    // Adhika: compare Sun's rashi at both Purnima boundaries
+    final prevRashi = _sunSiderealRashi(prevPurnima, ayanamsaMode);
+    final nextRashi = _sunSiderealRashi(nextPurnima, ayanamsaMode);
     final isAdhika = (prevRashi == nextRashi);
 
     return {
@@ -133,81 +133,90 @@ class MasaCalculator {
     };
   }
 
-  // ─── HELPER: Find New Moon (Amavasya) ───
-  // direction: -1 = search backward, +1 = search forward
-  static double _findNewMoon(double jdStart, int direction, String mode, bool tn) {
+  // ═══════════════════════════════════════════════════════════════
+  //  NEW MOON FINDING — TROPICAL (matches reference app)
+  //  Uses tropical Moon-Sun for geometric conjunction accuracy.
+  //  Binary search with -180..+180 mapping for smooth convergence.
+  // ═══════════════════════════════════════════════════════════════
+
+  /// Find exact New Moon (Amavasya) near jdStart.
+  /// direction: -1 = search backward, +1 = search forward
+  static double _findNewMoon(double jdStart, int direction) {
     // Scan in 1-day steps to find approximate conjunction
     double jd = jdStart;
-    double prevDiff = _moonSunDiff(jd, mode, tn);
+    double prevDiff = _tropicalElongation(jd);
 
     for (int i = 0; i < 35; i++) {
       jd += direction * 1.0;
-      final diff = _moonSunDiff(jd, mode, tn);
+      final diff = _tropicalElongation(jd);
 
-      // New Moon: Moon-Sun crosses 0° (or 360°)
+      // New Moon: elongation crosses 0° (wraps from ~360 to ~0)
       if (direction > 0 && prevDiff > 180 && diff < 180) {
-        // Crossed from ~360 to ~0
-        return _refineNewMoon(jd - 1.0, jd, mode, tn);
+        return _refineNewMoonTropical(jd - 1.0, jd);
       }
       if (direction < 0 && prevDiff < 180 && diff > 180) {
-        return _refineNewMoon(jd, jd + 1.0, mode, tn);
+        return _refineNewMoonTropical(jd, jd + 1.0);
       }
       prevDiff = diff;
     }
     return jdStart; // fallback
   }
 
-  static double _refineNewMoon(double lo, double hi, String mode, bool tn) {
-    for (int i = 0; i < 25; i++) {
+  /// Refine New Moon using binary search with -180..+180 convergence
+  /// (matches reference app's findNewMoon approach)
+  static double _refineNewMoonTropical(double lo, double hi) {
+    for (int i = 0; i < 30; i++) {
       final mid = (lo + hi) / 2;
-      final diff = _moonSunDiff(mid, mode, tn);
-      if (diff > 180) {
-        lo = mid; // Before conjunction
-      } else {
-        hi = mid; // After conjunction
-      }
+      final moonCalc = Sweph.swe_calc_ut(mid, HeavenlyBody.SE_MOON, SwephFlag.SEFLG_SWIEPH);
+      final sunCalc = Sweph.swe_calc_ut(mid, HeavenlyBody.SE_SUN, SwephFlag.SEFLG_SWIEPH);
+      final tDeg = ((moonCalc.longitude - sunCalc.longitude) % 360 + 360) % 360;
+      // Map to -180..+180 for convergence at 0°
+      final diff = ((tDeg + 180) % 360) - 180;
+      if (diff < 0) lo = mid; else hi = mid;
     }
     return (lo + hi) / 2;
   }
 
-  // ─── HELPER: Find Full Moon (Purnima) ───
-  static double _findFullMoon(double jdStart, int direction, String mode, bool tn) {
+  // ═══════════════════════════════════════════════════════════════
+  //  FULL MOON FINDING — TROPICAL
+  // ═══════════════════════════════════════════════════════════════
+
+  /// Find Full Moon (Purnima) near jdStart
+  static double _findFullMoon(double jdStart, int direction) {
     double jd = jdStart;
-    double prevDiff = _moonSunDiff(jd, mode, tn);
+    double prevDiff = _tropicalElongation(jd);
 
     for (int i = 0; i < 35; i++) {
       jd += direction * 1.0;
-      final diff = _moonSunDiff(jd, mode, tn);
+      final diff = _tropicalElongation(jd);
 
-      // Full Moon: Moon-Sun crosses 180°
+      // Full Moon: elongation crosses 180°
       if (direction > 0 && prevDiff < 180 && diff >= 180) {
-        return _refineFullMoon(jd - 1.0, jd, mode, tn);
+        return _refineFullMoonTropical(jd - 1.0, jd);
       }
       if (direction < 0 && prevDiff >= 180 && diff < 180) {
-        return _refineFullMoon(jd, jd + 1.0, mode, tn);
+        return _refineFullMoonTropical(jd, jd + 1.0);
       }
       prevDiff = diff;
     }
     return jdStart;
   }
 
-  static double _refineFullMoon(double lo, double hi, String mode, bool tn) {
-    for (int i = 0; i < 25; i++) {
+  /// Refine Full Moon using binary search
+  static double _refineFullMoonTropical(double lo, double hi) {
+    for (int i = 0; i < 30; i++) {
       final mid = (lo + hi) / 2;
-      final diff = _moonSunDiff(mid, mode, tn);
-      if (diff < 180) {
-        lo = mid;
-      } else {
-        hi = mid;
-      }
+      final elong = _tropicalElongation(mid);
+      if (elong < 180) lo = mid; else hi = mid;
     }
     return (lo + hi) / 2;
   }
 
-  /// Moon - Sun elongation (0-360)
-  static double _moonSunDiff(double jd, String mode, bool tn) {
-    final p = Ephemeris.calcAll(jd, mode, tn);
-    return Ephemeris.normDeg(p['Moon']![0] - p['Sun']![0]);
+  /// Tropical Moon-Sun elongation (0-360°) — NO ayanamsa
+  /// Used for finding conjunctions/oppositions (geometric events)
+  static double _tropicalElongation(double jd) {
+    final moonCalc = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_MOON, SwephFlag.SEFLG_SWIEPH);
+    final sunCalc = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_SUN, SwephFlag.SEFLG_SWIEPH);
+    return ((moonCalc.longitude - sunCalc.longitude) % 360 + 360) % 360;
   }
-
 }

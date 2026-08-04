@@ -82,30 +82,32 @@ class AdhikaMasaCalculator {
     return periods;
   }
 
-  /// Find all Amavasyas (elongation Moon-Sun ≈ 0°) from Mar prev year to Apr next year
+  /// Find all Amavasyas using TROPICAL Moon-Sun elongation (geometric event)
+  /// Matches reference app's approach for maximum accuracy.
   static List<double> _findAllAmavasyas(int year, double tzOffset) {
     final results = <double>[];
-    // Start from January of the year, extend to February of next year
     final scanStart = Sweph.swe_julday(year - 1, 12, 1, 0, CalendarType.SE_GREG_CAL);
     final scanEnd = Sweph.swe_julday(year + 1, 3, 1, 0, CalendarType.SE_GREG_CAL);
 
     double jd = scanStart;
     while (jd < scanEnd) {
-      final elong1 = _moonSunElong(jd);
-      final elong2 = _moonSunElong(jd + 1.0);
+      final elong1 = _tropicalElong(jd);
+      final elong2 = _tropicalElong(jd + 1.0);
 
       // Detect wrap-around (e.g., 355° → 5°) which indicates New Moon
       if (elong1 > 300 && elong2 < 60) {
-        // Refine with binary search
+        // Refine with -180..+180 binary search (reference app approach)
         double lo = jd, hi = jd + 1.0;
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 30; i++) {
           final mid = (lo + hi) / 2;
-          final e = _moonSunElong(mid);
-          // If elongation is large (>180), we're before the transition
-          if (e > 180) lo = mid; else hi = mid;
+          final moonCalc = Sweph.swe_calc_ut(mid, HeavenlyBody.SE_MOON, SwephFlag.SEFLG_SWIEPH);
+          final sunCalc = Sweph.swe_calc_ut(mid, HeavenlyBody.SE_SUN, SwephFlag.SEFLG_SWIEPH);
+          final tDeg = ((moonCalc.longitude - sunCalc.longitude) % 360 + 360) % 360;
+          final diff = ((tDeg + 180) % 360) - 180;
+          if (diff < 0) lo = mid; else hi = mid;
         }
         results.add((lo + hi) / 2);
-        jd += 25; // Skip ahead ~25 days to next lunation
+        jd += 25;
       } else {
         jd += 1.0;
       }
@@ -176,21 +178,22 @@ class AdhikaMasaCalculator {
     return _masaNames[newRashi];
   }
 
-  /// Get Moon-Sun elongation (0-360°) sidereal
-  static double _moonSunElong(double jd) {
-    Sweph.swe_set_sid_mode(SiderealMode.SE_SIDM_LAHIRI);
-    final flags = SwephFlag.SEFLG_SWIEPH | SwephFlag.SEFLG_SIDEREAL;
-    final sun = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_SUN, flags);
-    final moon = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_MOON, flags);
+  /// Tropical Moon-Sun elongation (0-360°) — NO ayanamsa
+  /// Used for finding conjunctions (geometric events)
+  static double _tropicalElong(double jd) {
+    final moon = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_MOON, SwephFlag.SEFLG_SWIEPH);
+    final sun = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_SUN, SwephFlag.SEFLG_SWIEPH);
     return ((moon.longitude - sun.longitude) + 360) % 360;
   }
 
-  /// Get Sun's rashi index (0-11)
+  /// Get Sun's sidereal rashi index (0-11)
+  /// Uses tropical Sun + manual ayanamsa subtraction (reference app approach)
   static int _sunRashi(double jd) {
     Sweph.swe_set_sid_mode(SiderealMode.SE_SIDM_LAHIRI);
-    final flags = SwephFlag.SEFLG_SWIEPH | SwephFlag.SEFLG_SIDEREAL;
-    final sun = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_SUN, flags);
-    return (sun.longitude / 30).floor() % 12;
+    final ayn = Sweph.swe_get_ayanamsa(jd);
+    final sun = Sweph.swe_calc_ut(jd, HeavenlyBody.SE_SUN, SwephFlag.SEFLG_SWIEPH);
+    final sunSid = ((sun.longitude - ayn) % 360 + 360) % 360;
+    return (sunSid / 30).floor() % 12;
   }
 
   /// Convert JD to local DateTime
