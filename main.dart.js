@@ -7649,8 +7649,8 @@ l=A.p7[e]
 d=new B.bV(B.h8(A.n.au((f-2440587.5)*864e5),0,!0),0,!0).i1(1000*A.n.au(r))
 c.push(B.aj(["jd",f,"rashi",e,"name",l+" \u0cb8\u0c82\u0c95\u0ccd\u0cb0\u0cbe\u0c82\u0ca4\u0cbf ("+(A.l4[B.aE(d)]+" "+B.bO(d))+")"],q,p))
 o=e}else o=k}return c},
-aQu(a,b,c){if(c.length===0)return A.A_[A.v.M(B.aFi(b)+1,12)]
-return A.A_[A.v.M(B.cC(c[0].h(0,"rashi"))+1,12)]},
+aQu(a,b,c){if(c.length===0)return A.A_[A.v.M(B.aFi((a+b)/2)+1,12)]
+return A.A_[B.cC(c[0].h(0,"rashi"))]},
 aAU(a){var s,r
 B.EA(A.lN)
 s=A.cd.hV(0,A.ep)
