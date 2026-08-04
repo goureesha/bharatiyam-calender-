@@ -51,6 +51,19 @@ class AdhikaMasaCalculator {
       final rashi2 = _sunRashi(am2Jd);
       final bool hasSankranti = (rashi1 != rashi2);
 
+      // DEBUG: trace rashi values for diagnosis
+      final d1 = _jdToLocal(am1Jd, tzOffset);
+      final d2 = _jdToLocal(am2Jd, tzOffset);
+      // Get actual Sun sidereal degrees for detailed trace
+      Sweph.swe_set_sid_mode(SiderealMode.SE_SIDM_LAHIRI);
+      final ayn1 = Sweph.swe_get_ayanamsa(am1Jd);
+      final sun1 = Sweph.swe_calc_ut(am1Jd, HeavenlyBody.SE_SUN, SwephFlag.SEFLG_SWIEPH);
+      final sid1 = ((sun1.longitude - ayn1) % 360 + 360) % 360;
+      final ayn2 = Sweph.swe_get_ayanamsa(am2Jd);
+      final sun2 = Sweph.swe_calc_ut(am2Jd, HeavenlyBody.SE_SUN, SwephFlag.SEFLG_SWIEPH);
+      final sid2 = ((sun2.longitude - ayn2) % 360 + 360) % 360;
+      print('MASA_DEBUG [$year] am1=${d1.month}/${d1.day} sun=${sid1.toStringAsFixed(2)}° rashi=$rashi1(${_rashiNames[rashi1]}) | am2=${d2.month}/${d2.day} sun=${sid2.toStringAsFixed(2)}° rashi=$rashi2(${_rashiNames[rashi2]}) → ${hasSankranti ? "NIJA" : "ADHIKA"}');
+
       // 3. Scan for Sankranti details (for display: which Sankranti, when)
       final sankrantis = _findSankrantis(am1Jd, am2Jd, tzOffset);
 
