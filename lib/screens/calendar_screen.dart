@@ -83,7 +83,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Future<void> _computeMonth() async {
-    // Show grid immediately (no spinner) — cells fill progressively
     if (mounted) setState(() => _loading = false);
 
     final data = <int, PanchangaData>{};
@@ -91,89 +90,50 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final daysInMonth = DateUtils.getDaysInMonth(_currentMonth.year, _currentMonth.month);
     final savedMonth = DateTime(_currentMonth.year, _currentMonth.month);
 
+    // Phase 1: FAST light calculations for all days (grid display only)
+    // ~2-3 Ephemeris calls per day instead of 300+
     for (int d = 1; d <= daysInMonth; d++) {
-      // Abort if user navigated away to a different month
       if (_currentMonth.year != savedMonth.year || _currentMonth.month != savedMonth.month) return;
 
       try {
-        var p = PanchangaCalculator.calculate(
+        final p = PanchangaCalculator.calculateLight(
           year: savedMonth.year, month: savedMonth.month, day: d,
           lat: LocationService.lat, lon: LocationService.lon,
           tzOffset: LocationService.tzOffset,
         );
-
-        // Fill masa, samvatsara, rutu, ghati (same as home_screen)
-        try {
-          final amanta = MasaCalculator.calculateAmanta(
-            jdSunrise: p.sunriseJd, lat: LocationService.lat,
-            lon: LocationService.lon, tzOffset: LocationService.tzOffset,
-          );
-          final pournimanta = MasaCalculator.calculatePournimanta(
-            jdSunrise: p.sunriseJd, lat: LocationService.lat,
-            lon: LocationService.lon, tzOffset: LocationService.tzOffset,
-          );
-          String amantaKey = amanta['masa'] as String;
-          String amantaName = amantaKey;
-          if (amanta['isAdhika'] == true) amantaName = 'adhika_$amantaName';
-          String pourniName = pournimanta['masa'] as String;
-          if (pournimanta['isAdhika'] == true) pourniName = 'adhika_$pourniName';
-
-          final samData = SamvatsaraCalculator.calculate(
-            savedMonth.year, savedMonth.month,
-            chandraMasaKey: amantaKey,
-          );
-          final sunPlanets = Ephemeris.calcAll(p.sunriseJd, 'lahiri', true);
-          final sunDeg = sunPlanets['Sun']![0];
-          final rutu = SamvatsaraCalculator.calculateRutu(sunDeg);
-
-          final vishaData = GhatiCalculator.calculateVishaGhati(
-            nakshatraIndex: p.nakshatraIndex,
-            sunriseJd: p.sunriseJd,
-            nakStartJd: p.nakStartJd,
-            nakEndJd: p.nakEndJd,
-            tzOffset: LocationService.tzOffset,
-          );
-          final amrutaData = GhatiCalculator.calculateAmrutaGhati(
-            nakshatraIndex: p.nakshatraIndex,
-            sunriseJd: p.sunriseJd,
-            nakStartJd: p.nakStartJd,
-            nakEndJd: p.nakEndJd,
-            tzOffset: LocationService.tzOffset,
-          );
-
-          p = p.copyWith(
-            samvatsara: samData['samvatsara'] as String,
-            rutu: rutu,
-            amantaMasa: amantaName,
-            pournimantaMasa: pourniName,
-            vishaPraghati: '${vishaData['start'] ?? ''} - ${vishaData['end'] ?? ''}',
-            amrutaPraghati: '${amrutaData['start'] ?? ''} - ${amrutaData['end'] ?? ''}',
-          );
-
-          final masaName = EventCalculator.masaKeyToKannada(amantaKey);
-          final sunsetTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd);
-          final ev = EventCalculator.getEvents(
-            masa: masaName, tIdx: p.tithiIndex,
-            sunsetTithiIdx: sunsetTithi,
-            isAdhika: amanta['isAdhika'] as bool,
-          );
-          if (ev.isNotEmpty) events[d] = ev;
-        } catch (_) {}
-
         data[d] = p;
       } catch (_) {}
 
-      // Progressive update: refresh UI every 5 days for smooth loading
-      if (d % 5 == 0 || d == daysInMonth) {
-        if (mounted) {
-          setState(() {
-            _monthData = Map.of(data);
-            _monthEvents = Map.of(events);
-          });
+      // Yield every 7 days for responsive UI
+      if (d % 7 == 0) await Future.delayed(Duration.zero);
+    }
+
+    // Phase 2: Quick event lookup using mid-month masa (same for most days)
+    try {
+      final midDay = data[15] ?? data[1];
+      if (midDay != null) {
+        final amanta = MasaCalculator.calculateAmanta(
+          jdSunrise: midDay.sunriseJd, lat: LocationService.lat,
+          lon: LocationService.lon, tzOffset: LocationService.tzOffset,
+        );
+        final amantaKey = amanta['masa'] as String;
+        final masaName = EventCalculator.masaKeyToKannada(amantaKey);
+        final isAdhika = amanta['isAdhika'] as bool;
+
+        for (int d = 1; d <= daysInMonth; d++) {
+          final p = data[d];
+          if (p == null) continue;
+          try {
+            final sunsetTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd);
+            final ev = EventCalculator.getEvents(
+              masa: masaName, tIdx: p.tithiIndex,
+              sunsetTithiIdx: sunsetTithi, isAdhika: isAdhika,
+            );
+            if (ev.isNotEmpty) events[d] = ev;
+          } catch (_) {}
         }
       }
-      await Future.delayed(Duration.zero); // yield to UI thread every day
-    }
+    } catch (_) {}
 
     final key = _monthKey(savedMonth.year, savedMonth.month);
     _dataCache[key] = data;
@@ -184,8 +144,74 @@ class _CalendarScreenState extends State<CalendarScreen> {
         _monthData = data;
         _monthEvents = events;
       });
-      _computeKalas();
+      // If a day is already selected (e.g. today), compute full details
+      if (_selectedDay != null) _computeFullDay(_selectedDay!);
     }
+  }
+
+  /// Full calculation for a single tapped day — runs on demand only.
+  Future<void> _computeFullDay(int day) async {
+    final savedMonth = DateTime(_currentMonth.year, _currentMonth.month);
+    try {
+      var p = PanchangaCalculator.calculate(
+        year: savedMonth.year, month: savedMonth.month, day: day,
+        lat: LocationService.lat, lon: LocationService.lon,
+        tzOffset: LocationService.tzOffset,
+      );
+
+      try {
+        final amanta = MasaCalculator.calculateAmanta(
+          jdSunrise: p.sunriseJd, lat: LocationService.lat,
+          lon: LocationService.lon, tzOffset: LocationService.tzOffset,
+        );
+        final pournimanta = MasaCalculator.calculatePournimanta(
+          jdSunrise: p.sunriseJd, lat: LocationService.lat,
+          lon: LocationService.lon, tzOffset: LocationService.tzOffset,
+        );
+        String amantaKey = amanta['masa'] as String;
+        String amantaName = amantaKey;
+        if (amanta['isAdhika'] == true) amantaName = 'adhika_$amantaName';
+        String pourniName = pournimanta['masa'] as String;
+        if (pournimanta['isAdhika'] == true) pourniName = 'adhika_$pourniName';
+
+        final samData = SamvatsaraCalculator.calculate(
+          savedMonth.year, savedMonth.month,
+          chandraMasaKey: amantaKey,
+        );
+        final sunPlanets = Ephemeris.calcAll(p.sunriseJd, 'lahiri', true);
+        final sunDeg = sunPlanets['Sun']![0];
+        final rutu = SamvatsaraCalculator.calculateRutu(sunDeg);
+
+        final vishaData = GhatiCalculator.calculateVishaGhati(
+          nakshatraIndex: p.nakshatraIndex, sunriseJd: p.sunriseJd,
+          nakStartJd: p.nakStartJd, nakEndJd: p.nakEndJd,
+          tzOffset: LocationService.tzOffset,
+        );
+        final amrutaData = GhatiCalculator.calculateAmrutaGhati(
+          nakshatraIndex: p.nakshatraIndex, sunriseJd: p.sunriseJd,
+          nakStartJd: p.nakStartJd, nakEndJd: p.nakEndJd,
+          tzOffset: LocationService.tzOffset,
+        );
+
+        p = p.copyWith(
+          samvatsara: samData['samvatsara'] as String,
+          rutu: rutu,
+          amantaMasa: amantaName,
+          pournimantaMasa: pourniName,
+          vishaPraghati: '${vishaData['start'] ?? ''} - ${vishaData['end'] ?? ''}',
+          amrutaPraghati: '${amrutaData['start'] ?? ''} - ${amrutaData['end'] ?? ''}',
+        );
+      } catch (_) {}
+
+      _monthData[day] = p;
+      final key = _monthKey(savedMonth.year, savedMonth.month);
+      _dataCache[key] = _monthData;
+
+      if (mounted) {
+        setState(() {});
+        _computeKalas();
+      }
+    } catch (_) {}
   }
 
   void _computeKalas() {
@@ -385,7 +411,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       return GestureDetector(
                         onTap: () {
                           setState(() => _selectedDay = day);
-                          _computeKalas();
+                          _computeFullDay(day);
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             if (_detailKey.currentContext != null) {
                               Scrollable.ensureVisible(

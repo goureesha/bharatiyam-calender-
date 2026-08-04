@@ -20,6 +20,77 @@ class PanchangaCalculator {
     return (tithiDeg / _tithiSpan).floor().clamp(0, 29);
   }
 
+  /// LIGHT calculator — for calendar grid display only.
+  /// Skips ALL binary searches (end times, gata/shesha/parama, anga transitions).
+  /// Only 1 sunrise calc + 1 calcAll per day → ~50x faster than full calculate().
+  static PanchangaData calculateLight({
+    required int year, required int month, required int day,
+    required double lat, required double lon, required double tzOffset,
+    String ayanamsaMode = 'lahiri', bool trueNode = true,
+  }) {
+    final srss = Ephemeris.findSunriseSetForDate(year, month, day, lat, lon, tzOffset: tzOffset);
+    final sunriseJd = srss[0];
+    final sunsetJd = srss[1];
+
+    final planets = Ephemeris.calcAll(sunriseJd, ayanamsaMode, trueNode);
+    final sunDeg = planets['Sun']![0];
+    final moonDeg = planets['Moon']![0];
+
+    final dt = Ephemeris.jdToDateTime(sunriseJd, tzOffset: tzOffset);
+    final varaIndex = dt.weekday % 7;
+
+    final tithiDeg = Ephemeris.normDeg(moonDeg - sunDeg);
+    final tithiIndex = (tithiDeg / _tithiSpan).floor().clamp(0, 29);
+    final nakshatraIndex = (moonDeg / _nakshatraSpan).floor() % 27;
+    final nakPercent = (moonDeg % _nakshatraSpan) / _nakshatraSpan;
+    final chandraPadaNum = (nakPercent * 4).floor().clamp(0, 3) + 1;
+    final yogaDeg = Ephemeris.normDeg(moonDeg + sunDeg);
+    final yogaIndex = (yogaDeg / _yogaSpan).floor() % 27;
+    final karanaRawIdx = (tithiDeg / _karanaSpan).floor();
+    final karanaIndex = _mapKaranaIndex(karanaRawIdx);
+    final suryaNakIdx = (sunDeg / _nakshatraSpan).floor() % 27;
+    final suryaPadaNum = ((sunDeg % _nakshatraSpan) / (_nakshatraSpan / 4)).floor().clamp(0, 3) + 1;
+    final chandraRashiIdx = (moonDeg / 30).floor() % 12;
+    final paksha = tithiIndex < 15 ? 'shukla' : 'krishna';
+    final dayHours = (sunsetJd - sunriseJd) * 24;
+    final nightHours = 24 - dayHours;
+    int shakaYear = year - 78;
+    if (month < 4) shakaYear -= 1;
+
+    // Sunset tithi for event matching
+    final sunsetTithiIdx = tithiAtJd(sunsetJd, ayanamsaMode: ayanamsaMode, trueNode: trueNode);
+
+    return PanchangaData(
+      tithi: 't$tithiIndex', vara: 'v$varaIndex',
+      nakshatra: 'n$nakshatraIndex', yoga: 'y$yogaIndex',
+      karana: _karanaKey(karanaRawIdx),
+      tithiIndex: tithiIndex, nakshatraIndex: nakshatraIndex,
+      yogaIndex: yogaIndex, karanaIndex: karanaIndex, varaIndex: varaIndex,
+      tithiEndTime: '', nakEndTime: '', yogaEndTime: '', karanaEndTime: '',
+      tithiEndsNextDay: false, nakEndsNextDay: false, yogaEndsNextDay: false, karanaEndsNextDay: false,
+      tithiGata: '', tithiShesha: '', tithiParama: '',
+      nakGata: '', nakShesha: '', nakParama: '',
+      yogaGata: '', yogaShesha: '', yogaParama: '',
+      karanaGata: '', karanaShesha: '', karanaParama: '',
+      udayadiGhati: '',
+      sunrise: Ephemeris.formatTimeFromJd(sunriseJd, tzOffset: tzOffset),
+      sunset: Ephemeris.formatTimeFromJd(sunsetJd, tzOffset: tzOffset),
+      chandraRashi: 'r$chandraRashiIdx', chandraPada: '$chandraPadaNum',
+      suryaNakshatra: 'n$suryaNakIdx', suryaPada: '$suryaPadaNum',
+      nakPercent: nakPercent,
+      amantaMasa: '', pournimantaMasa: '',
+      souraMasa: 'sm${(sunDeg / 30).floor() % 12}', souraMasaGataDina: '',
+      samvatsara: '', rutu: '',
+      ayana: sunDeg >= 90 && sunDeg < 270 ? 'dakshinayana' : 'uttarayana',
+      divamana: Ephemeris.formatDuration(dayHours),
+      ratrimana: Ephemeris.formatDuration(nightHours),
+      vishaPraghati: '', amrutaPraghati: '',
+      agniVasa: '', shakaVarsha: shakaYear, paksha: paksha,
+      chandraUdaya: '', chandraAsta: '',
+      sunriseJd: sunriseJd, sunsetJd: sunsetJd,
+    );
+  }
+
   /// Calculate complete Panchanga for a given date and location
   static PanchangaData calculate({
     required int year,
