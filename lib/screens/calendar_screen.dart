@@ -692,20 +692,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           const SizedBox(height: 4),
                           Text(e.description, style: TextStyle(fontSize: 10, color: kMuted)),
                         ],
-                        if (e.shloka.isNotEmpty) ...[
-                          const SizedBox(height: 4),
-                          Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(color: kBg.withAlpha(127), borderRadius: BorderRadius.circular(6)),
-                            child: Text(e.shloka.replaceAll('\\\\n', '\n'), style: TextStyle(fontSize: 9, color: kGold, fontStyle: FontStyle.italic)),
-                          ),
-                        ],
                         if (e.meaning.isNotEmpty) ...[
                           const SizedBox(height: 3),
                           Text(e.meaning, style: TextStyle(fontSize: 10, color: kTeal)),
                         ],
-                        const SizedBox(height: 2),
-                        Text('— ${e.source}', style: TextStyle(fontSize: 8, color: kMuted.withAlpha(127))),
                       ],
                     ),
                   )),
