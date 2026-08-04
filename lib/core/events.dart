@@ -117,7 +117,10 @@ class EventCalculator {
     if (masa == 'ಭಾದ್ರಪದ') {
       if (tIdx == 2) {
         events.add(AstroEvent(name: 'ಸ್ವರ್ಣಗೌರಿ ವ್ರತ / ಹರ್ತಾಲಿಕಾ ತೃತೀಯಾ', description: 'ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ ಪಾರ್ವತಿ ವ್ರತ. ಹರ್ತಾಲಿಕಾ ಪೂಜೆ.', shloka: 'ಭಾದ್ರೇ ಮಾಸಿ ಸಿತೇ ಪಕ್ಷೇ ತೃತೀಯಾಯಾಂ ಸುಶೋಭನೇ |', source: 'ವ್ರತ ರತ್ನಾವಳಿ'));
+        // Ganesha Chaturthi: Chaturthi at chandrodaya (moonrise) on the same day as Tritiya at sunrise
+        events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಚಂದ್ರೋದಯಕ್ಕೆ ಚತುರ್ಥಿ.', shloka: 'ಭಾದ್ರಶುಕ್ಲಚತುರ್ಥ್ಯಾಂ ತು ಯನ್ಮಹಾಗಣಪತೇರ್ದಿನಮ್ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
       } else if (tIdx == 3) {
+        // Fallback: if Chaturthi is at sunrise itself, show only Ganesha Chaturthi
         events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ.', shloka: 'ಭಾದ್ರಶುಕ್ಲಚತುರ್ಥ್ಯಾಂ ತು ಯನ್ಮಹಾಗಣಪತೇರ್ದಿನಮ್ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
       } else if (tIdx == 4) {
         events.add(AstroEvent(name: 'ಋಷಿ ಪಂಚಮಿ', description: 'ಸಪ್ತ ಋಷಿಗಳ ಆರಾಧನೆ.', shloka: 'ಭಾದ್ರೇ ಶುಕ್ಲೇ ಪಂಚಮ್ಯಾಂ ತು ಸಪ್ತರ್ಷೀನ್ ಪೂಜಯೇತ್ ಸದಾ |', source: 'ಧರ್ಮಸಿಂಧು'));
