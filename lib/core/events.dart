@@ -115,14 +115,17 @@ class EventCalculator {
 
     // 6. ಭಾದ್ರಪದ ಮಾಸ (Bhadrapada)
     if (masa == 'ಭಾದ್ರಪದ') {
-      if (tIdx == 2) {
-        events.add(AstroEvent(name: 'ಸ್ವರ್ಣಗೌರಿ ವ್ರತ / ಹರ್ತಾಲಿಕಾ ತೃತೀಯಾ', description: 'ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ ಪಾರ್ವತಿ ವ್ರತ. ಹರ್ತಾಲಿಕಾ ಪೂಜೆ.', shloka: 'ಭಾದ್ರೇ ಮಾಸಿ ಸಿತೇ ಪಕ್ಷೇ ತೃತೀಯಾಯಾಂ ಸುಶೋಭನೇ |', source: 'ವ್ರತ ರತ್ನಾವಳಿ'));
-        // Ganesha Chaturthi: Chaturthi at chandrodaya (moonrise) on the same day as Tritiya at sunrise
-        events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಚಂದ್ರೋದಯಕ್ಕೆ ಚತುರ್ಥಿ.', shloka: 'ಭಾದ್ರಶುಕ್ಲಚತುರ್ಥ್ಯಾಂ ತು ಯನ್ಮಹಾಗಣಪತೇರ್ದಿನಮ್ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
-      } else if (tIdx == 3) {
-        // Fallback: if Chaturthi is at sunrise itself, show only Ganesha Chaturthi
-        events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ.', shloka: 'ಭಾದ್ರಶುಕ್ಲಚತುರ್ಥ್ಯಾಂ ತು ಯನ್ಮಹಾಗಣಪತೇರ್ದಿನಮ್ |', source: 'ನಿರ್ಣಯಸಿಂಧು'));
-      } else if (tIdx == 4) {
+      // Swarna Gauri: Tritiya (tIdx=2) at sunrise OR sunset
+      if (tIdx == 2 || (sunsetTithiIdx != null && sunsetTithiIdx == 2)) {
+        events.add(AstroEvent(name: 'ಸ್ವರ್ಣಗೌರಿ ವ್ರತ / ಹರ್ತಾಲಿಕಾ ತೃತೀಯಾ', description: 'ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ ಪಾರ್ವತಿ ವ್ರತ. ಹರ್ತಾಲಿಕಾ ಪೂಜೆ.', shloka: '', source: ''));
+      }
+      // Ganesha Chaturthi: Chaturthi (tIdx=3) at chandrodaya.
+      // Show when Chaturthi is present at sunrise OR sunset (covers moonrise).
+      // When sunrise=Tritiya(2) and sunset=Chaturthi(3), both Gauri & Ganesha on same day.
+      if (tIdx == 3 || (sunsetTithiIdx != null && sunsetTithiIdx == 3 && tIdx <= 2)) {
+        events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಚಂದ್ರೋದಯಕ್ಕೆ ಚತುರ್ಥಿ.', shloka: '', source: ''));
+      }
+      if (tIdx == 4) {
         events.add(AstroEvent(name: 'ಋಷಿ ಪಂಚಮಿ', description: 'ಸಪ್ತ ಋಷಿಗಳ ಆರಾಧನೆ.', shloka: 'ಭಾದ್ರೇ ಶುಕ್ಲೇ ಪಂಚಮ್ಯಾಂ ತು ಸಪ್ತರ್ಷೀನ್ ಪೂಜಯೇತ್ ಸದಾ |', source: 'ಧರ್ಮಸಿಂಧು'));
       } else if (tIdx == 6) {
         events.add(AstroEvent(name: 'ಲಲಿತಾ ಸಪ್ತಮಿ', description: 'ಲಲಿತಾ ದೇವಿ ಆರಾಧನೆ.', shloka: 'ಲಲಿತೇ ಪರಮೇಶಾನಿ ಸರ್ವಶಕ್ತಿಸ್ವರೂಪಿಣಿ | ಪೂಜಾಂ ಗೃಹಾಣ ದೇವೇಶಿ ಸರ್ವಸಿದ್ಧಿಪ್ರದಾಯಿನಿ ||', source: 'ಲಲಿತಾ ಸಹಸ್ರನಾಮ'));
