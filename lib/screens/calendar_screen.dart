@@ -469,8 +469,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                              // Nakshatra
-                              if (data != null)
+                              // Nakshatra — only when NO event (event takes priority)
+                              if (data != null && !hasEvent)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 1),
                                   child: Text(
@@ -483,7 +483,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     maxLines: 1,
                                   ),
                                 ),
-                              // Event name
+                              // Event name — visible & prominent
                               if (hasEvent)
                                 Flexible(
                                   child: Padding(
@@ -491,7 +491,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     child: Text(
                                       _monthEvents[day]!.first.name,
                                       style: TextStyle(
-                                        fontSize: 6.5,
+                                        fontSize: 7,
                                         color: const Color(0xFFFF9800),
                                         fontWeight: FontWeight.w600,
                                       ),
