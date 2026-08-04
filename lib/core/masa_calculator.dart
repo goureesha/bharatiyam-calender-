@@ -1,5 +1,5 @@
-/// Masa Calculator — 4 calendar systems: Amanta, Pournimanta, Chandra Mana, Soura Mana.
-/// Includes Adhika Masa detection.
+// Masa Calculator — 4 calendar systems: Amanta, Pournimanta, Chandra Mana, Soura Mana.
+// Includes Adhika Masa detection.
 import 'ephemeris.dart';
 
 class MasaCalculator {
@@ -210,26 +210,4 @@ class MasaCalculator {
     return Ephemeris.normDeg(p['Moon']![0] - p['Sun']![0]);
   }
 
-  /// Check if Sun's Sankranti (rashi change) occurs between two JDs.
-  /// Samples Sun's rashi at multiple points to avoid edge-case misses
-  /// near Amavasya boundaries.
-  static bool _hasSankranti(double jd1, double jd2, String mode, bool tn) {
-    final p1 = Ephemeris.calcAll(jd1, mode, tn);
-    final r1 = (p1['Sun']![0] / 30).floor() % 12;
-
-    // Sample every ~2 days between jd1 and jd2
-    final duration = (jd2 - jd1).abs();
-    final steps = (duration / 2).ceil().clamp(5, 20);
-    final step = duration / steps;
-    int prevR = r1;
-
-    for (int i = 1; i <= steps; i++) {
-      final jd = jd1 + i * step;
-      final p = Ephemeris.calcAll(jd, mode, tn);
-      final r = (p['Sun']![0] / 30).floor() % 12;
-      if (r != prevR) return true; // Sankranti detected
-      prevR = r;
-    }
-    return false;
-  }
 }
