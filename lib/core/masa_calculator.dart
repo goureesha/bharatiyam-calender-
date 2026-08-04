@@ -29,13 +29,22 @@ class MasaCalculator {
     final prevAmavasya = _findNewMoon(jdSunrise, -1, ayanamsaMode, trueNode);
     final nextAmavasya = _findNewMoon(jdSunrise, 1, ayanamsaMode, trueNode);
 
-    // Check Sun's rashi at the Amavasya boundaries to determine month name
-    final sunAtPrev = Ephemeris.calcAll(prevAmavasya, ayanamsaMode, trueNode);
-    final sunRashi = (sunAtPrev['Sun']![0] / 30).floor() % 12;
-    final masaIdx = _masaFromSunRashi(sunRashi);
+    // IMPORTANT: Sample Sun's rashi slightly BEFORE each Amavasya (6 hours before).
+    // This avoids boundary ambiguity when Sankranti occurs at/near the exact conjunction.
+    // The traditional month name is based on the pre-Sankranti rashi, so sampling
+    // before the Amavasya ensures we get the correct rashi even if the Sankranti
+    // happens within hours of the Amavasya.
+    const double offset = 0.25; // 6 hours in Julian Days
 
-    // Check for Adhika Masa: no Sankranti between prevAmavasya and nextAmavasya
-    final isAdhika = !_hasSankranti(prevAmavasya, nextAmavasya, ayanamsaMode, trueNode);
+    final sunAtPrev = Ephemeris.calcAll(prevAmavasya - offset, ayanamsaMode, trueNode);
+    final prevRashi = (sunAtPrev['Sun']![0] / 30).floor() % 12;
+    final masaIdx = _masaFromSunRashi(prevRashi);
+
+    // Check for Adhika Masa: compare Sun's rashi before both Amavasyas.
+    // If the rashi is the SAME at both points, no Sankranti occurred → Adhika.
+    final sunAtNext = Ephemeris.calcAll(nextAmavasya - offset, ayanamsaMode, trueNode);
+    final nextRashi = (sunAtNext['Sun']![0] / 30).floor() % 12;
+    final isAdhika = (prevRashi == nextRashi);
 
     return {
       'masa': masaKeys[masaIdx],
@@ -66,30 +75,26 @@ class MasaCalculator {
     final tithiIdx = (tithiDeg / 12).floor().clamp(0, 29);
     final isKrishnaPaksha = tithiIdx >= 15;
 
-    // In Pournimanta: Krishna Paksha belongs to the NEXT month compared to Amanta
-    // Find the Amavasya within this Pournimanta month
+    // Find the Amavasya within this Pournimanta month for naming
     double refAmavasyaJd;
     if (isKrishnaPaksha) {
-      // Krishna Paksha: find next Amavasya
       refAmavasyaJd = _findNewMoon(jdSunrise, 1, ayanamsaMode, trueNode);
     } else {
-      // Shukla Paksha: find previous Amavasya
       refAmavasyaJd = _findNewMoon(jdSunrise, -1, ayanamsaMode, trueNode);
     }
 
-    final sunAtRef = Ephemeris.calcAll(refAmavasyaJd, ayanamsaMode, trueNode);
+    // Use 6-hour offset before Amavasya for consistent boundary handling
+    const double offset = 0.25;
+    final sunAtRef = Ephemeris.calcAll(refAmavasyaJd - offset, ayanamsaMode, trueNode);
     final sunRashi = (sunAtRef['Sun']![0] / 30).floor() % 12;
+    final masaIdx = _masaFromSunRashi(sunRashi);
 
-    // In Pournimanta, the month name is ONE ahead for Krishna Paksha
-    int masaIdx;
-    if (isKrishnaPaksha) {
-      masaIdx = _masaFromSunRashi(sunRashi);
-    } else {
-      masaIdx = _masaFromSunRashi(sunRashi);
-    }
-
-    // Check for Adhika Masa
-    final isAdhika = !_hasSankranti(prevPurnima, nextPurnima, ayanamsaMode, trueNode);
+    // Adhika: compare Sun's rashi before both Purnima boundaries
+    final sunAtPrev = Ephemeris.calcAll(prevPurnima - offset, ayanamsaMode, trueNode);
+    final prevRashi = (sunAtPrev['Sun']![0] / 30).floor() % 12;
+    final sunAtNext = Ephemeris.calcAll(nextPurnima - offset, ayanamsaMode, trueNode);
+    final nextRashi = (sunAtNext['Sun']![0] / 30).floor() % 12;
+    final isAdhika = (prevRashi == nextRashi);
 
     return {
       'masa': masaKeys[masaIdx],
