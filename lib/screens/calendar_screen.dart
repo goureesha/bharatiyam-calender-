@@ -125,24 +125,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
           if (p == null) continue;
           try {
             final sunsetTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd);
-            // Next day's sunrise tithi — for chandrodaya events (Ganesha, Sankashta)
-            // If tomorrow's sunrise has Chaturthi, Chaturthi arrived at moonrise tonight
-            final nextP = data[d + 1]; // null for last day of month
+            final nextP = data[d + 1];
             final nextDayTithi = nextP?.tithiIndex;
-            // DEBUG: Log event matching for Bhadrapada days
-            if (masaName == 'ಭಾದ್ರಪದ' && (p.tithiIndex >= 1 && p.tithiIndex <= 5)) {
-              print('EVENT_DEBUG day=$d masa=$masaName tIdx=${p.tithiIndex} sunset=$sunsetTithi nextDay=$nextDayTithi');
-            }
             final ev = EventCalculator.getEvents(
               masa: masaName, tIdx: p.tithiIndex,
               sunsetTithiIdx: sunsetTithi,
               nextDayTithiIdx: nextDayTithi,
               isAdhika: isAdhika,
             );
-            if (ev.isNotEmpty) {
-              events[d] = ev;
-              for (final e in ev) { print('EVENT_DEBUG   → day=$d: ${e.name}'); }
-            }
+            if (ev.isNotEmpty) events[d] = ev;
           } catch (_) {}
         }
       }
