@@ -12,6 +12,8 @@ import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
 import '../services/precomputed_data.dart';
 import '../widgets/common.dart';
+import '../widgets/panchanga_share.dart';
+import '../core/events.dart';
 import 'panchanga_screen.dart';
 import 'settings_screen.dart';
 import 'calendar_screen.dart';
@@ -156,6 +158,43 @@ class _HomeScreenState extends State<HomeScreen> {
   void _changeDate(int days) {
     setState(() => _selectedDate = _selectedDate.add(Duration(days: days)));
     _compute();
+  }
+
+  Future<void> _sharePanchanga() async {
+    if (_data == null) return;
+    final d = _data!;
+    // Compute events for this day
+    List<AstroEvent> dayEvents = [];
+    try {
+      final amanta = MasaCalculator.computeAmanta(
+        d.sunriseJd, lat: LocationService.lat, lon: LocationService.lon, tzOffset: LocationService.tzOffset,
+      );
+      final masaKey = amanta['masa'] as String;
+      final isAdhika = amanta['isAdhika'] as bool;
+      final masaName = EventCalculator.masaKeyToKannada(masaKey);
+      final sunsetTithi = PanchangaCalculator.tithiAtJd(d.sunsetJd);
+      int? prevTithi, nextTithi, moonriseTithi, noonTithi, midnightTithi;
+      try { prevTithi = PanchangaCalculator.tithiAtJd(d.sunriseJd - 1.0); } catch (_) {}
+      try { nextTithi = PanchangaCalculator.tithiAtJd(d.sunriseJd + 1.0); } catch (_) {}
+      try {
+        final mr = Ephemeris.findMoonriseSet(_selectedDate.year, _selectedDate.month, _selectedDate.day, LocationService.lat, LocationService.lon, LocationService.tzOffset);
+        if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
+      } catch (_) {}
+      try { noonTithi = PanchangaCalculator.tithiAtJd((d.sunriseJd + d.sunsetJd) / 2); } catch (_) {}
+      try { midnightTithi = PanchangaCalculator.tithiAtJd(d.sunsetJd + 0.25); } catch (_) {}
+      dayEvents = EventCalculator.getEvents(
+        masa: masaName, tIdx: d.tithiIndex,
+        sunsetTithiIdx: sunsetTithi,
+        nextDayTithiIdx: nextTithi,
+        prevDayTithiIdx: prevTithi,
+        moonriseTithiIdx: moonriseTithi,
+        noonTithiIdx: noonTithi,
+        midnightTithiIdx: midnightTithi,
+        isAdhika: isAdhika,
+      );
+    } catch (_) {}
+    if (!mounted) return;
+    await PanchangaShare.showShareDialog(context, d, dayEvents);
   }
 
   Future<void> _pickDate() async {
@@ -323,6 +362,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: Text(AppLocale.t('today'), style: TextStyle(fontSize: 10, color: kTeal, fontWeight: FontWeight.bold)),
               ),
+            ),
+          // Share button
+          if (_data != null)
+            IconButton(
+              icon: Icon(Icons.share_rounded, color: kGold, size: 20),
+              onPressed: () => _sharePanchanga(),
+              tooltip: 'Share',
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
             ),
           IconButton(
             icon: Icon(Icons.chevron_right_rounded, color: kGold),
