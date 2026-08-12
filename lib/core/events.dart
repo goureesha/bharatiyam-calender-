@@ -123,8 +123,8 @@ class EventCalculator {
     // 6. ಭಾದ್ರಪದ ಮಾಸ
     if (masa == 'ಭಾದ್ರಪದ') {
       if (t(2)) events.add(AstroEvent(name: 'ಸ್ವರ್ಣಗೌರಿ ವ್ರತ / ಹರ್ತಾಲಿಕಾ ತೃತೀಯಾ', description: 'ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ ಪಾರ್ವತಿ ವ್ರತ. ಹರ್ತಾಲಿಕಾ ಪೂಜೆ.'));
-      // Ganesha Chaturthi: chandrodaya — Chaturthi at MOONRISE
-      if (moonriseTithiIdx == 3) events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಚಂದ್ರೋದಯಕ್ಕೆ ಚತುರ್ಥಿ.'));
+      // Ganesha Chaturthi: Madhyahna Vyapti — Chaturthi must be at NOON (Dharma Sindhu)
+      if (noonTithiIdx == 3 && prevDayTithiIdx != 3) events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಮಧ್ಯಾಹ್ನ ವ್ಯಾಪ್ತಿ.'));
       if (t(4)) events.add(AstroEvent(name: 'ಋಷಿ ಪಂಚಮಿ', description: 'ಸಪ್ತ ಋಷಿಗಳ ಆರಾಧನೆ.'));
       if (t(6)) events.add(AstroEvent(name: 'ಲಲಿತಾ ಸಪ್ತಮಿ', description: 'ಲಲಿತಾ ದೇವಿ ಆರಾಧನೆ.'));
       if (tPara(10)) events.add(AstroEvent(name: 'ಪರಿವರ್ತಿನೀ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುವಿನ ಶಯನ ಪರಿವರ್ತನ.'));
@@ -212,8 +212,14 @@ class EventCalculator {
       events.add(AstroEvent(name: 'ಪ್ರದೋಷ ವ್ರತ', description: 'ಶಿವನ ಆರಾಧನೆ. ಸಂಧ್ಯಾ ಕಾಲದಲ್ಲಿ ತ್ರಯೋದಶಿ ಇರಬೇಕು.'));
     }
 
-    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ — Kr. Chaturthi at MOONRISE
+    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ — Kr. Chaturthi at MOONRISE, Para Viddha (prefer second day)
     if (moonriseTithiIdx == 18) {
+      // Para Viddha: skip if next day also has same tithi (prefer second day)
+      if (nextDayTithiIdx != 18) {
+        events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.'));
+      }
+    } else if (t(18) && moonriseTithiIdx != null && moonriseTithiIdx != 18) {
+      // Kshaya at chandrodaya: Chaturthi at sunrise but not at moonrise → fallback
       events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.'));
     }
 
