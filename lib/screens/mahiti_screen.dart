@@ -1,9 +1,13 @@
-/// Mahiti (Info) Screen — Astronomical information: Grahana, Guru/Shukra Asta, etc.
+/// Mahiti (Info) Screen — Astronomical information: Grahana, Guru/Shukra Asta, Events, etc.
 import 'package:flutter/material.dart';
 import '../core/asta_calculator.dart';
 import '../core/adhika_masa_calculator.dart';
 import '../core/grahana_calculator.dart';
+import '../core/panchanga_calculator.dart';
+import '../core/masa_calculator.dart';
+import '../core/events.dart';
 import '../services/location_service.dart';
+import '../services/panchanga_cache.dart';
 import '../widgets/common.dart';
 
 class MahitiScreen extends StatefulWidget {
@@ -18,6 +22,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
   List<AstaPeriod> _shukraAsta = [];
   List<MasaPeriodInfo> _masaPeriods = [];
   List<GrahanaInfo> _grahanas = []; // Grahana section hidden for now
+  Map<String, List<DateTime>> _yearEvents = {};
   bool _loading = true;
   int _year = DateTime.now().year;
 
@@ -40,11 +45,61 @@ class _MahitiScreenState extends State<MahitiScreen> {
       //   lon: LocationService.lon,
       //   tzOffset: LocationService.tzOffset,
       // );
+      // ── Compute year events ──
+      final yearEvents = <String, List<DateTime>>{};
+      final cache = PanchangaCache();
+      final now = DateTime.now();
+      final useCache = cache.isInitialized &&
+          _year >= now.year - 1 && _year <= now.year + 1;
+
+      for (int m = 1; m <= 12; m++) {
+        final dim = DateUtils.getDaysInMonth(_year, m);
+        for (int d = 1; d <= dim; d++) {
+          try {
+            List<AstroEvent> dayEvents;
+            if (useCache) {
+              dayEvents = cache.getEvents(_year, m, d);
+            } else {
+              final data = PanchangaCalculator.calculate(
+                year: _year, month: m, day: d,
+                lat: LocationService.lat, lon: LocationService.lon,
+                tzOffset: LocationService.tzOffset,
+              );
+              final amanta = MasaCalculator.calculateAmanta(
+                jdSunrise: data.sunriseJd,
+                lat: LocationService.lat, lon: LocationService.lon,
+                tzOffset: LocationService.tzOffset,
+              );
+              final masaKey = amanta['masa'] as String;
+              final isAdhika = amanta['isAdhika'] as bool;
+              final masaName = EventCalculator.masaKeyToKannada(masaKey);
+              final sunsetTithi = PanchangaCalculator.tithiAtJd(data.sunsetJd);
+              int? prevTithi, nextTithi;
+              try { prevTithi = PanchangaCalculator.tithiAtJd(data.sunriseJd - 1.0); } catch (_) {}
+              try { nextTithi = PanchangaCalculator.tithiAtJd(data.sunriseJd + 1.0); } catch (_) {}
+              dayEvents = EventCalculator.getEvents(
+                masa: masaName, tIdx: data.tithiIndex,
+                sunsetTithiIdx: sunsetTithi,
+                nextDayTithiIdx: nextTithi,
+                prevDayTithiIdx: prevTithi,
+                isAdhika: isAdhika,
+              );
+            }
+            for (final ev in dayEvents) {
+              yearEvents.putIfAbsent(ev.name, () => []);
+              yearEvents[ev.name]!.add(DateTime(_year, m, d));
+            }
+          } catch (_) {}
+        }
+        await Future.delayed(Duration.zero); // Yield per month
+      }
+
       if (mounted) {
         setState(() {
           _guruAsta = guru;
           _shukraAsta = shukra;
           _masaPeriods = masas;
+          _yearEvents = yearEvents;
           // _grahanas = grahanas;
           _loading = false;
         });
@@ -139,6 +194,9 @@ class _MahitiScreenState extends State<MahitiScreen> {
 
             // ── Adhika / Kshaya Masa (Dynamic) ──
             _buildMasaSection(),
+
+            // ── Events / Festivals ──
+            _buildEventsSection(),
 
             // ── Uttarayana / Dakshinayana ──
             _InfoSection(
@@ -569,6 +627,184 @@ class _MahitiScreenState extends State<MahitiScreen> {
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Monthly event category detection ──
+  String? _getMonthlyCategory(String name) {
+    if (name.contains('ಏಕಾದಶಿ')) return 'ಏಕಾದಶಿ';
+    if (name.contains('ಪ್ರದೋಷ')) return 'ಪ್ರದೋಷ';
+    if (name.contains('ಸಂಕಷ್ಟಹರ') || name.contains('ವಿನಾಯಕ ಚತುರ್ಥಿ')) return 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ';
+    return null;
+  }
+
+  String _fmtDate(DateTime dt) {
+    const m = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const wd = ['', 'ಸೋಮ', 'ಮಂಗಳ', 'ಬುಧ', 'ಗುರು', 'ಶುಕ್ರ', 'ಶನಿ', 'ಭಾನು'];
+    return '${m[dt.month]} ${dt.day} (${wd[dt.weekday]})';
+  }
+
+  /// Build the Events/Festivals section
+  Widget _buildEventsSection() {
+    if (_yearEvents.isEmpty && !_loading) {
+      return const SizedBox.shrink();
+    }
+
+    // Categorize events
+    final monthlyGroups = <String, List<MapEntry<String, DateTime>>>{};
+    final specialEvents = <MapEntry<String, DateTime>>[];
+
+    for (final entry in _yearEvents.entries) {
+      final name = entry.key;
+      final dates = entry.value;
+      final category = _getMonthlyCategory(name);
+      if (category != null) {
+        monthlyGroups.putIfAbsent(category, () => []);
+        for (final dt in dates) {
+          monthlyGroups[category]!.add(MapEntry(name, dt));
+        }
+      } else {
+        for (final dt in dates) {
+          specialEvents.add(MapEntry(name, dt));
+        }
+      }
+    }
+
+    // Sort by date
+    for (final group in monthlyGroups.values) {
+      group.sort((a, b) => a.value.compareTo(b.value));
+    }
+    specialEvents.sort((a, b) => a.value.compareTo(b.value));
+
+    const color = Color(0xFFE91E63);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: kCard.withAlpha(178),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withAlpha(60)),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+          childrenPadding: const EdgeInsets.only(left: 14, right: 14, bottom: 12),
+          leading: Icon(Icons.celebration_rounded, color: color, size: 20),
+          title: Row(
+            children: [
+              Expanded(child: Text('ಹಬ್ಬ / ವ್ರತ  $_year', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: color))),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: color.withAlpha(20),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text('${specialEvents.length + monthlyGroups.values.fold<int>(0, (s, l) => s + l.length)}', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
+              ),
+            ],
+          ),
+          iconColor: color,
+          collapsedIconColor: color.withAlpha(150),
+          children: [
+            // ── Special (yearly) events ──
+            if (specialEvents.isNotEmpty)
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: color.withAlpha(10),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: color.withAlpha(30)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('🎉 ವಿಶೇಷ ಹಬ್ಬಗಳು', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
+                    const SizedBox(height: 8),
+                    ...specialEvents.map((e) => Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 90,
+                            child: Text(
+                              _fmtDate(e.value),
+                              style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kGold),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(e.key, style: TextStyle(fontSize: 10, color: kText)),
+                          ),
+                        ],
+                      ),
+                    )),
+                  ],
+                ),
+              ),
+
+            // ── Monthly recurring event dropdowns ──
+            ...monthlyGroups.entries.map((group) {
+              final categoryName = group.key;
+              final items = group.value;
+              final categoryIcons = {
+                'ಏಕಾದಶಿ': '🙏',
+                'ಪ್ರದೋಷ': '🌙',
+                'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ': '🐘',
+              };
+
+              return Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 8),
+                decoration: BoxDecoration(
+                  color: kBg.withAlpha(100),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: kBorder.withAlpha(40)),
+                ),
+                child: Theme(
+                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    childrenPadding: const EdgeInsets.only(left: 10, right: 10, bottom: 8),
+                    title: Row(
+                      children: [
+                        Text('${categoryIcons[categoryName] ?? '🔁'} $categoryName', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kText)),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: color.withAlpha(20),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text('${items.length}', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
+                        ),
+                      ],
+                    ),
+                    children: items.map((item) => Padding(
+                      padding: const EdgeInsets.only(bottom: 3),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 90,
+                            child: Text(
+                              _fmtDate(item.value),
+                              style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kGold),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(item.key, style: TextStyle(fontSize: 10, color: kMuted)),
+                          ),
+                        ],
+                      ),
+                    )).toList(),
+                  ),
+                ),
+              );
+            }),
           ],
         ),
       ),
