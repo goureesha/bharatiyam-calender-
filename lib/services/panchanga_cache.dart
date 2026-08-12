@@ -121,6 +121,14 @@ class PanchangaCache {
                   } catch (_) {}
                   return null;
                 })(),
+                noonTithiIdx: (() {
+                  try { return PanchangaCalculator.tithiAtJd((data.sunriseJd + data.sunsetJd) / 2); } catch (_) {}
+                  return null;
+                })(),
+                midnightTithiIdx: (() {
+                  try { return PanchangaCalculator.tithiAtJd(data.sunsetJd + 0.25); } catch (_) {}
+                  return null;
+                })(),
                 isAdhika: isAdhika,
               );
               if (events.isNotEmpty) _eventCache[key] = events;

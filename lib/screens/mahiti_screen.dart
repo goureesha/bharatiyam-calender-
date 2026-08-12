@@ -83,12 +83,20 @@ class _MahitiScreenState extends State<MahitiScreen> {
                 final mr = Ephemeris.findMoonriseSet(_year, m, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
                 if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
               } catch (_) {}
+              // Noon tithi (Madhyahna)
+              int? noonTithi;
+              try { noonTithi = PanchangaCalculator.tithiAtJd((data.sunriseJd + data.sunsetJd) / 2); } catch (_) {}
+              // Midnight tithi (Nishitha)
+              int? midnightTithi;
+              try { midnightTithi = PanchangaCalculator.tithiAtJd(data.sunsetJd + 0.25); } catch (_) {}
               dayEvents = EventCalculator.getEvents(
                 masa: masaName, tIdx: data.tithiIndex,
                 sunsetTithiIdx: sunsetTithi,
                 nextDayTithiIdx: nextTithi,
                 prevDayTithiIdx: prevTithi,
                 moonriseTithiIdx: moonriseTithi,
+                noonTithiIdx: noonTithi,
+                midnightTithiIdx: midnightTithi,
                 isAdhika: isAdhika,
               );
             }

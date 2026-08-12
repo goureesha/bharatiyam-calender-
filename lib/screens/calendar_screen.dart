@@ -99,12 +99,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   final mr = Ephemeris.findMoonriseSet(_currentMonth.year, _currentMonth.month, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
                   if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
                 } catch (_) {}
+                // Noon tithi (Madhyahna) for Rama Navami etc.
+                int? noonTithi;
+                try { noonTithi = PanchangaCalculator.tithiAtJd((p.sunriseJd + p.sunsetJd) / 2); } catch (_) {}
+                // Midnight tithi (Nishitha) for Janmashtami, Shivaratri
+                int? midnightTithi;
+                try { midnightTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd + 0.25); } catch (_) {}
                 final ev = EventCalculator.getEvents(
                   masa: masaName, tIdx: p.tithiIndex,
                   sunsetTithiIdx: sunsetTithi,
                   nextDayTithiIdx: nextDayTithi,
                   prevDayTithiIdx: prevDayTithi,
                   moonriseTithiIdx: moonriseTithi,
+                  noonTithiIdx: noonTithi,
+                  midnightTithiIdx: midnightTithi,
                   isAdhika: isAdhika,
                 );
                 if (ev.isNotEmpty) events[d] = ev;
@@ -183,12 +191,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
               final mr = Ephemeris.findMoonriseSet(savedMonth.year, savedMonth.month, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
               if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
             } catch (_) {}
+            // Noon tithi (Madhyahna)
+            int? noonTithi;
+            try { noonTithi = PanchangaCalculator.tithiAtJd((p.sunriseJd + p.sunsetJd) / 2); } catch (_) {}
+            // Midnight tithi (Nishitha)
+            int? midnightTithi;
+            try { midnightTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd + 0.25); } catch (_) {}
             final ev = EventCalculator.getEvents(
               masa: masaName, tIdx: p.tithiIndex,
               sunsetTithiIdx: sunsetTithi,
               nextDayTithiIdx: nextDayTithi,
               prevDayTithiIdx: prevDayTithi,
               moonriseTithiIdx: moonriseTithi,
+              noonTithiIdx: noonTithi,
+              midnightTithiIdx: midnightTithi,
               isAdhika: isAdhika,
             );
             if (ev.isNotEmpty) events[d] = ev;
