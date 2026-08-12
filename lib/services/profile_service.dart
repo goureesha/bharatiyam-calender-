@@ -1,15 +1,15 @@
 /// Profile Service — Manages user profile data (name, address, mobile).
-/// Stores locally via SharedPreferences and syncs to server.
+/// Stores locally via SharedPreferences and syncs to Cloud Firestore.
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart';
 
 class ProfileService {
   static String _name = '';
   static String _address = '';
   static String _mobile = '';
   static bool _profileComplete = false;
+  static String _docId = '';
 
   static String get name => _name;
   static String get address => _address;
@@ -32,10 +32,11 @@ class ProfileService {
     _name = prefs.getString('profile_name') ?? '';
     _address = prefs.getString('profile_address') ?? '';
     _mobile = prefs.getString('profile_mobile') ?? '';
+    _docId = prefs.getString('profile_doc_id') ?? '';
     _profileComplete = _name.isNotEmpty && _mobile.isNotEmpty;
   }
 
-  /// Save profile to local storage
+  /// Save profile to local storage and sync to Firestore
   static Future<void> save({
     required String name,
     required String address,
@@ -51,30 +52,49 @@ class ProfileService {
     await prefs.setString('profile_address', _address);
     await prefs.setString('profile_mobile', _mobile);
 
-    // Sync to server (fire-and-forget)
-    _syncToServer();
+    // Sync to Firestore
+    await _syncToFirestore();
   }
 
-  /// Sync profile to server
-  static Future<void> _syncToServer() async {
+  /// Sync profile to Cloud Firestore
+  static Future<void> _syncToFirestore() async {
     try {
-      // TODO: Replace with your actual server endpoint
-      // Example: POST to Firebase, Supabase, or custom API
-      final payload = {
+      final collection = FirebaseFirestore.instance.collection('users');
+      final data = {
         'name': _name,
         'address': _address,
         'mobile': _mobile,
-        'timestamp': DateTime.now().toIso8601String(),
+        'updatedAt': FieldValue.serverTimestamp(),
       };
-      debugPrint('Profile sync payload: ${json.encode(payload)}');
-      // Uncomment when server is ready:
-      // final response = await http.post(
-      //   Uri.parse('https://your-server.com/api/profiles'),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: json.encode(payload),
-      // );
+
+      if (_docId.isNotEmpty) {
+        // Update existing document
+        await collection.doc(_docId).update(data);
+      } else {
+        // Check if mobile already exists
+        final existing = await collection
+            .where('mobile', isEqualTo: _mobile)
+            .limit(1)
+            .get();
+
+        if (existing.docs.isNotEmpty) {
+          _docId = existing.docs.first.id;
+          await collection.doc(_docId).update(data);
+        } else {
+          // Create new document
+          data['createdAt'] = FieldValue.serverTimestamp();
+          final doc = await collection.add(data);
+          _docId = doc.id;
+        }
+
+        // Save doc ID locally
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('profile_doc_id', _docId);
+      }
+
+      debugPrint('Profile synced to Firestore: $_docId');
     } catch (e) {
-      debugPrint('Profile sync error: $e');
+      debugPrint('Firestore sync error: $e');
     }
   }
 }

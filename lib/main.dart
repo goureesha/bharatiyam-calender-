@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'screens/home_screen.dart';
 import 'screens/profile_setup_screen.dart';
 import 'services/profile_service.dart';
@@ -6,6 +7,7 @@ import 'widgets/common.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await ThemeService.loadTheme();
   await ProfileService.load();
   runApp(const BharatiyamPanchangaApp());

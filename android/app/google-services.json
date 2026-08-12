@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1085359219387",
+    "project_id": "bharatiyam-calender",
+    "storage_bucket": "bharatiyam-calender.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085359219387:android:0b9a94c1c6a8d80e6abf9e",
+        "android_client_info": {
+          "package_name": "com.example.bharatiyam_panchanga"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrF2hsOC1nhmvYEqdVZD35n6MIShKPUDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
