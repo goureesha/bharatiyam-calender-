@@ -67,16 +67,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     if (pre.isLoaded) {
       final data = pre.getMonthData(_currentMonth.year, _currentMonth.month);
       if (data.isNotEmpty) {
-        final events = pre.getMonthEvents(_currentMonth.year, _currentMonth.month);
+        // Use precomputed panchanga data but compute events LIVE
+        // (precomputed events may be stale / use old logic)
         _dataCache[key] = data;
-        _eventsCache[key] = events;
-        setState(() {
-          _monthData = data;
-          _monthEvents = events;
-          _loading = false;
-        });
-        _computeKalas();
-        return;
+        // Fall through to _computeMonth which will use this cached data for events
       }
     }
     _computeMonth();
