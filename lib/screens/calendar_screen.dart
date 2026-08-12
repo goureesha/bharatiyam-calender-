@@ -121,8 +121,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
             final sunsetTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd);
             final nextP = data[d + 1];
             final nextDayTithi = nextP?.tithiIndex;
-            final prevP = (d > 1) ? data[d - 1] : null;
-            final prevDayTithi = prevP?.tithiIndex;
+            // Previous day tithi: from data if available, else compute from ephemeris
+            int? prevDayTithi;
+            if (d > 1) {
+              prevDayTithi = data[d - 1]?.tithiIndex;
+            } else {
+              // Day 1 boundary: compute from previous day's approximate sunrise
+              try { prevDayTithi = PanchangaCalculator.tithiAtJd(p.sunriseJd - 1.0); } catch (_) {}
+            }
             final ev = EventCalculator.getEvents(
               masa: masaName, tIdx: p.tithiIndex,
               sunsetTithiIdx: sunsetTithi,
