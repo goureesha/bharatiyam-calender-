@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'screens/home_screen.dart';
 import 'screens/profile_setup_screen.dart';
 import 'services/profile_service.dart';
@@ -18,7 +19,9 @@ void main() async {
 
 Future<void> _initFirebase() async {
   try {
-    await Firebase.initializeApp().timeout(
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    ).timeout(
       const Duration(seconds: 3),
       onTimeout: () {
         debugPrint('Firebase init timed out — will retry in background');
