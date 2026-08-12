@@ -10,6 +10,7 @@ import '../core/shraddha_calculator.dart';
 import '../models/panchanga_data.dart';
 import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
+import '../services/profile_service.dart';
 import '../services/precomputed_data.dart';
 import '../widgets/common.dart';
 import '../widgets/panchanga_share.dart';
@@ -194,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } catch (_) {}
     if (!mounted) return;
-    await PanchangaShare.showShareDialog(context, d, dayEvents, kalas: _kalas ?? []);
+    await PanchangaShare.showShareDialog(context, d, dayEvents, kalas: _kalas ?? [], purohitDetails: ProfileService.purohitDetails);
   }
 
   Future<void> _pickDate() async {

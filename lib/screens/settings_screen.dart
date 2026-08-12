@@ -1,7 +1,9 @@
-/// Settings Screen — Language selector, location picker, about info.
+/// Settings Screen — Profile editor, language selector, location picker, about info.
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
+import '../services/profile_service.dart';
 import '../constants/places.dart';
 import '../widgets/common.dart';
 
@@ -16,8 +18,24 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController _searchCtrl = TextEditingController();
+  final TextEditingController _nameCtrl = TextEditingController(text: ProfileService.name);
+  final TextEditingController _addressCtrl = TextEditingController(text: ProfileService.address);
+  final TextEditingController _mobileCtrl = TextEditingController(text: ProfileService.mobile);
   List<CityData> _filteredCities = indianCities;
   bool _detectingGps = false;
+  bool _profileSaved = false;
+
+  Future<void> _saveProfile() async {
+    await ProfileService.save(
+      name: _nameCtrl.text,
+      address: _addressCtrl.text,
+      mobile: _mobileCtrl.text,
+    );
+    setState(() => _profileSaved = true);
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _profileSaved = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +49,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: kGold)),
         ),
 
-        // ── Language ──
+        // ── Profile ──
+        AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SectionHeader(icon: Icons.person_rounded, title: 'ಪ್ರೊಫೈಲ್ / Profile'),
+              const SizedBox(height: 12),
+              _profileField(_nameCtrl, 'ಹೆಸರು / Name', Icons.person_outline_rounded),
+              const SizedBox(height: 10),
+              _profileField(_addressCtrl, 'ವಿಳಾಸ / Address', Icons.location_on_outlined, maxLines: 2),
+              const SizedBox(height: 10),
+              _profileField(_mobileCtrl, 'ಮೊಬೈಲ್ / Mobile', Icons.phone_outlined,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)]),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: _saveProfile,
+                      icon: Icon(_profileSaved ? Icons.check : Icons.save_rounded, color: Colors.white, size: 18),
+                      label: Text(_profileSaved ? 'Saved ✓' : 'Save Profile',
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _profileSaved ? Colors.green : kGold,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+
         AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,5 +387,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await LocationService.setCity(city);
     setState(() {});
     widget.onLocationChanged?.call();
+  }
+
+  Widget _profileField(TextEditingController ctrl, String label, IconData icon, {
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+    int maxLines = 1,
+  }) {
+    return TextField(
+      controller: ctrl,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      maxLines: maxLines,
+      style: TextStyle(color: kText, fontSize: 13),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: kMuted, fontSize: 12),
+        prefixIcon: Icon(icon, color: kGold, size: 18),
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        filled: true,
+        fillColor: kBg,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: kBorder)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: kBorder)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: kGold, width: 1.5)),
+      ),
+    );
   }
 }
