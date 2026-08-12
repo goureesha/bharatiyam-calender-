@@ -32,6 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _initDone = false;
   int _navIndex = 0;
 
+  /// Vaidika Rutu from Pournimanta Masa
+  static String _vaidikaRutu(String pMasa) {
+    const map = {
+      'cm0': 'ವಸಂತ', 'cm1': 'ವಸಂತ',       // Chaitra, Vaishakha
+      'cm2': 'ಗ್ರೀಷ್ಮ', 'cm3': 'ಗ್ರೀಷ್ಮ',     // Jyeshtha, Ashadha
+      'cm4': 'ವರ್ಷಾ', 'cm5': 'ವರ್ಷಾ',       // Shravana, Bhadrapada
+      'cm6': 'ಶರದ್', 'cm7': 'ಶರದ್',         // Ashwina, Kartika
+      'cm8': 'ಹೇಮಂತ', 'cm9': 'ಹೇಮಂತ',     // Margashira, Pushya
+      'cm10': 'ಶಿಶಿರ', 'cm11': 'ಶಿಶಿರ',     // Magha, Phalguna
+    };
+    return map[pMasa] ?? '';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -368,7 +381,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 InfoRow(label: 'ಚಂದ್ರ ಮಾಸ (Pournimanta)', value: AppLocale.t(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('souraMasa'), value: AppLocale.t(d.souraMasa)),
                 InfoRow(label: 'ಸೌರ ಮಾಸ ಗತ ದಿನ', value: '${d.souraMasaGataDina} ದಿನ'),
-                InfoRow(label: AppLocale.t('rutu'), value: AppLocale.t(d.rutu)),
+                InfoRow(label: 'ಸೌರ ಋತು', value: AppLocale.t(d.rutu)),
+                InfoRow(label: 'ವೈದಿಕ ಋತು', value: _vaidikaRutu(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('ayana'), value: AppLocale.t(d.ayana)),
               ],
             ),
