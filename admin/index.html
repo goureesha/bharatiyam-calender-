@@ -11,6 +11,28 @@
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh; color: #e0e0e0;
     }
+    /* Login screen */
+    .login-screen {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100vh; gap: 20px;
+    }
+    .login-screen h1 { color: #FF6B00; font-size: 28px; }
+    .login-screen p { color: #888; font-size: 14px; }
+    .login-btn {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 32px; background: #fff; color: #333; border: none;
+      border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: transform 0.2s;
+    }
+    .login-btn:hover { transform: scale(1.03); }
+    .login-btn img { width: 24px; height: 24px; }
+    .access-denied {
+      color: #ef5350; background: rgba(239,83,80,0.1);
+      padding: 16px 24px; border-radius: 10px; text-align: center;
+      border: 1px solid rgba(239,83,80,0.3); display: none;
+    }
+    /* Dashboard */
+    .dashboard { display: none; }
     .header {
       background: rgba(255,107,0,0.15);
       border-bottom: 2px solid rgba(255,107,0,0.3);
@@ -18,7 +40,19 @@
       display: flex; align-items: center; justify-content: space-between;
     }
     .header h1 { color: #FF6B00; font-size: 22px; }
-    .header .stats { display: flex; gap: 20px; }
+    .header .user-info {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .header .user-info img {
+      width: 32px; height: 32px; border-radius: 50%; border: 2px solid #FF6B00;
+    }
+    .header .user-info span { font-size: 12px; color: #888; }
+    .logout-btn {
+      padding: 6px 14px; background: rgba(239,83,80,0.2); color: #ef5350;
+      border: 1px solid rgba(239,83,80,0.3); border-radius: 6px;
+      cursor: pointer; font-size: 12px;
+    }
+    .stats { display: flex; gap: 20px; }
     .stat-card {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,107,0,0.2);
@@ -36,11 +70,11 @@
       border-radius: 8px; color: #fff; font-size: 14px; outline: none;
     }
     .controls input:focus { border-color: #FF6B00; }
-    .controls button {
+    .controls button, .refresh-btn {
       padding: 10px 20px; background: #FF6B00; color: #fff; border: none;
       border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px;
     }
-    .controls button:hover { background: #e65c00; }
+    .controls button:hover, .refresh-btn:hover { background: #e65c00; }
     .controls .count { color: #888; font-size: 13px; margin-left: auto; }
     .table-wrap { padding: 20px 30px; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
@@ -60,13 +94,10 @@
     .date-col { color: #888; font-size: 12px; }
     .badge {
       display: inline-block; padding: 2px 8px; border-radius: 10px;
-      font-size: 10px; font-weight: bold;
+      font-size: 10px; font-weight: bold; margin-left: 6px;
     }
     .badge-new { background: rgba(76,175,80,0.2); color: #4caf50; }
-    .badge-updated { background: rgba(33,150,243,0.2); color: #2196f3; }
-    .empty-state {
-      text-align: center; padding: 60px; color: #666;
-    }
+    .empty-state { text-align: center; padding: 60px; color: #666; }
     .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
     .loading { text-align: center; padding: 40px; color: #FF6B00; }
     .export-btn {
@@ -78,69 +109,131 @@
   </style>
 </head>
 <body>
-  <div class="header">
-    <div>
-      <h1>✦ ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ — Admin</h1>
-      <p style="color:#888;font-size:12px;margin-top:4px">User Management Dashboard</p>
+
+  <!-- Login Screen -->
+  <div class="login-screen" id="loginScreen">
+    <h1>✦ ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ</h1>
+    <p>Admin Dashboard — Sign in with authorized Google account</p>
+    <button class="login-btn" onclick="signIn()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
+      Sign in with Google
+    </button>
+    <div class="access-denied" id="accessDenied">
+      🚫 Access denied. Only authorized admins can access this dashboard.
     </div>
-    <div class="stats">
-      <div class="stat-card">
-        <div class="num" id="totalCount">—</div>
-        <div class="label">Total Users</div>
+  </div>
+
+  <!-- Dashboard (hidden until auth) -->
+  <div class="dashboard" id="dashboard">
+    <div class="header">
+      <div>
+        <h1>✦ ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ — Admin</h1>
+        <p style="color:#888;font-size:12px;margin-top:4px">User Management Dashboard</p>
       </div>
-      <div class="stat-card">
-        <div class="num" id="todayCount">—</div>
-        <div class="label">Today</div>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="num" id="totalCount">—</div>
+          <div class="label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="todayCount">—</div>
+          <div class="label">Today</div>
+        </div>
+      </div>
+      <div class="user-info">
+        <img id="userPhoto" src="" alt="">
+        <div>
+          <div id="userName" style="font-size:13px"></div>
+          <span id="userEmail"></span>
+        </div>
+        <button class="logout-btn" onclick="signOut()">Logout</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <input type="text" id="searchBox" placeholder="🔍 Search by name, mobile, or address..." oninput="filterUsers()">
+      <button onclick="refreshData()">⟳ Refresh</button>
+      <button class="export-btn" onclick="exportCSV()">📥 Export CSV</button>
+      <span class="count" id="showingCount"></span>
+    </div>
+
+    <div class="table-wrap">
+      <div class="loading" id="loadingMsg">⏳ Loading users...</div>
+      <table id="usersTable" style="display:none">
+        <thead>
+          <tr>
+            <th onclick="sortBy('index')">#</th>
+            <th onclick="sortBy('name')">Name ↕</th>
+            <th onclick="sortBy('address')">Address ↕</th>
+            <th onclick="sortBy('mobile')">Mobile ↕</th>
+            <th onclick="sortBy('createdAt')">Joined ↕</th>
+            <th onclick="sortBy('updatedAt')">Last Updated ↕</th>
+          </tr>
+        </thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none">
+        <div class="icon">📭</div>
+        <p>No users found</p>
       </div>
     </div>
   </div>
 
-  <div class="controls">
-    <input type="text" id="searchBox" placeholder="🔍 Search by name, mobile, or address..." oninput="filterUsers()">
-    <button onclick="refreshData()">⟳ Refresh</button>
-    <button class="export-btn" onclick="exportCSV()">📥 Export CSV</button>
-    <span class="count" id="showingCount"></span>
-  </div>
-
-  <div class="table-wrap">
-    <div class="loading" id="loadingMsg">⏳ Loading users...</div>
-    <table id="usersTable" style="display:none">
-      <thead>
-        <tr>
-          <th onclick="sortBy('index')">#</th>
-          <th onclick="sortBy('name')">Name ↕</th>
-          <th onclick="sortBy('address')">Address ↕</th>
-          <th onclick="sortBy('mobile')">Mobile ↕</th>
-          <th onclick="sortBy('createdAt')">Joined ↕</th>
-          <th onclick="sortBy('updatedAt')">Last Updated ↕</th>
-        </tr>
-      </thead>
-      <tbody id="usersBody"></tbody>
-    </table>
-    <div class="empty-state" id="emptyState" style="display:none">
-      <div class="icon">📭</div>
-      <p>No users found</p>
-    </div>
-  </div>
-
-  <!-- Firebase JS SDK (compat for simplicity) -->
+  <!-- Firebase JS SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <script>
-    // ── Firebase Config ──
-    // NOTE: You may need to add a Web App in Firebase Console and use its config
+    // ── Config ──
     firebase.initializeApp({
       apiKey: "AIzaSyCrF2hsOC1nhmvYEqdVZD35n6MIShKPUDk",
+      authDomain: "bharatiyam-calender.firebaseapp.com",
       projectId: "bharatiyam-calender",
       storageBucket: "bharatiyam-calender.firebasestorage.app",
       appId: "1:1085359219387:android:0b9a94c1c6a8d80e6abf9e",
     });
 
     const db = firebase.firestore();
+    const auth = firebase.auth();
+    const ADMIN_EMAILS = ['uastro785@gmail.com'];
+
     let allUsers = [];
     let sortField = 'createdAt';
     let sortDir = -1;
 
+    // ── Auth ──
+    function signIn() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch(e => console.error('Sign-in error:', e));
+    }
+
+    function signOut() {
+      auth.signOut();
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        if (ADMIN_EMAILS.includes(user.email)) {
+          // Authorized admin
+          document.getElementById('loginScreen').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          document.getElementById('userName').textContent = user.displayName || '';
+          document.getElementById('userEmail').textContent = user.email;
+          document.getElementById('userPhoto').src = user.photoURL || '';
+          refreshData();
+        } else {
+          // Not authorized
+          document.getElementById('accessDenied').style.display = 'block';
+          auth.signOut();
+        }
+      } else {
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('accessDenied').style.display = 'none';
+      }
+    });
+
+    // ── Data ──
     async function refreshData() {
       document.getElementById('loadingMsg').style.display = 'block';
       document.getElementById('usersTable').style.display = 'none';
@@ -148,29 +241,22 @@
 
       try {
         const snap = await db.collection('users').orderBy('createdAt', 'desc').get();
-        allUsers = snap.docs.map((doc, i) => ({
-          id: doc.id,
-          index: i + 1,
-          ...doc.data(),
-        }));
+        allUsers = snap.docs.map((doc, i) => ({ id: doc.id, index: i + 1, ...doc.data() }));
 
         document.getElementById('totalCount').textContent = allUsers.length;
 
-        // Count today's users
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const today = new Date(); today.setHours(0, 0, 0, 0);
         const todayUsers = allUsers.filter(u => {
           if (!u.createdAt) return false;
           const d = u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt);
           return d >= today;
         });
         document.getElementById('todayCount').textContent = todayUsers.length;
-
         renderTable();
       } catch (e) {
         console.error('Error:', e);
         document.getElementById('loadingMsg').innerHTML =
-          '❌ Error loading data. Make sure Firestore rules allow read access.<br><small>' + e.message + '</small>';
+          '❌ Error: ' + e.message;
       }
     }
 
@@ -182,10 +268,8 @@
         (u.address || '').toLowerCase().includes(search)
       );
 
-      // Sort
       filtered.sort((a, b) => {
-        let va = a[sortField] || '';
-        let vb = b[sortField] || '';
+        let va = a[sortField] || '', vb = b[sortField] || '';
         if (va?.toDate) va = va.toDate();
         if (vb?.toDate) vb = vb.toDate();
         if (va < vb) return -sortDir;
@@ -205,54 +289,38 @@
       }
 
       filtered.forEach((u, i) => {
-        const created = formatDate(u.createdAt);
-        const updated = formatDate(u.updatedAt);
-        const isNew = isToday(u.createdAt);
-
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${i + 1}</td>
           <td><strong>${esc(u.name || '—')}</strong>
-            ${isNew ? '<span class="badge badge-new">NEW</span>' : ''}</td>
+            ${isToday(u.createdAt) ? '<span class="badge badge-new">NEW</span>' : ''}</td>
           <td>${esc(u.address || '—')}</td>
           <td class="mobile-col">${esc(u.mobile || '—')}</td>
-          <td class="date-col">${created}</td>
-          <td class="date-col">${updated}</td>
+          <td class="date-col">${formatDate(u.createdAt)}</td>
+          <td class="date-col">${formatDate(u.updatedAt)}</td>
         `;
         tbody.appendChild(tr);
       });
 
-      document.getElementById('showingCount').textContent =
-        `Showing ${filtered.length} of ${allUsers.length}`;
+      document.getElementById('showingCount').textContent = `Showing ${filtered.length} of ${allUsers.length}`;
       document.getElementById('loadingMsg').style.display = 'none';
     }
 
     function formatDate(ts) {
       if (!ts) return '—';
       const d = ts.toDate ? ts.toDate() : new Date(ts);
-      return d.toLocaleDateString('en-IN', {
-        day: '2-digit', month: 'short', year: 'numeric',
-        hour: '2-digit', minute: '2-digit',
-      });
+      return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     }
 
     function isToday(ts) {
       if (!ts) return false;
       const d = ts.toDate ? ts.toDate() : new Date(ts);
-      const today = new Date();
-      return d.getDate() === today.getDate() &&
-        d.getMonth() === today.getMonth() &&
-        d.getFullYear() === today.getFullYear();
+      const t = new Date();
+      return d.getDate() === t.getDate() && d.getMonth() === t.getMonth() && d.getFullYear() === t.getFullYear();
     }
 
-    function esc(s) {
-      const d = document.createElement('div');
-      d.textContent = s;
-      return d.innerHTML;
-    }
-
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
     function filterUsers() { renderTable(); }
-
     function sortBy(field) {
       if (sortField === field) sortDir *= -1;
       else { sortField = field; sortDir = 1; }
@@ -260,30 +328,14 @@
     }
 
     function exportCSV() {
-      if (allUsers.length === 0) return;
-      const rows = [['#', 'Name', 'Address', 'Mobile', 'Joined', 'Updated']];
-      allUsers.forEach((u, i) => {
-        rows.push([
-          i + 1,
-          `"${(u.name || '').replace(/"/g, '""')}"`,
-          `"${(u.address || '').replace(/"/g, '""')}"`,
-          u.mobile || '',
-          formatDate(u.createdAt),
-          formatDate(u.updatedAt),
-        ]);
-      });
-      const csv = rows.map(r => r.join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
+      if (!allUsers.length) return;
+      const rows = [['#','Name','Address','Mobile','Joined','Updated']];
+      allUsers.forEach((u, i) => rows.push([i+1, `"${(u.name||'').replace(/"/g,'""')}"`, `"${(u.address||'').replace(/"/g,'""')}"`, u.mobile||'', formatDate(u.createdAt), formatDate(u.updatedAt)]));
+      const blob = new Blob([rows.map(r=>r.join(',')).join('\n')], { type: 'text/csv' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `bharatiyam_users_${new Date().toISOString().split('T')[0]}.csv`;
       a.click();
-      URL.revokeObjectURL(url);
     }
-
-    // Load on page open
-    refreshData();
   </script>
 </body>
 </html>
