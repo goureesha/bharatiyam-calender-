@@ -129,6 +129,48 @@ class PanchangaCache {
             await Future.delayed(Duration.zero);
           }
         }
+
+        // ═══ Varalakshmi Vrata (Shravana, nearest Friday to Pournima) ═══
+        // After processing all days of this month, check for Shravana Pournima
+        for (int d = 1; d <= daysInMonth; d++) {
+          final key = _key(y, m, d);
+          final data = _dataCache[key];
+          if (data == null) continue;
+          try {
+            final amanta = MasaCalculator.calculateAmanta(
+              jdSunrise: data.sunriseJd,
+              lat: lat, lon: lon, tzOffset: tzOffset,
+            );
+            final masaKey = amanta['masa'] as String;
+            final isAdhika = amanta['isAdhika'] as bool;
+            final masaName = EventCalculator.masaKeyToKannada(masaKey);
+            if (masaName == 'ಶ್ರಾವಣ' && !isAdhika && data.tithiIndex == 14) {
+              // Found Shravana Pournima on day d
+              final pournimaDate = DateTime(y, m, d);
+              final wd = pournimaDate.weekday; // 1=Mon...5=Fri...7=Sun
+              int varalakshmiDay;
+              if (wd == 5) {
+                varalakshmiDay = d;
+              } else {
+                int daysToPrevFri = (wd - 5 + 7) % 7;
+                if (daysToPrevFri == 0) daysToPrevFri = 7;
+                int daysToNextFri = (5 - wd + 7) % 7;
+                if (daysToNextFri == 0) daysToNextFri = 7;
+                varalakshmiDay = d + ((daysToPrevFri <= daysToNextFri) ? -daysToPrevFri : daysToNextFri);
+              }
+              if (varalakshmiDay >= 1 && varalakshmiDay <= daysInMonth) {
+                final vKey = _key(y, m, varalakshmiDay);
+                _eventCache.putIfAbsent(vKey, () => []);
+                _eventCache[vKey]!.add(AstroEvent(
+                  name: 'ವರಮಹಾಲಕ್ಷ್ಮಿ ವ್ರತ',
+                  description: 'ಶ್ರಾವಣ ಪೌರ್ಣಿಮೆಗೆ ಸಮೀಪದ ಶುಕ್ರವಾರ. ಮಹಾಲಕ್ಷ್ಮಿ ಪೂಜೆ.',
+                  shloka: '', source: '',
+                ));
+              }
+              break; // Only one Pournima per Shravana
+            }
+          } catch (_) {}
+        }
       }
     }
 
