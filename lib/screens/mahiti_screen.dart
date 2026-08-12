@@ -25,6 +25,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
   List<GrahanaInfo> _grahanas = []; // Grahana section hidden for now
   Map<String, List<DateTime>> _yearEvents = {};
   bool _loading = true;
+  bool _eventsLoading = false;
+  int _eventsProgress = 0; // 0-12 months done
   int _year = DateTime.now().year;
 
   @override
@@ -37,91 +39,102 @@ class _MahitiScreenState extends State<MahitiScreen> {
     setState(() => _loading = true);
     await Future.delayed(Duration.zero);
     try {
+      // Fast calculations — show immediately
       final guru = AstaCalculator.calculateGuruAsta(_year);
       final shukra = AstaCalculator.calculateShukraAsta(_year);
       final masas = AdhikaMasaCalculator.calculateForYear(_year);
-      // final grahanas = GrahanaCalculator.calculateForYear(
-      //   _year,
-      //   lat: LocationService.lat,
-      //   lon: LocationService.lon,
-      //   tzOffset: LocationService.tzOffset,
-      // );
-      // ── Compute year events ──
-      final yearEvents = <String, List<DateTime>>{};
-      final cache = PanchangaCache();
-      final now = DateTime.now();
-      final useCache = cache.isInitialized &&
-          _year >= now.year - 1 && _year <= now.year + 1;
-
-      for (int m = 1; m <= 12; m++) {
-        final dim = DateUtils.getDaysInMonth(_year, m);
-        for (int d = 1; d <= dim; d++) {
-          try {
-            List<AstroEvent> dayEvents;
-            if (useCache) {
-              dayEvents = cache.getEvents(_year, m, d);
-            } else {
-              final data = PanchangaCalculator.calculate(
-                year: _year, month: m, day: d,
-                lat: LocationService.lat, lon: LocationService.lon,
-                tzOffset: LocationService.tzOffset,
-              );
-              final amanta = MasaCalculator.calculateAmanta(
-                jdSunrise: data.sunriseJd,
-                lat: LocationService.lat, lon: LocationService.lon,
-                tzOffset: LocationService.tzOffset,
-              );
-              final masaKey = amanta['masa'] as String;
-              final isAdhika = amanta['isAdhika'] as bool;
-              final masaName = EventCalculator.masaKeyToKannada(masaKey);
-              final sunsetTithi = PanchangaCalculator.tithiAtJd(data.sunsetJd);
-              int? prevTithi, nextTithi;
-              try { prevTithi = PanchangaCalculator.tithiAtJd(data.sunriseJd - 1.0); } catch (_) {}
-              try { nextTithi = PanchangaCalculator.tithiAtJd(data.sunriseJd + 1.0); } catch (_) {}
-              int? moonriseTithi;
-              try {
-                final mr = Ephemeris.findMoonriseSet(_year, m, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
-                if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
-              } catch (_) {}
-              // Noon tithi (Madhyahna)
-              int? noonTithi;
-              try { noonTithi = PanchangaCalculator.tithiAtJd((data.sunriseJd + data.sunsetJd) / 2); } catch (_) {}
-              // Midnight tithi (Nishitha)
-              int? midnightTithi;
-              try { midnightTithi = PanchangaCalculator.tithiAtJd(data.sunsetJd + 0.25); } catch (_) {}
-              dayEvents = EventCalculator.getEvents(
-                masa: masaName, tIdx: data.tithiIndex,
-                sunsetTithiIdx: sunsetTithi,
-                nextDayTithiIdx: nextTithi,
-                prevDayTithiIdx: prevTithi,
-                moonriseTithiIdx: moonriseTithi,
-                noonTithiIdx: noonTithi,
-                midnightTithiIdx: midnightTithi,
-                isAdhika: isAdhika,
-              );
-            }
-            for (final ev in dayEvents) {
-              yearEvents.putIfAbsent(ev.name, () => []);
-              yearEvents[ev.name]!.add(DateTime(_year, m, d));
-            }
-          } catch (_) {}
-        }
-        await Future.delayed(Duration.zero); // Yield per month
-      }
 
       if (mounted) {
         setState(() {
           _guruAsta = guru;
           _shukraAsta = shukra;
           _masaPeriods = masas;
-          _yearEvents = yearEvents;
-          // _grahanas = grahanas;
           _loading = false;
         });
       }
+
+      // Slow event computation — runs in background
+      _computeYearEvents();
     } catch (e) {
       if (mounted) setState(() => _loading = false);
       debugPrint('Mahiti calc error: $e');
+    }
+  }
+
+  Future<void> _computeYearEvents() async {
+    setState(() { _eventsLoading = true; _eventsProgress = 0; _yearEvents = {}; });
+
+    final cache = PanchangaCache();
+    final now = DateTime.now();
+    final useCache = cache.isInitialized && _year >= now.year - 1 && _year <= now.year + 1;
+    final yearEvents = <String, List<DateTime>>{};
+
+    for (int m = 1; m <= 12; m++) {
+      final dim = DateUtils.getDaysInMonth(_year, m);
+      for (int d = 1; d <= dim; d++) {
+        try {
+          List<AstroEvent> dayEvents;
+          if (useCache) {
+            dayEvents = cache.getEvents(_year, m, d);
+          } else {
+            final data = PanchangaCalculator.calculate(
+              year: _year, month: m, day: d,
+              lat: LocationService.lat, lon: LocationService.lon,
+              tzOffset: LocationService.tzOffset,
+            );
+            final amanta = MasaCalculator.calculateAmanta(
+              jdSunrise: data.sunriseJd,
+              lat: LocationService.lat, lon: LocationService.lon,
+              tzOffset: LocationService.tzOffset,
+            );
+            final masaKey = amanta['masa'] as String;
+            final isAdhika = amanta['isAdhika'] as bool;
+            final masaName = EventCalculator.masaKeyToKannada(masaKey);
+            final sunsetTithi = PanchangaCalculator.tithiAtJd(data.sunsetJd);
+            int? prevTithi, nextTithi;
+            try { prevTithi = PanchangaCalculator.tithiAtJd(data.sunriseJd - 1.0); } catch (_) {}
+            try { nextTithi = PanchangaCalculator.tithiAtJd(data.sunriseJd + 1.0); } catch (_) {}
+            int? moonriseTithi;
+            try {
+              final mr = Ephemeris.findMoonriseSet(_year, m, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
+              if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
+            } catch (_) {}
+            int? noonTithi;
+            try { noonTithi = PanchangaCalculator.tithiAtJd((data.sunriseJd + data.sunsetJd) / 2); } catch (_) {}
+            int? midnightTithi;
+            try { midnightTithi = PanchangaCalculator.tithiAtJd(data.sunsetJd + 0.25); } catch (_) {}
+            dayEvents = EventCalculator.getEvents(
+              masa: masaName, tIdx: data.tithiIndex,
+              sunsetTithiIdx: sunsetTithi,
+              nextDayTithiIdx: nextTithi,
+              prevDayTithiIdx: prevTithi,
+              moonriseTithiIdx: moonriseTithi,
+              noonTithiIdx: noonTithi,
+              midnightTithiIdx: midnightTithi,
+              isAdhika: isAdhika,
+            );
+          }
+          for (final ev in dayEvents) {
+            yearEvents.putIfAbsent(ev.name, () => []);
+            yearEvents[ev.name]!.add(DateTime(_year, m, d));
+          }
+        } catch (_) {}
+      }
+      // Update progress after each month
+      if (mounted) {
+        setState(() {
+          _eventsProgress = m;
+          _yearEvents = Map.from(yearEvents);
+        });
+      }
+      await Future.delayed(Duration.zero); // Yield per month
+    }
+
+    if (mounted) {
+      setState(() {
+        _yearEvents = yearEvents;
+        _eventsLoading = false;
+      });
     }
   }
 
@@ -664,7 +677,24 @@ class _MahitiScreenState extends State<MahitiScreen> {
 
   /// Build the Events/Festivals section
   Widget _buildEventsSection() {
-    if (_yearEvents.isEmpty && !_loading) {
+    if (_eventsLoading) {
+      return AppCard(
+        child: Column(children: [
+          SectionHeader(icon: Icons.celebration_rounded, title: 'ಹಬ್ಬ / ವಿಶೇಷ ದಿನಗಳು'),
+          const SizedBox(height: 12),
+          LinearProgressIndicator(value: _eventsProgress / 12, color: kGold, backgroundColor: kBorder),
+          const SizedBox(height: 8),
+          Text('Computing events... $_eventsProgress/12 months',
+            style: TextStyle(fontSize: 12, color: kMuted)),
+          if (_yearEvents.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text('${_yearEvents.length} events found so far',
+              style: TextStyle(fontSize: 11, color: kGold)),
+          ],
+        ]),
+      );
+    }
+    if (_yearEvents.isEmpty) {
       return const SizedBox.shrink();
     }
 
