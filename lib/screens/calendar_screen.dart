@@ -93,11 +93,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 } else {
                   try { prevDayTithi = PanchangaCalculator.tithiAtJd(p.sunriseJd - 1.0); } catch (_) {}
                 }
+                // Moonrise tithi for chandrodaya events
+                int? moonriseTithi;
+                try {
+                  final mr = Ephemeris.findMoonriseSet(_currentMonth.year, _currentMonth.month, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
+                  if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
+                } catch (_) {}
                 final ev = EventCalculator.getEvents(
                   masa: masaName, tIdx: p.tithiIndex,
                   sunsetTithiIdx: sunsetTithi,
                   nextDayTithiIdx: nextDayTithi,
                   prevDayTithiIdx: prevDayTithi,
+                  moonriseTithiIdx: moonriseTithi,
                   isAdhika: isAdhika,
                 );
                 if (ev.isNotEmpty) events[d] = ev;
@@ -164,19 +171,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
             final sunsetTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd);
             final nextP = data[d + 1];
             final nextDayTithi = nextP?.tithiIndex;
-            // Previous day tithi: from data if available, else compute from ephemeris
             int? prevDayTithi;
             if (d > 1) {
               prevDayTithi = data[d - 1]?.tithiIndex;
             } else {
-              // Day 1 boundary: compute from previous day's approximate sunrise
               try { prevDayTithi = PanchangaCalculator.tithiAtJd(p.sunriseJd - 1.0); } catch (_) {}
             }
+            // Moonrise tithi for chandrodaya events
+            int? moonriseTithi;
+            try {
+              final mr = Ephemeris.findMoonriseSet(savedMonth.year, savedMonth.month, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
+              if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
+            } catch (_) {}
             final ev = EventCalculator.getEvents(
               masa: masaName, tIdx: p.tithiIndex,
               sunsetTithiIdx: sunsetTithi,
               nextDayTithiIdx: nextDayTithi,
               prevDayTithiIdx: prevDayTithi,
+              moonriseTithiIdx: moonriseTithi,
               isAdhika: isAdhika,
             );
             if (ev.isNotEmpty) events[d] = ev;

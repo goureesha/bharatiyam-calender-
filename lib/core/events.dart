@@ -26,6 +26,7 @@ class EventCalculator {
     int? sunsetTithiIdx,
     int? nextDayTithiIdx,
     int? prevDayTithiIdx,
+    int? moonriseTithiIdx,
     bool isAdhika = false,
   }) {
     final List<AstroEvent> events = [];
@@ -102,7 +103,8 @@ class EventCalculator {
     // 6. ಭಾದ್ರಪದ ಮಾಸ
     if (masa == 'ಭಾದ್ರಪದ') {
       if (t(2)) events.add(AstroEvent(name: 'ಸ್ವರ್ಣಗೌರಿ ವ್ರತ / ಹರ್ತಾಲಿಕಾ ತೃತೀಯಾ', description: 'ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ ಪಾರ್ವತಿ ವ್ರತ. ಹರ್ತಾಲಿಕಾ ಪೂಜೆ.'));
-      if (t(3)) events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಚಂದ್ರೋದಯಕ್ಕೆ ಚತುರ್ಥಿ.'));
+      // Ganesha Chaturthi: chandrodaya rule — Chaturthi must be at moonrise
+      if (moonriseTithiIdx == 3) events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಚಂದ್ರೋದಯಕ್ಕೆ ಚತುರ್ಥಿ.'));
       if (t(4)) events.add(AstroEvent(name: 'ಋಷಿ ಪಂಚಮಿ', description: 'ಸಪ್ತ ಋಷಿಗಳ ಆರಾಧನೆ.'));
       if (t(6)) events.add(AstroEvent(name: 'ಲಲಿತಾ ಸಪ್ತಮಿ', description: 'ಲಲಿತಾ ದೇವಿ ಆರಾಧನೆ.'));
       if (t(10)) events.add(AstroEvent(name: 'ಪರಿವರ್ತಿನೀ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುವಿನ ಶಯನ ಪರಿವರ್ತನ.'));
@@ -188,8 +190,8 @@ class EventCalculator {
       events.add(AstroEvent(name: 'ಪ್ರದೋಷ ವ್ರತ', description: 'ಶಿವನ ಆರಾಧನೆ. ಸಂಧ್ಯಾ ಕಾಲದಲ್ಲಿ ತ್ರಯೋದಶಿ ಇರಬೇಕು.'));
     }
 
-    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ (Krishna Chaturthi)
-    if (t(18)) {
+    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ — chandrodaya rule — Krishna Chaturthi at moonrise
+    if (moonriseTithiIdx == 18) {
       events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.'));
     }
 

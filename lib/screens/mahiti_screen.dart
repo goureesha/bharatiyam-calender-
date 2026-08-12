@@ -5,6 +5,7 @@ import '../core/adhika_masa_calculator.dart';
 import '../core/grahana_calculator.dart';
 import '../core/panchanga_calculator.dart';
 import '../core/masa_calculator.dart';
+import '../core/ephemeris.dart';
 import '../core/events.dart';
 import '../services/location_service.dart';
 import '../services/panchanga_cache.dart';
@@ -77,11 +78,17 @@ class _MahitiScreenState extends State<MahitiScreen> {
               int? prevTithi, nextTithi;
               try { prevTithi = PanchangaCalculator.tithiAtJd(data.sunriseJd - 1.0); } catch (_) {}
               try { nextTithi = PanchangaCalculator.tithiAtJd(data.sunriseJd + 1.0); } catch (_) {}
+              int? moonriseTithi;
+              try {
+                final mr = Ephemeris.findMoonriseSet(_year, m, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
+                if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
+              } catch (_) {}
               dayEvents = EventCalculator.getEvents(
                 masa: masaName, tIdx: data.tithiIndex,
                 sunsetTithiIdx: sunsetTithi,
                 nextDayTithiIdx: nextTithi,
                 prevDayTithiIdx: prevTithi,
+                moonriseTithiIdx: moonriseTithi,
                 isAdhika: isAdhika,
               );
             }

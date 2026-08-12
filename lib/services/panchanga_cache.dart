@@ -114,6 +114,13 @@ class PanchangaCache {
                 sunsetTithiIdx: sunsetTithi,
                 nextDayTithiIdx: nextDayTithi,
                 prevDayTithiIdx: prevDayTithi,
+                moonriseTithiIdx: (() {
+                  try {
+                    final mr = Ephemeris.findMoonriseSet(year, month, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
+                    if (mr[0] != null) return PanchangaCalculator.tithiAtJd(mr[0]!);
+                  } catch (_) {}
+                  return null;
+                })(),
                 isAdhika: isAdhika,
               );
               if (events.isNotEmpty) _eventCache[key] = events;
