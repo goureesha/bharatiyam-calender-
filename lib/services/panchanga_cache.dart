@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import '../core/panchanga_calculator.dart';
 import '../core/masa_calculator.dart';
+import '../core/ephemeris.dart';
 import '../core/events.dart';
 import '../models/panchanga_data.dart';
+import 'location_service.dart';
 
 class _DayCache {
   final PanchangaData data;
@@ -116,7 +118,7 @@ class PanchangaCache {
                 prevDayTithiIdx: prevDayTithi,
                 moonriseTithiIdx: (() {
                   try {
-                    final mr = Ephemeris.findMoonriseSet(year, month, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
+                    final mr = Ephemeris.findMoonriseSet(y, m, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
                     if (mr[0] != null) return PanchangaCalculator.tithiAtJd(mr[0]!);
                   } catch (_) {}
                   return null;
