@@ -117,14 +117,17 @@ class EventCalculator {
 
     // 6. ಭಾದ್ರಪದ ಮಾಸ (Bhadrapada)
     if (masa == 'ಭಾದ್ರಪದ') {
-      // Swarna Gauri + Ganesha Chaturthi: BOTH on Tritiya day (tIdx=2)
-      // Gauri = Tritiya at sunrise. Ganesha = Chaturthi at chandrodaya (same evening).
+      // Swarna Gauri: Tritiya (tIdx=2) at sunrise
       if (tIdx == 2) {
         events.add(AstroEvent(name: 'ಸ್ವರ್ಣಗೌರಿ ವ್ರತ / ಹರ್ತಾಲಿಕಾ ತೃತೀಯಾ', description: 'ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ ಪಾರ್ವತಿ ವ್ರತ. ಹರ್ತಾಲಿಕಾ ಪೂಜೆ.', shloka: '', source: ''));
+      }
+      // Ganesha Chaturthi: Chaturthi at chandrodaya (moonrise).
+      // Rule: Show when Chaturthi is present at sunrise (tIdx=3)
+      //   OR when sunrise=Tritiya(2) but Chaturthi(3) arrives by sunset.
+      //   In Shukla Paksha, moonrise for Chaturthi is in the evening,
+      //   so if Chaturthi is at sunset, it IS at chandrodaya.
+      if (tIdx == 3 || (tIdx == 2 && sunsetTithiIdx != null && sunsetTithiIdx == 3)) {
         events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಚಂದ್ರೋದಯಕ್ಕೆ ಚತುರ್ಥಿ.', shloka: '', source: ''));
-      } else if (tIdx == 3) {
-        // Fallback for years where Chaturthi is at sunrise
-        events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ.', shloka: '', source: ''));
       }
       if (tIdx == 4) {
         events.add(AstroEvent(name: 'ಋಷಿ ಪಂಚಮಿ', description: 'ಸಪ್ತ ಋಷಿಗಳ ಆರಾಧನೆ.', shloka: 'ಭಾದ್ರೇ ಶುಕ್ಲೇ ಪಂಚಮ್ಯಾಂ ತು ಸಪ್ತರ್ಷೀನ್ ಪೂಜಯೇತ್ ಸದಾ |', source: 'ಧರ್ಮಸಿಂಧು'));
@@ -256,17 +259,17 @@ class EventCalculator {
       events.add(AstroEvent(name: 'ಏಕಾದಶಿ ವ್ರತ', description: 'ಮಹಾವಿಷ್ಣುವಿನ ಆರಾಧನೆಗಾಗಿ ಉಪವಾಸ.', shloka: 'ಏಕಾದಶ್ಯಾಂ ನ ಭುಂಜೀತ ಪಕ್ಷಯೋರುಭಯೋರಪಿ |', source: 'ವೈಷ್ಣವ ಸಂಪ್ರದಾಯ'));
     }
 
-    // ಪ್ರದೋಷ (both pakshas) — Trayodashi must prevail at SUNSET (Sandhya Kala)
-    // Rule: If Trayodashi tithi is running at sunset time, it is Pradosha
-    final pradoshaTithi = sunsetTithiIdx ?? tIdx; // fallback to sunrise if sunset not provided
-    if (pradoshaTithi == 12 || pradoshaTithi == 27) {
-      events.add(AstroEvent(name: 'ಪ್ರದೋಷ ವ್ರತ', description: 'ಶಿವನ ಆರಾಧನೆ ಸರ್ವ ಪಾಪ ನಾಶಕ. ಸಂಧ್ಯಾ ಕಾಲದಲ್ಲಿ (ಸೂರ್ಯಾಸ್ತ ಸಮಯ) ತ್ರಯೋದಶಿ ಇರಬೇಕು.', shloka: 'ತ್ರಯೋದಶ್ಯಾಂ ನಿಶಾಮುಖೇ ಪ್ರದೋಷಸಮಯೇ ಹರಮ್ |', source: 'ಸ್ಕಂದ ಪುರಾಣ'));
+    // ಪ್ರದೋಷ (both pakshas) — Trayodashi at sunset (Sandhya Kala)
+    // Primary: sunrise Trayodashi (12 or 27) — almost always extends to sunset
+    // Enhanced: also check if sunset tithi is Trayodashi (covers edge cases)
+    if (tIdx == 12 || tIdx == 27 || (sunsetTithiIdx != null && (sunsetTithiIdx == 12 || sunsetTithiIdx == 27))) {
+      events.add(AstroEvent(name: 'ಪ್ರದೋಷ ವ್ರತ', description: 'ಶಿವನ ಆರಾಧನೆ ಸರ್ವ ಪಾಪ ನಾಶಕ. ಸಂಧ್ಯಾ ಕಾಲದಲ್ಲಿ (ಸೂರ್ಯಾಸ್ತ ಸಮಯ) ತ್ರಯೋದಶಿ ಇರಬೇಕು.', shloka: '', source: ''));
     }
 
     // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ (Krishna Chaturthi — chandrodaya rule)
-    // Chandrodaya: show on Krishna Tritiya day (17) since Chaturthi arrives by moonrise
-    // Also show on tIdx==18 as fallback for when Chaturthi is at sunrise
-    if (tIdx == 17 || tIdx == 18) {
+    // Show when Krishna Chaturthi (18) is at sunrise,
+    // OR when Krishna Tritiya (17) at sunrise but Chaturthi arrives by sunset.
+    if (tIdx == 18 || (tIdx == 17 && sunsetTithiIdx != null && sunsetTithiIdx == 18)) {
       events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.', shloka: '', source: ''));
     }
 
