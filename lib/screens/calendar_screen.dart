@@ -68,9 +68,52 @@ class _CalendarScreenState extends State<CalendarScreen> {
       final data = pre.getMonthData(_currentMonth.year, _currentMonth.month);
       if (data.isNotEmpty) {
         // Use precomputed panchanga data but compute events LIVE
-        // (precomputed events may be stale / use old logic)
+        final events = <int, List<AstroEvent>>{};
+        final daysInMonth = DateUtils.getDaysInMonth(_currentMonth.year, _currentMonth.month);
+        try {
+          final midDay = data[15] ?? data[1];
+          if (midDay != null) {
+            final amanta = MasaCalculator.calculateAmanta(
+              jdSunrise: midDay.sunriseJd, lat: LocationService.lat,
+              lon: LocationService.lon, tzOffset: LocationService.tzOffset,
+            );
+            final amantaKey = amanta['masa'] as String;
+            final masaName = EventCalculator.masaKeyToKannada(amantaKey);
+            final isAdhika = amanta['isAdhika'] as bool;
+            for (int d = 1; d <= daysInMonth; d++) {
+              final p = data[d];
+              if (p == null) continue;
+              try {
+                final sunsetTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd);
+                final nextP = data[d + 1];
+                final nextDayTithi = nextP?.tithiIndex;
+                int? prevDayTithi;
+                if (d > 1) {
+                  prevDayTithi = data[d - 1]?.tithiIndex;
+                } else {
+                  try { prevDayTithi = PanchangaCalculator.tithiAtJd(p.sunriseJd - 1.0); } catch (_) {}
+                }
+                final ev = EventCalculator.getEvents(
+                  masa: masaName, tIdx: p.tithiIndex,
+                  sunsetTithiIdx: sunsetTithi,
+                  nextDayTithiIdx: nextDayTithi,
+                  prevDayTithiIdx: prevDayTithi,
+                  isAdhika: isAdhika,
+                );
+                if (ev.isNotEmpty) events[d] = ev;
+              } catch (_) {}
+            }
+          }
+        } catch (_) {}
         _dataCache[key] = data;
-        // Fall through to _computeMonth which will use this cached data for events
+        _eventsCache[key] = events;
+        setState(() {
+          _monthData = data;
+          _monthEvents = events;
+          _loading = false;
+        });
+        _computeKalas();
+        return;
       }
     }
     _computeMonth();
