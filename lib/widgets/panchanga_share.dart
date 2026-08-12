@@ -148,6 +148,16 @@ class _ShareCard extends StatelessWidget {
             const SizedBox(height: 8),
 
             // ── Date + Vara ──
+            Builder(builder: (_) {
+              final dt = DateTime.fromMillisecondsSinceEpoch(
+                ((d.sunriseJd - 2440587.5) * 86400000).round(), isUtc: true,
+              ).add(const Duration(hours: 5, minutes: 30));
+              return Text(
+                '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}',
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF333333)),
+              );
+            }),
+            const SizedBox(height: 4),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
               decoration: BoxDecoration(
