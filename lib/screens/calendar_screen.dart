@@ -612,7 +612,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 2),
                                     child: Text(
-                                      _monthEvents[day]!.first.name,
+                                      _monthEvents[day]!.map((e) => e.name).join(' / '),
                                       style: TextStyle(
                                         fontSize: 7,
                                         color: const Color(0xFFFF9800),
