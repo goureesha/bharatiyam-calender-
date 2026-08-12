@@ -81,6 +81,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
+              // Firestore connection status
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: ProfileService.isFirebaseReady
+                    ? Colors.green.withAlpha(20) : Colors.red.withAlpha(20),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: ProfileService.isFirebaseReady
+                    ? Colors.green.withAlpha(76) : Colors.red.withAlpha(76)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      ProfileService.isFirebaseReady ? Icons.cloud_done_rounded : Icons.cloud_off_rounded,
+                      color: ProfileService.isFirebaseReady ? Colors.green : Colors.red,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Firestore: ${ProfileService.firebaseStatus}',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: ProfileService.isFirebaseReady ? Colors.green : Colors.red,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        await ProfileService.checkFirebase();
+                        setState(() {});
+                      },
+                      child: Icon(Icons.refresh_rounded, color: kMuted, size: 18),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

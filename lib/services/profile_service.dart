@@ -10,11 +10,34 @@ class ProfileService {
   static String _mobile = '';
   static bool _profileComplete = false;
   static String _docId = '';
+  static bool _firebaseReady = false;
+  static String _firebaseStatus = 'Not initialized';
 
   static String get name => _name;
   static String get address => _address;
   static String get mobile => _mobile;
   static bool get isProfileComplete => _profileComplete;
+  static bool get isFirebaseReady => _firebaseReady;
+  static String get firebaseStatus => _firebaseStatus;
+
+  /// Check and set Firebase status
+  static Future<void> checkFirebase() async {
+    try {
+      // Try a simple Firestore operation to verify connection
+      await FirebaseFirestore.instance
+          .collection('_ping')
+          .doc('test')
+          .set({'ts': FieldValue.serverTimestamp()})
+          .timeout(const Duration(seconds: 5));
+      _firebaseReady = true;
+      _firebaseStatus = 'Connected ✓';
+      debugPrint('Firestore connected');
+    } catch (e) {
+      _firebaseReady = false;
+      _firebaseStatus = 'Error: $e';
+      debugPrint('Firestore check failed: $e');
+    }
+  }
 
   /// Purohit details string for share card
   static String get purohitDetails {

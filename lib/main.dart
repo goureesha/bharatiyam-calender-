@@ -26,6 +26,8 @@ Future<void> _initFirebase() async {
       },
     );
     debugPrint('Firebase initialized successfully');
+    // Check Firestore connection
+    ProfileService.checkFirebase();
   } catch (e) {
     debugPrint('Firebase init skipped: $e');
   }
