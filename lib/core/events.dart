@@ -31,12 +31,20 @@ class EventCalculator {
     final List<AstroEvent> events = [];
     if (isAdhika) return events;
 
-    // ═══ Simple helper: fire on first day only (skip vriddhi second day) ═══
-    // If previous day had the SAME tithi → this is second day of vriddhi → skip
+    // ═══ Helper: fire on correct day, handle vriddhi + kshaya ═══
     bool t(int target) {
-      if (tIdx != target) return false;
-      if (prevDayTithiIdx != null && prevDayTithiIdx == tIdx) return false;
-      return true;
+      // Normal: tithi matches at sunrise
+      if (tIdx == target) {
+        // Vriddhi: skip second day (first day preferred)
+        if (prevDayTithiIdx != null && prevDayTithiIdx == tIdx) return false;
+        return true;
+      }
+      // Kshaya: tithi was skipped entirely (prev+1 != today)
+      if (prevDayTithiIdx != null) {
+        final expected = (prevDayTithiIdx! + 1) % 30;
+        if (expected != tIdx && expected == target) return true;
+      }
+      return false;
     }
 
     // ═══════════════════════════════════════════════════════
