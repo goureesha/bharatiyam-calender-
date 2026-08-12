@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } catch (_) {}
     if (!mounted) return;
-    await PanchangaShare.showShareDialog(context, d, dayEvents);
+    await PanchangaShare.showShareDialog(context, d, dayEvents, kalas: _kalas ?? []);
   }
 
   Future<void> _pickDate() async {

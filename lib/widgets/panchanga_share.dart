@@ -14,7 +14,13 @@ class PanchangaShare {
   static final GlobalKey _repaintKey = GlobalKey();
 
   /// Show the share preview dialog, then capture & share
-  static Future<void> showShareDialog(BuildContext context, PanchangaData d, List<AstroEvent> events, {String purohitDetails = ''}) async {
+  static Future<void> showShareDialog(
+    BuildContext context,
+    PanchangaData d,
+    List<AstroEvent> events, {
+    List<KalaTiming> kalas = const [],
+    String purohitDetails = '',
+  }) async {
     await showDialog(
       context: context,
       builder: (ctx) => Dialog(
@@ -26,7 +32,7 @@ class PanchangaShare {
             children: [
               RepaintBoundary(
                 key: _repaintKey,
-                child: _ShareCard(d: d, events: events, purohitDetails: purohitDetails),
+                child: _ShareCard(d: d, events: events, kalas: kalas, purohitDetails: purohitDetails),
               ),
               const SizedBox(height: 12),
               ElevatedButton.icon(
@@ -75,8 +81,9 @@ class PanchangaShare {
 class _ShareCard extends StatelessWidget {
   final PanchangaData d;
   final List<AstroEvent> events;
+  final List<KalaTiming> kalas;
   final String purohitDetails;
-  const _ShareCard({required this.d, required this.events, this.purohitDetails = ''});
+  const _ShareCard({required this.d, required this.events, this.kalas = const [], this.purohitDetails = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +100,19 @@ class _ShareCard extends StatelessWidget {
 
     // Next-day marker
     String nd(bool nextDay) => nextDay ? ' (+)' : '';
+
+    // Find Rahu Kala, Gulika Kala, Abhijit from kalas list
+    String rahuKala = '', gulikaKala = '', abhijit = '';
+    for (final k in kalas) {
+      final name = k.name.toLowerCase();
+      if (name.contains('rahu') || name.contains('ರಾಹು')) {
+        rahuKala = '${k.startTime} - ${k.endTime}';
+      } else if (name.contains('gulika') || name.contains('ಗುಳಿಕ')) {
+        gulikaKala = '${k.startTime} - ${k.endTime}';
+      } else if (name.contains('abhijit') || name.contains('ಅಭಿಜಿತ್') || name.contains('abhijin')) {
+        abhijit = '${k.startTime} - ${k.endTime}';
+      }
+    }
 
     return Container(
       width: 380,
@@ -129,14 +149,14 @@ class _ShareCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // ── Date ──
+            // ── Date + Vara ──
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
               decoration: BoxDecoration(
                 color: const Color(0xFFFF6B00),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text('${AppLocale.t(d.vara)}',
+              child: Text(AppLocale.t(d.vara),
                 style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
             ),
             const SizedBox(height: 8),
@@ -155,8 +175,9 @@ class _ShareCard extends StatelessWidget {
             _divider(),
 
             // ── Calendar info ──
-            const SizedBox(height: 4),
+            const SizedBox(height: 3),
             _row('ಸಂವತ್ಸರ', AppLocale.t(d.samvatsara)),
+            _row('ವಾರ', AppLocale.t(d.vara)),
             _row('ಅಮಾಂತ ಮಾಸ', AppLocale.t(d.amantaMasa)),
             _row('ಪೂರ್ಣಿಮಾಂತ ಮಾಸ', AppLocale.t(d.pournimantaMasa)),
             _row('ಸೌರ ಮಾಸ', '${AppLocale.t(d.souraMasa)} (${d.souraMasaGataDina} ದಿನ)'),
@@ -171,6 +192,17 @@ class _ShareCard extends StatelessWidget {
             _limbRow('ನಕ್ಷತ್ರ', AppLocale.t(d.nakshatra), '${d.nakEndTime} (${d.nakEndGhati})${nd(d.nakEndsNextDay)}'),
             _limbRow('ಯೋಗ', AppLocale.t(d.yoga), '${d.yogaEndTime} (${d.yogaEndGhati})${nd(d.yogaEndsNextDay)}'),
             _limbRow('ಕರಣ', AppLocale.t(d.karana), '${d.karanaEndTime} (${d.karanaEndGhati})${nd(d.karanaEndsNextDay)}'),
+
+            // ── Rahu Kala, Gulika Kala, Abhijit ──
+            if (rahuKala.isNotEmpty || gulikaKala.isNotEmpty || abhijit.isNotEmpty) ...[
+              _divider(),
+              const SizedBox(height: 3),
+              const Text('⚠ ಕಾಲ ಸಮಯ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00))),
+              const SizedBox(height: 3),
+              if (rahuKala.isNotEmpty) _kalaRow('ರಾಹು ಕಾಲ', rahuKala, Colors.red),
+              if (gulikaKala.isNotEmpty) _kalaRow('ಗುಳಿಕ ಕಾಲ', gulikaKala, Colors.red),
+              if (abhijit.isNotEmpty) _kalaRow('ಅಭಿಜಿತ್ ಮುಹೂರ್ತ', abhijit, Colors.green),
+            ],
 
             // ── Events ──
             if (events.isNotEmpty) ...[
@@ -220,6 +252,18 @@ class _ShareCard extends StatelessWidget {
         SizedBox(width: 55, child: Text(label, style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00)))),
         Expanded(child: Text(value, style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333)))),
         Text(endTime, style: const TextStyle(fontSize: 7.5, color: Color(0xFF666666))),
+      ]),
+    );
+  }
+
+  Widget _kalaRow(String label, String time, Color dotColor) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1.5),
+      child: Row(children: [
+        Container(width: 6, height: 6, margin: const EdgeInsets.only(right: 6),
+          decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle)),
+        SizedBox(width: 110, child: Text(label, style: const TextStyle(fontSize: 8.5, color: Color(0xFF666666)))),
+        Expanded(child: Text(time, style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333)))),
       ]),
     );
   }
