@@ -127,10 +127,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
             final sunsetTithi = PanchangaCalculator.tithiAtJd(p.sunsetJd);
             final nextP = data[d + 1];
             final nextDayTithi = nextP?.tithiIndex;
+            final prevP = (d > 1) ? data[d - 1] : null;
+            final prevDayTithi = prevP?.tithiIndex;
             final ev = EventCalculator.getEvents(
               masa: masaName, tIdx: p.tithiIndex,
               sunsetTithiIdx: sunsetTithi,
               nextDayTithiIdx: nextDayTithi,
+              prevDayTithiIdx: prevDayTithi,
               isAdhika: isAdhika,
             );
             if (ev.isNotEmpty) events[d] = ev;

@@ -102,11 +102,18 @@ class PanchangaCache {
                 final nextDaySunriseJd = data.sunriseJd + 1.0; // approximate next sunrise
                 nextDayTithi = PanchangaCalculator.tithiAtJd(nextDaySunriseJd);
               } catch (_) {}
+              // Previous day tithi for Vriddhi/Kshaya detection
+              int? prevDayTithi;
+              try {
+                final prevDaySunriseJd = data.sunriseJd - 1.0; // approximate prev sunrise
+                prevDayTithi = PanchangaCalculator.tithiAtJd(prevDaySunriseJd);
+              } catch (_) {}
               final events = EventCalculator.getEvents(
                 masa: masaName,
                 tIdx: data.tithiIndex,
                 sunsetTithiIdx: sunsetTithi,
                 nextDayTithiIdx: nextDayTithi,
+                prevDayTithiIdx: prevDayTithi,
                 isAdhika: isAdhika,
               );
               if (events.isNotEmpty) _eventCache[key] = events;
