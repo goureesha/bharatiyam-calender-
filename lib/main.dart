@@ -7,7 +7,14 @@ import 'widgets/common.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  // Firebase init — non-blocking, app works even if Firebase fails
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    debugPrint('Firebase init error (app will continue): $e');
+  }
+
   await ThemeService.loadTheme();
   await ProfileService.load();
   runApp(const BharatiyamPanchangaApp());
