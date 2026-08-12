@@ -606,21 +606,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     maxLines: 1,
                                   ),
                                 ),
-                              // Event name — visible & prominent
+                              // Event names — scrollable when multiple
                               if (hasEvent)
                                 Flexible(
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 2),
-                                    child: Text(
-                                      _monthEvents[day]!.map((e) => e.name).join(' / '),
-                                      style: TextStyle(
-                                        fontSize: 7,
-                                        color: const Color(0xFFFF9800),
-                                        fontWeight: FontWeight.w600,
+                                    child: SingleChildScrollView(
+                                      physics: const BouncingScrollPhysics(),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: _monthEvents[day]!.map((e) => Text(
+                                          e.name,
+                                          style: TextStyle(
+                                            fontSize: 7,
+                                            color: const Color(0xFFFF9800),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        )).toList(),
                                       ),
-                                      textAlign: TextAlign.center,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
