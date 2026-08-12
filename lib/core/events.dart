@@ -188,8 +188,8 @@ class EventCalculator {
       if (match(2)) {
         events.add(AstroEvent(name: 'ಸ್ವರ್ಣಗೌರಿ ವ್ರತ / ಹರ್ತಾಲಿಕಾ ತೃತೀಯಾ', description: 'ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ ಪಾರ್ವತಿ ವ್ರತ. ಹರ್ತಾಲಿಕಾ ಪೂಜೆ.', shloka: '', source: ''));
       }
-      // Ganesha Chaturthi: chandrodaya rule
-      if (match(3) || (tIdx == 2 && sunsetTithiIdx != null && sunsetTithiIdx == 3) || skippedTithi == 3) {
+      // Ganesha Chaturthi: chandrodaya (Purva Viddha)
+      if (match(3)) {
         events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಚಂದ್ರೋದಯಕ್ಕೆ ಚತುರ್ಥಿ.', shloka: '', source: ''));
       }
       if (match(4)) {
@@ -360,13 +360,13 @@ class EventCalculator {
       events.add(AstroEvent(name: 'ಏಕಾದಶಿ ವ್ರತ', description: 'ಮಹಾವಿಷ್ಣುವಿನ ಆರಾಧನೆಗಾಗಿ ಉಪವಾಸ.', shloka: '', source: ''));
     }
 
-    // ಪ್ರದೋಷ — Trayodashi at sunset + Vriddhi/Kshaya
-    if (match(12) || match(27) || (sunsetTithiIdx != null && (sunsetTithiIdx == 12 || sunsetTithiIdx == 27))) {
+    // ಪ್ರದೋಷ — Trayodashi (Purva Viddha)
+    if (match(12) || match(27)) {
       events.add(AstroEvent(name: 'ಪ್ರದೋಷ ವ್ರತ', description: 'ಶಿವನ ಆರಾಧನೆ. ಸಂಧ್ಯಾ ಕಾಲದಲ್ಲಿ ತ್ರಯೋದಶಿ ಇರಬೇಕು.', shloka: '', source: ''));
     }
 
-    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ — chandrodaya + Vriddhi/Kshaya
-    if (match(18) || (tIdx == 17 && sunsetTithiIdx != null && sunsetTithiIdx == 18) || skippedTithi == 18) {
+    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ — chandrodaya (Purva Viddha)
+    if (match(18)) {
       events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.', shloka: '', source: ''));
     }
 
