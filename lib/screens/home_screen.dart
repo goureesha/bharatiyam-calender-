@@ -166,8 +166,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // Compute events for this day
     List<AstroEvent> dayEvents = [];
     try {
-      final amanta = MasaCalculator.computeAmanta(
-        d.sunriseJd, lat: LocationService.lat, lon: LocationService.lon, tzOffset: LocationService.tzOffset,
+      final amanta = MasaCalculator.calculateAmanta(
+        jdSunrise: d.sunriseJd, lat: LocationService.lat, lon: LocationService.lon,
       );
       final masaKey = amanta['masa'] as String;
       final isAdhika = amanta['isAdhika'] as bool;

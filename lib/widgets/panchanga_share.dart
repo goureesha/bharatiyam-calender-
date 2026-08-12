@@ -66,11 +66,9 @@ class PanchangaShare {
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/panchanga_share.png');
       await file.writeAsBytes(bytes);
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(file.path)],
-          text: 'ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ',
-        ),
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: 'ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ',
       );
     } catch (e) {
       debugPrint('Share error: $e');
