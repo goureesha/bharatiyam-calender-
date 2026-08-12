@@ -7,17 +7,28 @@ import 'widgets/common.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Firebase init — non-blocking, app works even if Firebase fails
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    debugPrint('Firebase init error (app will continue): $e');
-  }
-
   await ThemeService.loadTheme();
   await ProfileService.load();
+
+  // Firebase init — background with 3s timeout, never blocks app launch
+  _initFirebase();
+
   runApp(const BharatiyamPanchangaApp());
+}
+
+Future<void> _initFirebase() async {
+  try {
+    await Firebase.initializeApp().timeout(
+      const Duration(seconds: 3),
+      onTimeout: () {
+        debugPrint('Firebase init timed out — will retry in background');
+        throw Exception('timeout');
+      },
+    );
+    debugPrint('Firebase initialized successfully');
+  } catch (e) {
+    debugPrint('Firebase init skipped: $e');
+  }
 }
 
 class BharatiyamPanchangaApp extends StatelessWidget {
@@ -39,7 +50,6 @@ class BharatiyamPanchangaApp extends StatelessWidget {
   }
 }
 
-/// Gates the app — shows ProfileSetupScreen if profile is incomplete.
 class _AppGate extends StatefulWidget {
   const _AppGate();
   @override
