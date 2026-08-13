@@ -13,6 +13,7 @@ import '../core/masa_calculator.dart';
 import '../core/sankalpa_generator.dart';
 import '../core/ephemeris.dart';
 import '../core/events.dart';
+import '../models/panchanga_data.dart';
 import '../services/location_service.dart';
 import '../services/panchanga_cache.dart';
 import '../widgets/common.dart';
