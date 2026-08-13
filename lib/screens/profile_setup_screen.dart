@@ -80,14 +80,13 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Mobile field
+                  // Mobile field (optional)
                   _buildField(
                     controller: _mobileCtrl,
-                    label: 'ಮೊಬೈಲ್ ನಂಬರ್ / Mobile',
+                    label: 'ಮೊಬೈಲ್ ನಂಬರ್ / Mobile (optional)',
                     icon: Icons.phone_rounded,
                     keyboardType: TextInputType.phone,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
-                    validator: (v) => (v == null || v.trim().length < 10) ? '10 ಅಂಕಿ ಅಗತ್ಯ' : null,
                   ),
                   const SizedBox(height: 32),
 

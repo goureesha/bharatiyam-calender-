@@ -56,7 +56,7 @@ class ProfileService {
     _address = prefs.getString('profile_address') ?? '';
     _mobile = prefs.getString('profile_mobile') ?? '';
     _docId = prefs.getString('profile_doc_id') ?? '';
-    _profileComplete = _name.isNotEmpty && _mobile.isNotEmpty;
+    _profileComplete = _name.isNotEmpty;
   }
 
   /// Save profile to local storage and sync to Firestore
@@ -68,7 +68,7 @@ class ProfileService {
     _name = name.trim();
     _address = address.trim();
     _mobile = mobile.trim();
-    _profileComplete = _name.isNotEmpty && _mobile.isNotEmpty;
+    _profileComplete = _name.isNotEmpty;
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('profile_name', _name);
