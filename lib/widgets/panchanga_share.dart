@@ -236,6 +236,50 @@ class _ShareCard extends StatelessWidget {
               )),
             ],
 
+            // ── Shraddha Info ──
+            _divider(),
+            const SizedBox(height: 3),
+            const Text('🙏 ಶ್ರಾದ್ಧ ಮಾಹಿತಿ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00))),
+            const SizedBox(height: 3),
+            Builder(builder: (_) {
+              // Day duration in hours
+              final dayDuration = (d.sunsetJd - d.sunriseJd) * 24.0;
+              final oneKala = dayDuration / 5.0;
+
+              // Kutupa Muhurta = 2nd part of 5 parts (segment 2)
+              final kutupaStartJd = d.sunriseJd + (oneKala * 1 / 24.0);
+              final kutupaEndJd = d.sunriseJd + (oneKala * 2 / 24.0);
+
+              // Aparahna Kala = 4th part of 5 parts (segment 4, index 3)
+              final aparahnaStartJd = d.sunriseJd + (oneKala * 3 / 24.0);
+              final aparahnaEndJd = d.sunriseJd + (oneKala * 4 / 24.0);
+
+              String fmtJd(double jd) {
+                final utcMs = ((jd - 2440587.5) * 86400000).round();
+                final utcDt = DateTime.fromMillisecondsSinceEpoch(utcMs, isUtc: true);
+                final local = utcDt.add(const Duration(hours: 5, minutes: 30));
+                final h = local.hour;
+                final m = local.minute;
+                final amPm = h >= 12 ? 'PM' : 'AM';
+                final h12 = h > 12 ? h - 12 : (h == 0 ? 12 : h);
+                return '${h12.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')} $amPm';
+              }
+
+              final tithiName = AppLocale.t(d.tithi);
+              final pakshaName = d.paksha == 'shukla' ? 'ಶುಕ್ಲ' : 'ಕೃಷ್ಣ';
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _kalaRow('ಕುತುಪ ಮುಹೂರ್ತ', '${fmtJd(kutupaStartJd)} - ${fmtJd(kutupaEndJd)}', const Color(0xFF4CAF50)),
+                  _kalaRow('ಅಪಾರಾಹ್ಣ ಕಾಲ', '${fmtJd(aparahnaStartJd)} - ${fmtJd(aparahnaEndJd)}', const Color(0xFF4CAF50)),
+                  const SizedBox(height: 3),
+                  Text('ಇಂದಿನ ಶ್ರಾದ್ಧ ತಿಥಿ: $pakshaName $tithiName',
+                    style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+                ],
+              );
+            }),
+
             const SizedBox(height: 5),
             Text('(+) = ಮರುದಿನ ಮುಗಿಯುತ್ತದೆ',
               style: TextStyle(fontSize: 6, color: Colors.grey[500], fontStyle: FontStyle.italic)),
