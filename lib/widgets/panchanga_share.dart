@@ -136,8 +136,11 @@ class _ShareCard extends StatelessWidget {
                   Expanded(flex: 3, child: Text(purohitDetails,
                     style: const TextStyle(fontSize: 7, color: Color(0xFF666666), height: 1.3))),
                 Expanded(flex: 4, child: Column(children: [
-                  Text('✦ ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ ✦',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00)),
+                  Text('✦ ಭಾರತೀಯಮ್ ✦',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00)),
+                    textAlign: TextAlign.center),
+                  Text('ಪಂಚಾಂಗ',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00)),
                     textAlign: TextAlign.center),
                   const SizedBox(height: 2),
                   Container(height: 1.5, width: 110, color: const Color(0xFFFF6B00)),
