@@ -29,6 +29,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
   List<AstaPeriod> _guruAsta = [];
   List<AstaPeriod> _shukraAsta = [];
   List<MasaPeriodInfo> _masaPeriods = [];
+  List<DateTime> _purnimas = [];
+  List<Map<String, dynamic>> _sankrantis = [];
   List<GrahanaInfo> _grahanas = []; // Grahana section hidden for now
   Map<String, List<DateTime>> _yearEvents = {};
   bool _loading = true;
@@ -52,12 +54,16 @@ class _MahitiScreenState extends State<MahitiScreen> {
       final guru = AstaCalculator.calculateGuruAsta(_year);
       final shukra = AstaCalculator.calculateShukraAsta(_year);
       final masas = AdhikaMasaCalculator.calculateForYear(_year);
+      final purnimas = AdhikaMasaCalculator.findAllPurnimas(_year);
+      final sankrantis = AdhikaMasaCalculator.findAllSankrantisForYear(_year);
 
       if (mounted) {
         setState(() {
           _guruAsta = guru;
           _shukraAsta = shukra;
           _masaPeriods = masas;
+          _purnimas = purnimas;
+          _sankrantis = sankrantis;
           _loading = false;
         });
       }
@@ -467,6 +473,10 @@ class _MahitiScreenState extends State<MahitiScreen> {
             // ── Grahana (Eclipses — Dynamic) — removed for now ──
             // _buildGrahanaSection(),
 
+            // ── Masa Details (Start Dates) ──
+            _buildMasaDetailsSection(),
+            const SizedBox(height: 12),
+
             // ── Adhika / Kshaya Masa (Dynamic) ──
             _buildMasaSection(),
 
@@ -750,6 +760,167 @@ class _MahitiScreenState extends State<MahitiScreen> {
         ],
       ),
     );
+  }
+
+  /// Build Masa Details section — start dates for Pournimanta, Amanta, Souramana
+  Widget _buildMasaDetailsSection() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: kCard.withAlpha(178),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: kGold.withAlpha(60)),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+          childrenPadding: const EdgeInsets.only(left: 14, right: 14, bottom: 12),
+          leading: Icon(Icons.date_range_rounded, color: kGold, size: 20),
+          title: Text(
+            'ಮಾಸ ವಿವರ $_year',
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kGold),
+          ),
+          iconColor: kGold,
+          collapsedIconColor: kGold.withAlpha(150),
+          children: [
+            const SizedBox(height: 8),
+
+            // ── Pournimanta (Purnima to Purnima) ──
+            _masaSubTable(
+              title: 'ಪೌರ್ಣಿಮಾಂತ ಮಾಸ',
+              subtitle: 'ಪೂರ್ಣಿಮೆಯಿಂದ ಪೂರ್ಣಿಮೆ',
+              icon: '🌕',
+              color: const Color(0xFFFFB300),
+              entries: _buildPournimantaEntries(),
+            ),
+            const SizedBox(height: 10),
+
+            // ── Amanta (Amavasya to Amavasya) ──
+            _masaSubTable(
+              title: 'ಅಮಾಂತ ಮಾಸ',
+              subtitle: 'ಅಮಾವಾಸ್ಯೆಯಿಂದ ಅಮಾವಾಸ್ಯೆ',
+              icon: '🌑',
+              color: const Color(0xFF7E57C2),
+              entries: _buildAmantaEntries(),
+            ),
+            const SizedBox(height: 10),
+
+            // ── Souramana (Sankranti to Sankranti) ──
+            _masaSubTable(
+              title: 'ಸೌರಮಾನ ಮಾಸ',
+              subtitle: 'ಸಂಕ್ರಾಂತಿಯಿಂದ ಸಂಕ್ರಾಂತಿ',
+              icon: '☀️',
+              color: const Color(0xFFFF7043),
+              entries: _buildSouramanaEntries(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<_MasaEntry> _buildPournimantaEntries() {
+    if (_purnimas.length < 2) return [];
+    final entries = <_MasaEntry>[];
+    // Pournimanta: month starts day after Purnima
+    // Month name = the month that starts after this Purnima
+    const masaNames = [
+      'ಚೈತ್ರ', 'ವೈಶಾಖ', 'ಜ್ಯೇಷ್ಠ', 'ಆಷಾಢ', 'ಶ್ರಾವಣ', 'ಭಾದ್ರಪದ',
+      'ಆಶ್ವಯುಜ', 'ಕಾರ್ತೀಕ', 'ಮಾರ್ಗಶಿರ', 'ಪುಷ್ಯ', 'ಮಾಘ', 'ಫಾಲ್ಗುಣ',
+    ];
+    for (int i = 0; i < _purnimas.length - 1; i++) {
+      final startDate = _purnimas[i].add(const Duration(days: 1));
+      final endDate = _purnimas[i + 1];
+      // Determine masa name from the Amanta masa that contains this period
+      String masaName = '';
+      for (final mp in _masaPeriods) {
+        if (startDate.isAfter(mp.amavasya1.subtract(const Duration(days: 1))) &&
+            startDate.isBefore(mp.amavasya2.add(const Duration(days: 15)))) {
+          masaName = mp.masaName;
+          break;
+        }
+      }
+      if (masaName.isEmpty && i < masaNames.length) masaName = masaNames[i % 12];
+      entries.add(_MasaEntry(name: masaName, start: startDate, end: endDate));
+    }
+    return entries;
+  }
+
+  List<_MasaEntry> _buildAmantaEntries() {
+    return _masaPeriods.map((p) {
+      final startDate = p.amavasya1.add(const Duration(days: 1));
+      final prefix = p.masaType == 'adhika' ? 'ಅಧಿಕ ' : p.masaType == 'kshaya' ? 'ಕ್ಷಯ ' : '';
+      return _MasaEntry(name: '$prefix${p.masaName}', start: startDate, end: p.amavasya2);
+    }).toList();
+  }
+
+  List<_MasaEntry> _buildSouramanaEntries() {
+    if (_sankrantis.length < 2) return [];
+    final entries = <_MasaEntry>[];
+    for (int i = 0; i < _sankrantis.length - 1; i++) {
+      final s = _sankrantis[i];
+      final startDate = s['date'] as DateTime;
+      final endDate = (_sankrantis[i + 1]['date'] as DateTime).subtract(const Duration(days: 1));
+      entries.add(_MasaEntry(
+        name: '${s['masaName']} (${s['name']})',
+        start: startDate,
+        end: endDate,
+      ));
+    }
+    return entries;
+  }
+
+  Widget _masaSubTable({
+    required String title,
+    required String subtitle,
+    required String icon,
+    required Color color,
+    required List<_MasaEntry> entries,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: color.withAlpha(10),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withAlpha(40)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Text('$icon ', style: const TextStyle(fontSize: 14)),
+            Text(title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
+          ]),
+          Text('   $subtitle', style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
+          const SizedBox(height: 8),
+          // Header
+          Row(children: [
+            SizedBox(width: 90, child: Text('ಮಾಸ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color))),
+            Expanded(child: Text('ಆರಂಭ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color))),
+            SizedBox(width: 80, child: Text('ಅಂತ್ಯ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color), textAlign: TextAlign.right)),
+          ]),
+          Container(height: 1, margin: const EdgeInsets.symmetric(vertical: 4), color: color.withAlpha(30)),
+          if (entries.isEmpty)
+            Text('ಲೆಕ್ಕಾಚಾರ ಮಾಡಲಾಗುತ್ತಿದೆ...', style: TextStyle(fontSize: 10, color: kMuted))
+          else
+            ...entries.map((e) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(children: [
+                SizedBox(width: 90, child: Text(e.name, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: kText))),
+                Expanded(child: Text(_fmtDate(e.start), style: TextStyle(fontSize: 10, color: kMuted))),
+                SizedBox(width: 80, child: Text(_fmtDate(e.end), style: TextStyle(fontSize: 10, color: kMuted), textAlign: TextAlign.right)),
+              ]),
+            )),
+        ],
+      ),
+    );
+  }
+
+  String _fmtDate(DateTime dt) {
+    const months = ['', 'ಜನ', 'ಫೆಬ್ರ', 'ಮಾರ್ಚ್', 'ಏಪ್ರಿ', 'ಮೇ', 'ಜೂನ್', 'ಜುಲೈ', 'ಆಗ', 'ಸೆಪ್ಟೆ', 'ಅಕ್ಟೋ', 'ನವೆ', 'ಡಿಸೆ'];
+    return '${dt.day} ${months[dt.month]} ${dt.year}';
   }
 
   Widget _buildMasaSection() {
@@ -1185,4 +1356,11 @@ class _InfoItem {
   final List<String> details;
 
   const _InfoItem({required this.title, required this.details});
+}
+
+class _MasaEntry {
+  final String name;
+  final DateTime start;
+  final DateTime end;
+  const _MasaEntry({required this.name, required this.start, required this.end});
 }

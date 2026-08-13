@@ -249,4 +249,76 @@ class AdhikaMasaCalculator {
     ];
     return '${months[dt.month]} ${dt.day}, ${dt.year}';
   }
+
+  /// Find all Purnimas (Full Moons) for a year — returns local DateTimes
+  /// Full Moon = Moon-Sun elongation crosses 180°
+  static List<DateTime> findAllPurnimas(int year, {double tzOffset = 5.5}) {
+    final results = <DateTime>[];
+    final scanStart = Sweph.swe_julday(year - 1, 12, 1, 0, CalendarType.SE_GREG_CAL);
+    final scanEnd = Sweph.swe_julday(year + 1, 2, 1, 0, CalendarType.SE_GREG_CAL);
+
+    double jd = scanStart;
+    while (jd < scanEnd) {
+      final e1 = _tropicalElong(jd);
+      final e2 = _tropicalElong(jd + 1.0);
+
+      // Detect Full Moon: elongation crosses 180° (from <180 to >180)
+      if (e1 < 180 && e2 >= 180) {
+        double lo = jd, hi = jd + 1.0;
+        for (int i = 0; i < 30; i++) {
+          final mid = (lo + hi) / 2;
+          if (_tropicalElong(mid) < 180) lo = mid; else hi = mid;
+        }
+        final purnimaJd = (lo + hi) / 2;
+        final dt = _jdToLocal(purnimaJd, tzOffset);
+        if (dt.year == year || (dt.year == year - 1 && dt.month == 12) || (dt.year == year + 1 && dt.month == 1)) {
+          results.add(dt);
+        }
+        jd += 25;
+      } else {
+        jd += 1.0;
+      }
+    }
+    return results;
+  }
+
+  /// Find all Sankrantis for a year — returns list of {name, date, rashi}
+  static List<Map<String, dynamic>> findAllSankrantisForYear(int year, {double tzOffset = 5.5}) {
+    final scanStart = Sweph.swe_julday(year - 1, 12, 15, 0, CalendarType.SE_GREG_CAL);
+    final scanEnd = Sweph.swe_julday(year + 1, 1, 15, 0, CalendarType.SE_GREG_CAL);
+    final results = <Map<String, dynamic>>[];
+
+    double jd = scanStart;
+    int prevRashi = _sunRashi(jd);
+    while (jd < scanEnd) {
+      final nextJd = jd + 0.5;
+      final curRashi = _sunRashi(nextJd);
+      if (curRashi != prevRashi) {
+        double lo = jd, hi = nextJd;
+        for (int i = 0; i < 20; i++) {
+          final mid = (lo + hi) / 2;
+          if (_sunRashi(mid) == prevRashi) lo = mid; else hi = mid;
+        }
+        final sankrantiJd = (lo + hi) / 2;
+        final dt = _jdToLocal(sankrantiJd, tzOffset);
+        if (dt.year == year || (dt.year == year - 1 && dt.month >= 12) || (dt.year == year + 1 && dt.month <= 1)) {
+          results.add({
+            'rashi': curRashi,
+            'name': _rashiNames[curRashi],
+            'masaName': _masaNames[curRashi],
+            'date': dt,
+          });
+        }
+        prevRashi = curRashi;
+      } else {
+        prevRashi = curRashi;
+      }
+      jd = nextJd;
+    }
+    return results;
+  }
+
+  /// Get masa names list (public access)
+  static List<String> get masaNames => _masaNames;
+  static List<String> get rashiNames => _rashiNames;
 }
