@@ -73,8 +73,9 @@ class _MahitiScreenState extends State<MahitiScreen> {
   Future<void> _computeYearEvents() async {
     setState(() { _eventsLoading = true; _eventsProgress = 0; _yearEvents = {}; });
 
-    // Try loading from local cache first
-    final cached = await _loadEventsCache(_year);
+    // Try loading from local cache first (key = samvatsara year)
+    final cacheKey = _year * 100 + 4; // unique key for Ugadi-based year
+    final cached = await _loadEventsCache(cacheKey);
     if (cached != null && mounted) {
       setState(() {
         _yearEvents = cached;
@@ -85,23 +86,31 @@ class _MahitiScreenState extends State<MahitiScreen> {
       return;
     }
 
-    // Compute fresh
+    // Compute fresh — Ugadi to Ugadi (~April to next March)
+    // Hindu year starts at Chaitra Shukla Pratipada (Ugadi), approx late March/early April
     final cache = PanchangaCache();
     final now = DateTime.now();
-    final useCache = cache.isInitialized && _year >= now.year - 1 && _year <= now.year + 1;
     final yearEvents = <String, List<DateTime>>{};
 
-    for (int m = 1; m <= 12; m++) {
-      final dim = DateUtils.getDaysInMonth(_year, m);
+    // Compute from April of _year to March of _year+1 (Ugadi to Ugadi range)
+    final months = <List<int>>[];
+    for (int m = 4; m <= 12; m++) months.add([_year, m]);     // Apr-Dec of _year
+    for (int m = 1; m <= 3; m++) months.add([_year + 1, m]);  // Jan-Mar of _year+1
+    int monthsDone = 0;
+
+    for (final ym in months) {
+      final y = ym[0], m = ym[1];
+      final dim = DateUtils.getDaysInMonth(y, m);
+      final useCache = cache.isInitialized && y >= now.year - 1 && y <= now.year + 1;
       for (int d = 1; d <= dim; d++) {
         if (!mounted) return;
         try {
           List<AstroEvent> dayEvents;
           if (useCache) {
-            dayEvents = cache.getEvents(_year, m, d);
+            dayEvents = cache.getEvents(y, m, d);
           } else {
             final data = PanchangaCalculator.calculate(
-              year: _year, month: m, day: d,
+              year: y, month: m, day: d,
               lat: LocationService.lat, lon: LocationService.lon,
               tzOffset: LocationService.tzOffset,
             );
@@ -119,7 +128,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
             try { nextTithi = PanchangaCalculator.tithiAtJd(data.sunriseJd + 1.0); } catch (_) {}
             int? moonriseTithi;
             try {
-              final mr = Ephemeris.findMoonriseSet(_year, m, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
+              final mr = Ephemeris.findMoonriseSet(y, m, d, LocationService.lat, LocationService.lon, LocationService.tzOffset);
               if (mr[0] != null) moonriseTithi = PanchangaCalculator.tithiAtJd(mr[0]!);
             } catch (_) {}
             int? noonTithi;
@@ -139,14 +148,15 @@ class _MahitiScreenState extends State<MahitiScreen> {
           }
           for (final ev in dayEvents) {
             yearEvents.putIfAbsent(ev.name, () => []);
-            yearEvents[ev.name]!.add(DateTime(_year, m, d));
+            yearEvents[ev.name]!.add(DateTime(y, m, d));
           }
         } catch (_) {}
         await Future.delayed(const Duration(milliseconds: 1));
       }
+      monthsDone++;
       if (mounted) {
         setState(() {
-          _eventsProgress = m;
+          _eventsProgress = monthsDone;
           _yearEvents = Map.from(yearEvents);
         });
       }
@@ -160,7 +170,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
     }
 
     // Save to cache for next time
-    _saveEventsCache(_year, yearEvents);
+    _saveEventsCache(cacheKey, yearEvents);
   }
 
   /// Get cache file path for a year
@@ -400,7 +410,12 @@ class _MahitiScreenState extends State<MahitiScreen> {
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                 ),
-                Text('$_year', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                Column(
+                  children: [
+                    Text('$_year-${_year + 1}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                    Text(SankalpaGenerator.getSamvatsara(_year, 4), style: TextStyle(fontSize: 11, color: kGold.withAlpha(180))),
+                  ],
+                ),
                 IconButton(
                   icon: Icon(Icons.chevron_right, color: kGold, size: 20),
                   onPressed: () => _changeYear(1),
