@@ -34,7 +34,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
   bool _loading = true;
   bool _eventsLoading = false;
   int _eventsProgress = 0; // 0-12 months done
-  int _year = DateTime.now().year;
+  int _year = DateTime.now().month >= 4 ? DateTime.now().year : DateTime.now().year - 1;
   String? _selectedKarya;
   bool _sankalpaExpanded = false;
 
