@@ -195,7 +195,18 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } catch (_) {}
     if (!mounted) return;
-    await PanchangaShare.showShareDialog(context, d, dayEvents, kalas: _kalas ?? [], purohitDetails: ProfileService.purohitDetails);
+    final shraddha = ShraddhaCalculator.calculate(
+      tithiIndex: d.tithiIndex,
+      nakshatraIndex: d.nakshatraIndex,
+      amantaMasa: d.amantaMasa,
+      pournimantaMasa: d.pournimantaMasa,
+      souraMasa: d.souraMasa,
+      sunriseJd: d.sunriseJd,
+      sunsetJd: d.sunsetJd,
+      tithiEndJd: d.tithiEndJd,
+      tithiStartJd: d.tithiStartJd,
+    );
+    await PanchangaShare.showShareDialog(context, d, dayEvents, kalas: _kalas ?? [], purohitDetails: ProfileService.purohitDetails, shraddha: shraddha);
     ProfileService.incrementShareCount();
   }
 

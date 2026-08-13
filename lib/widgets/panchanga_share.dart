@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/panchanga_data.dart';
 import '../core/events.dart';
+import '../core/shraddha_calculator.dart';
 import '../i18n/app_locale.dart';
 
 class PanchangaShare {
@@ -20,6 +21,7 @@ class PanchangaShare {
     List<AstroEvent> events, {
     List<KalaTiming> kalas = const [],
     String purohitDetails = '',
+    ShraddhaInfo? shraddha,
   }) async {
     await showDialog(
       context: context,
@@ -32,7 +34,7 @@ class PanchangaShare {
             children: [
               RepaintBoundary(
                 key: _repaintKey,
-                child: _ShareCard(d: d, events: events, kalas: kalas, purohitDetails: purohitDetails),
+                child: _ShareCard(d: d, events: events, kalas: kalas, purohitDetails: purohitDetails, shraddha: shraddha),
               ),
               const SizedBox(height: 12),
               ElevatedButton.icon(
@@ -81,7 +83,8 @@ class _ShareCard extends StatelessWidget {
   final List<AstroEvent> events;
   final List<KalaTiming> kalas;
   final String purohitDetails;
-  const _ShareCard({required this.d, required this.events, this.kalas = const [], this.purohitDetails = ''});
+  final ShraddhaInfo? shraddha;
+  const _ShareCard({required this.d, required this.events, this.kalas = const [], this.purohitDetails = '', this.shraddha});
 
   @override
   Widget build(BuildContext context) {
@@ -237,114 +240,75 @@ class _ShareCard extends StatelessWidget {
             ],
 
             // ── Shraddha Nirnaya ──
-            _divider(),
-            const SizedBox(height: 3),
-            const Text('🪔 ಶ್ರಾದ್ಧ ನಿರ್ಣಯ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00))),
-            const SizedBox(height: 2),
-            Text('ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು',
-              style: TextStyle(fontSize: 7, color: Colors.grey[600], fontStyle: FontStyle.italic)),
-            const SizedBox(height: 4),
-            Builder(builder: (_) {
-              // Day duration in hours
-              final dayDuration = (d.sunsetJd - d.sunriseJd) * 24.0;
-              final oneKala = dayDuration / 5.0;
-
-              // Kutupa Kala = 2nd segment of 5 parts
-              final kutupaStartJd = d.sunriseJd + (oneKala * 1 / 24.0);
-              final kutupaEndJd = d.sunriseJd + (oneKala * 2 / 24.0);
-
-              // Aparahna = 4th segment of 5 parts
-              final aparahnaStartJd = d.sunriseJd + (oneKala * 3 / 24.0);
-              final aparahnaEndJd = d.sunriseJd + (oneKala * 4 / 24.0);
-
-              // Kutupa duration in ghati
-              final kutupaGhati = ((kutupaEndJd - kutupaStartJd) * 60.0).toStringAsFixed(0);
-
-              String fmtJd(double jd) {
-                final utcMs = ((jd - 2440587.5) * 86400000).round();
-                final utcDt = DateTime.fromMillisecondsSinceEpoch(utcMs, isUtc: true);
-                final local = utcDt.add(const Duration(hours: 5, minutes: 30));
-                final h = local.hour;
-                final m = local.minute;
-                final amPm = h >= 12 ? 'PM' : 'AM';
-                final h12 = h > 12 ? h - 12 : (h == 0 ? 12 : h);
-                return '${h12.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')} $amPm';
-              }
-
-              final tithiName = AppLocale.t(d.tithi);
-              final pakshaName = d.paksha == 'shukla' ? 'ಶುಕ್ಲ' : 'ಕೃಷ್ಣ';
-              final tithiEndTimeStr = d.tithiEndTime;
-
-              // Check: does tithi exist during Kutupa Kala?
-              // Tithi is present if it hasn't ended before Kutupa starts
-              final tithiInKutupa = d.tithiEndJd > kutupaStartJd;
-
-              final amantaName = AppLocale.t(d.amantaMasa);
-              final pournimantaName = AppLocale.t(d.pournimantaMasa);
-              final souraName = AppLocale.t(d.souraMasa);
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Kutupa Kala
-                  Text('ಕುತುಪ ಕಾಲ: ${fmtJd(kutupaStartJd)} — ${fmtJd(kutupaEndJd)}  ($kutupaGhati ಘಟಿ)',
-                    style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
-                  const SizedBox(height: 2),
-                  // Aparahna
-                  Text('ಅಪರಾಹ್ಣ: ${fmtJd(aparahnaStartJd)} — ${fmtJd(aparahnaEndJd)}',
-                    style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
-                  const SizedBox(height: 2),
-                  // Tithi end time
-                  Text('$pakshaName $tithiName ತಿಥಿ ಅಂತ್ಯ: $tithiEndTimeStr',
-                    style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
-                  const SizedBox(height: 4),
-
-                  // Tithi present in Kutupa check
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
-                    decoration: BoxDecoration(
-                      color: tithiInKutupa ? const Color(0xFFE8F5E9) : const Color(0xFFFFF3E0),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      tithiInKutupa
-                        ? '☑ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ'
-                        : '☐ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ',
-                      style: TextStyle(
-                        fontSize: 8, fontWeight: FontWeight.bold,
-                        color: tithiInKutupa ? const Color(0xFF2E7D32) : const Color(0xFFE65100),
-                      ),
-                    ),
+            if (shraddha != null) ...[
+              _divider(),
+              const SizedBox(height: 3),
+              const Text('🪔 ಶ್ರಾದ್ಧ ನಿರ್ಣಯ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00))),
+              const SizedBox(height: 2),
+              Text('ನಿಯಮ: ${shraddha!.ruleText.isNotEmpty ? shraddha!.ruleText : "ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು"}',
+                style: TextStyle(fontSize: 7, color: Colors.grey[600], fontStyle: FontStyle.italic)),
+              const SizedBox(height: 4),
+              // Kutupa Kala
+              Text('ಕುತುಪ ಕಾಲ: ${shraddha!.aparahnaStart} — ${shraddha!.aparahnaEnd}  (${shraddha!.aparahnaStartGhati})',
+                style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+              const SizedBox(height: 2),
+              // Aparahna
+              Text('ಅಪರಾಹ್ಣ: ${shraddha!.aparahnaTimeStart} — ${shraddha!.aparahnaTimeEnd}',
+                style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+              const SizedBox(height: 2),
+              // Tithi end
+              if (shraddha!.sunriseTithiName.isNotEmpty)
+                Text('${shraddha!.sunriseTithiName} ತಿಥಿ ಅಂತ್ಯ: ${shraddha!.tithiEndTimeForRule}',
+                  style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+              const SizedBox(height: 4),
+              // Tithi in Kutupa check
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+                decoration: BoxDecoration(
+                  color: shraddha!.isTithiPresentAtAparahna ? const Color(0xFFE8F5E9) : const Color(0xFFFFF3E0),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  shraddha!.tithiStatusAtAparahna.isNotEmpty
+                    ? '☑ ${shraddha!.tithiStatusAtAparahna}'
+                    : (shraddha!.isTithiPresentAtAparahna
+                      ? '☑ ${shraddha!.sunriseTithiName} — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ'
+                      : '☐ ${shraddha!.sunriseTithiName} — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ'),
+                  style: TextStyle(
+                    fontSize: 8, fontWeight: FontWeight.bold,
+                    color: shraddha!.isTithiPresentAtAparahna ? const Color(0xFF2E7D32) : const Color(0xFFE65100),
                   ),
-                  const SizedBox(height: 4),
-
-                  // Amanta Shraddha
-                  Row(children: [
-                    Text('⚠️ ', style: TextStyle(fontSize: 8)),
-                    Text('ಅಮಾಂತ: ', style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold, color: Color(0xFF795548))),
-                    Text('$amantaName $pakshaName $tithiName ಶ್ರಾದ್ಧ',
-                      style: TextStyle(fontSize: 7.5, color: Color(0xFF333333))),
-                  ]),
-                  const SizedBox(height: 2),
-                  // Pournimanta Shraddha
-                  Row(children: [
-                    Text('⚠️ ', style: TextStyle(fontSize: 8)),
-                    Text('ಪೌರ್ಣಿಮಾಂತ: ', style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold, color: Color(0xFF795548))),
-                    Text('$pournimantaName $pakshaName $tithiName ಶ್ರಾದ್ಧ',
-                      style: TextStyle(fontSize: 7.5, color: Color(0xFF333333))),
-                  ]),
-                  const SizedBox(height: 2),
-                  // Sauramana Shraddha
-                  Row(children: [
-                    Text('⚠️ ', style: TextStyle(fontSize: 8)),
-                    Text('ಸೌರಮಾನ: ', style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold, color: Color(0xFF795548))),
-                    Text('$souraName $pakshaName $tithiName ಶ್ರಾದ್ಧ',
-                      style: TextStyle(fontSize: 7.5, color: Color(0xFF333333))),
-                  ]),
-                ],
-              );
-            }),
+                ),
+              ),
+              const SizedBox(height: 4),
+              // Amanta
+              if (shraddha!.varshikaChandraAmanta.isNotEmpty)
+                Row(children: [
+                  Text('⚠️ ', style: TextStyle(fontSize: 8)),
+                  Text('ಅಮಾಂತ: ', style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold, color: Color(0xFF795548))),
+                  Expanded(child: Text(shraddha!.varshikaChandraAmanta,
+                    style: TextStyle(fontSize: 7.5, color: Color(0xFF333333)))),
+                ]),
+              const SizedBox(height: 2),
+              // Pournimanta
+              if (shraddha!.varshikaChandraPournimanta.isNotEmpty)
+                Row(children: [
+                  Text('⚠️ ', style: TextStyle(fontSize: 8)),
+                  Text('ಪೌರ್ಣಿಮಾಂತ: ', style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold, color: Color(0xFF795548))),
+                  Expanded(child: Text(shraddha!.varshikaChandraPournimanta,
+                    style: TextStyle(fontSize: 7.5, color: Color(0xFF333333)))),
+                ]),
+              const SizedBox(height: 2),
+              // Sauramana
+              if (shraddha!.varshikaSoura.isNotEmpty)
+                Row(children: [
+                  Text('⚠️ ', style: TextStyle(fontSize: 8)),
+                  Text('ಸೌರಮಾನ: ', style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold, color: Color(0xFF795548))),
+                  Expanded(child: Text(shraddha!.varshikaSoura,
+                    style: TextStyle(fontSize: 7.5, color: Color(0xFF333333)))),
+                ]),
+            ],
 
             const SizedBox(height: 5),
             Text('(+) = ಮರುದಿನ ಮುಗಿಯುತ್ತದೆ',
