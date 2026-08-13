@@ -68,10 +68,12 @@ class _MahitiScreenState extends State<MahitiScreen> {
     final now = DateTime.now();
     final useCache = cache.isInitialized && _year >= now.year - 1 && _year <= now.year + 1;
     final yearEvents = <String, List<DateTime>>{};
+    int dayCount = 0;
 
     for (int m = 1; m <= 12; m++) {
       final dim = DateUtils.getDaysInMonth(_year, m);
       for (int d = 1; d <= dim; d++) {
+        if (!mounted) return; // Stop if screen is gone
         try {
           List<AstroEvent> dayEvents;
           if (useCache) {
@@ -119,6 +121,10 @@ class _MahitiScreenState extends State<MahitiScreen> {
             yearEvents[ev.name]!.add(DateTime(_year, m, d));
           }
         } catch (_) {}
+
+        dayCount++;
+        // Yield after every day to prevent ANR
+        await Future.delayed(const Duration(milliseconds: 1));
       }
       // Update progress after each month
       if (mounted) {
@@ -127,7 +133,6 @@ class _MahitiScreenState extends State<MahitiScreen> {
           _yearEvents = Map.from(yearEvents);
         });
       }
-      await Future.delayed(Duration.zero); // Yield per month
     }
 
     if (mounted) {
