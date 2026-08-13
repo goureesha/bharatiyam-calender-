@@ -129,13 +129,21 @@ class _ShareCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             // ── Header ──
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Stack(
+              alignment: Alignment.topCenter,
               children: [
+                // Purohit details (left-aligned)
                 if (purohitDetails.isNotEmpty)
-                  Expanded(flex: 3, child: Text(purohitDetails,
-                    style: const TextStyle(fontSize: 7, color: Color(0xFF666666), height: 1.3))),
-                Expanded(flex: 4, child: Column(children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: SizedBox(
+                      width: 100,
+                      child: Text(purohitDetails,
+                        style: const TextStyle(fontSize: 7, color: Color(0xFF666666), height: 1.3)),
+                    ),
+                  ),
+                // Title (always centered)
+                Column(children: [
                   Text('✦ ಭಾರತೀಯಮ್ ✦',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00)),
                     textAlign: TextAlign.center),
@@ -144,8 +152,7 @@ class _ShareCard extends StatelessWidget {
                     textAlign: TextAlign.center),
                   const SizedBox(height: 2),
                   Container(height: 1.5, width: 110, color: const Color(0xFFFF6B00)),
-                ])),
-                if (purohitDetails.isNotEmpty) const Spacer(flex: 1),
+                ]),
               ],
             ),
             const SizedBox(height: 8),
