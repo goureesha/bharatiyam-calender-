@@ -909,8 +909,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
               padding: const EdgeInsets.symmetric(vertical: 2),
               child: Row(children: [
                 SizedBox(width: 90, child: Text(e.name, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: kText))),
-                Expanded(child: Text(_fmtDate(e.start), style: TextStyle(fontSize: 10, color: kMuted))),
-                SizedBox(width: 80, child: Text(_fmtDate(e.end), style: TextStyle(fontSize: 10, color: kMuted), textAlign: TextAlign.right)),
+                Expanded(child: Text(_fmtMasaDate(e.start), style: TextStyle(fontSize: 10, color: kMuted))),
+                SizedBox(width: 80, child: Text(_fmtMasaDate(e.end), style: TextStyle(fontSize: 10, color: kMuted), textAlign: TextAlign.right)),
               ]),
             )),
         ],
@@ -918,7 +918,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
     );
   }
 
-  String _fmtDate(DateTime dt) {
+  String _fmtMasaDate(DateTime dt) {
     const months = ['', 'ಜನ', 'ಫೆಬ್ರ', 'ಮಾರ್ಚ್', 'ಏಪ್ರಿ', 'ಮೇ', 'ಜೂನ್', 'ಜುಲೈ', 'ಆಗ', 'ಸೆಪ್ಟೆ', 'ಅಕ್ಟೋ', 'ನವೆ', 'ಡಿಸೆ'];
     return '${dt.day} ${months[dt.month]} ${dt.year}';
   }
