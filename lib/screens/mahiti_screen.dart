@@ -34,7 +34,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
   bool _loading = true;
   bool _eventsLoading = false;
   int _eventsProgress = 0; // 0-12 months done
-  int _year = DateTime.now().month >= 4 ? DateTime.now().year : DateTime.now().year - 1;
+  int _year = DateTime.now().year;
   String? _selectedKarya;
   bool _sankalpaExpanded = false;
 
@@ -73,8 +73,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
   Future<void> _computeYearEvents() async {
     setState(() { _eventsLoading = true; _eventsProgress = 0; _yearEvents = {}; });
 
-    // Try loading from local cache first (key = samvatsara year)
-    final cacheKey = _year * 100 + 4; // unique key for Ugadi-based year
+    // Try loading from local cache first
+    final cacheKey = _year;
     final cached = await _loadEventsCache(cacheKey);
     if (cached != null && mounted) {
       setState(() {
@@ -86,20 +86,14 @@ class _MahitiScreenState extends State<MahitiScreen> {
       return;
     }
 
-    // Compute fresh — Ugadi to Ugadi (~April to next March)
-    // Hindu year starts at Chaitra Shukla Pratipada (Ugadi), approx late March/early April
+    // Compute fresh — January to December
     final cache = PanchangaCache();
     final now = DateTime.now();
     final yearEvents = <String, List<DateTime>>{};
-
-    // Compute from April of _year to March of _year+1 (Ugadi to Ugadi range)
-    final months = <List<int>>[];
-    for (int m = 4; m <= 12; m++) months.add([_year, m]);     // Apr-Dec of _year
-    for (int m = 1; m <= 3; m++) months.add([_year + 1, m]);  // Jan-Mar of _year+1
     int monthsDone = 0;
 
-    for (final ym in months) {
-      final y = ym[0], m = ym[1];
+    for (int m = 1; m <= 12; m++) {
+      final y = _year;
       final dim = DateUtils.getDaysInMonth(y, m);
       final useCache = cache.isInitialized && y >= now.year - 1 && y <= now.year + 1;
       for (int d = 1; d <= dim; d++) {
@@ -412,7 +406,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                 ),
                 Column(
                   children: [
-                    Text('$_year-${_year + 1}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                    Text('$_year', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
                     Text(SankalpaGenerator.getSamvatsara(_year, 4), style: TextStyle(fontSize: 11, color: kGold.withAlpha(180))),
                   ],
                 ),
