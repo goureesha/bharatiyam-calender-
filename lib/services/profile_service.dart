@@ -1,5 +1,6 @@
 /// Profile Service — Manages user profile data (name, address, mobile).
 /// Stores locally via SharedPreferences and syncs to Cloud Firestore.
+/// Tracks lastSeen and shareCount.
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -23,7 +24,6 @@ class ProfileService {
   /// Check and set Firebase status
   static Future<void> checkFirebase() async {
     try {
-      // Try a simple Firestore operation to verify connection
       await FirebaseFirestore.instance
           .collection('_ping')
           .doc('test')
@@ -79,6 +79,34 @@ class ProfileService {
     await _syncToFirestore();
   }
 
+  /// Update lastSeen timestamp (call on app open)
+  static Future<void> updateLastSeen() async {
+    if (_docId.isEmpty || !_firebaseReady) return;
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_docId)
+          .update({'lastSeen': FieldValue.serverTimestamp()});
+      debugPrint('lastSeen updated');
+    } catch (e) {
+      debugPrint('lastSeen update error: $e');
+    }
+  }
+
+  /// Increment share count (call after each panchanga share)
+  static Future<void> incrementShareCount() async {
+    if (_docId.isEmpty) return;
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_docId)
+          .update({'shareCount': FieldValue.increment(1)});
+      debugPrint('shareCount incremented');
+    } catch (e) {
+      debugPrint('shareCount error: $e');
+    }
+  }
+
   /// Sync profile to Cloud Firestore
   static Future<void> _syncToFirestore() async {
     try {
@@ -91,10 +119,8 @@ class ProfileService {
       };
 
       if (_docId.isNotEmpty) {
-        // Update existing document
         await collection.doc(_docId).update(data);
       } else {
-        // Check if mobile already exists
         final existing = await collection
             .where('mobile', isEqualTo: _mobile)
             .limit(1)
@@ -104,13 +130,13 @@ class ProfileService {
           _docId = existing.docs.first.id;
           await collection.doc(_docId).update(data);
         } else {
-          // Create new document
           data['createdAt'] = FieldValue.serverTimestamp();
+          data['lastSeen'] = FieldValue.serverTimestamp();
+          data['shareCount'] = 0;
           final doc = await collection.add(data);
           _docId = doc.id;
         }
 
-        // Save doc ID locally
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('profile_doc_id', _docId);
       }

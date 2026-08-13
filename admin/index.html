@@ -52,7 +52,7 @@
       border: 1px solid rgba(239,83,80,0.3); border-radius: 6px;
       cursor: pointer; font-size: 12px;
     }
-    .stats { display: flex; gap: 20px; }
+    .stats { display: flex; gap: 20px; flex-wrap: wrap; }
     .stat-card {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,107,0,0.2);
@@ -60,6 +60,9 @@
     }
     .stat-card .num { font-size: 28px; font-weight: bold; color: #FF6B00; }
     .stat-card .label { font-size: 11px; color: #888; }
+    .share-col { color: #ab47bc; font-weight: bold; }
+    .online { color: #4caf50; }
+    .offline { color: #888; }
     .controls {
       padding: 15px 30px; display: flex; gap: 12px; align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -139,6 +142,14 @@
           <div class="num" id="todayCount">—</div>
           <div class="label">Today</div>
         </div>
+        <div class="stat-card">
+          <div class="num" id="totalShares">—</div>
+          <div class="label">Total Shares</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="activeCount">—</div>
+          <div class="label">Active (24h)</div>
+        </div>
       </div>
       <div class="user-info">
         <img id="userPhoto" src="" alt="">
@@ -166,8 +177,9 @@
             <th onclick="sortBy('name')">Name ↕</th>
             <th onclick="sortBy('address')">Address ↕</th>
             <th onclick="sortBy('mobile')">Mobile ↕</th>
+            <th onclick="sortBy('shareCount')">Shares ↕</th>
+            <th onclick="sortBy('lastSeen')">Last Seen ↕</th>
             <th onclick="sortBy('createdAt')">Joined ↕</th>
-            <th onclick="sortBy('updatedAt')">Last Updated ↕</th>
           </tr>
         </thead>
         <tbody id="usersBody"></tbody>
@@ -246,12 +258,25 @@
         document.getElementById('totalCount').textContent = allUsers.length;
 
         const today = new Date(); today.setHours(0, 0, 0, 0);
+        const yesterday = new Date(today.getTime() - 86400000);
         const todayUsers = allUsers.filter(u => {
           if (!u.createdAt) return false;
           const d = u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt);
           return d >= today;
         });
         document.getElementById('todayCount').textContent = todayUsers.length;
+
+        // Total shares
+        const totalShares = allUsers.reduce((s, u) => s + (u.shareCount || 0), 0);
+        document.getElementById('totalShares').textContent = totalShares;
+
+        // Active in last 24h
+        const activeUsers = allUsers.filter(u => {
+          if (!u.lastSeen) return false;
+          const d = u.lastSeen.toDate ? u.lastSeen.toDate() : new Date(u.lastSeen);
+          return d >= yesterday;
+        });
+        document.getElementById('activeCount').textContent = activeUsers.length;
         renderTable();
       } catch (e) {
         console.error('Error:', e);
@@ -290,14 +315,17 @@
 
       filtered.forEach((u, i) => {
         const tr = document.createElement('tr');
+        const lastSeenText = formatLastSeen(u.lastSeen);
+        const lastSeenClass = isRecent(u.lastSeen) ? 'online' : 'offline';
         tr.innerHTML = `
           <td>${i + 1}</td>
           <td><strong>${esc(u.name || '—')}</strong>
             ${isToday(u.createdAt) ? '<span class="badge badge-new">NEW</span>' : ''}</td>
           <td>${esc(u.address || '—')}</td>
           <td class="mobile-col">${esc(u.mobile || '—')}</td>
+          <td class="share-col">${u.shareCount || 0}</td>
+          <td class="date-col ${lastSeenClass}">${lastSeenText}</td>
           <td class="date-col">${formatDate(u.createdAt)}</td>
-          <td class="date-col">${formatDate(u.updatedAt)}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -319,6 +347,24 @@
       return d.getDate() === t.getDate() && d.getMonth() === t.getMonth() && d.getFullYear() === t.getFullYear();
     }
 
+    function formatLastSeen(ts) {
+      if (!ts) return 'Never';
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      const now = new Date();
+      const diff = Math.floor((now - d) / 1000);
+      if (diff < 60) return '🟢 Just now';
+      if (diff < 3600) return `🟢 ${Math.floor(diff/60)}m ago`;
+      if (diff < 86400) return `🟡 ${Math.floor(diff/3600)}h ago`;
+      if (diff < 604800) return `⚫ ${Math.floor(diff/86400)}d ago`;
+      return formatDate(ts);
+    }
+
+    function isRecent(ts) {
+      if (!ts) return false;
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      return (new Date() - d) < 86400000;
+    }
+
     function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
     function filterUsers() { renderTable(); }
     function sortBy(field) {
@@ -329,8 +375,8 @@
 
     function exportCSV() {
       if (!allUsers.length) return;
-      const rows = [['#','Name','Address','Mobile','Joined','Updated']];
-      allUsers.forEach((u, i) => rows.push([i+1, `"${(u.name||'').replace(/"/g,'""')}"`, `"${(u.address||'').replace(/"/g,'""')}"`, u.mobile||'', formatDate(u.createdAt), formatDate(u.updatedAt)]));
+      const rows = [['#','Name','Address','Mobile','Shares','Last Seen','Joined']];
+      allUsers.forEach((u, i) => rows.push([i+1, `"${(u.name||'').replace(/"/g,'""')}"`, `"${(u.address||'').replace(/"/g,'""')}"`, u.mobile||'', u.shareCount||0, formatDate(u.lastSeen), formatDate(u.createdAt)]));
       const blob = new Blob([rows.map(r=>r.join(',')).join('\n')], { type: 'text/csv' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `bharatiyam_users_${new Date().toISOString().split('T')[0]}.csv`;

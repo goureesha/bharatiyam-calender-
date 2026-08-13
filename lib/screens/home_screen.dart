@@ -196,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (_) {}
     if (!mounted) return;
     await PanchangaShare.showShareDialog(context, d, dayEvents, kalas: _kalas ?? [], purohitDetails: ProfileService.purohitDetails);
+    ProfileService.incrementShareCount();
   }
 
   Future<void> _pickDate() async {
