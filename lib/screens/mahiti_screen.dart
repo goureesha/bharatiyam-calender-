@@ -1,5 +1,8 @@
 /// Mahiti (Info) Screen — Astronomical information: Grahana, Guru/Shukra Asta, Events, etc.
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import '../core/asta_calculator.dart';
 import '../core/adhika_masa_calculator.dart';
 import '../core/grahana_calculator.dart';
@@ -64,16 +67,28 @@ class _MahitiScreenState extends State<MahitiScreen> {
   Future<void> _computeYearEvents() async {
     setState(() { _eventsLoading = true; _eventsProgress = 0; _yearEvents = {}; });
 
+    // Try loading from local cache first
+    final cached = await _loadEventsCache(_year);
+    if (cached != null && mounted) {
+      setState(() {
+        _yearEvents = cached;
+        _eventsLoading = false;
+        _eventsProgress = 12;
+      });
+      debugPrint('Loaded $_year events from cache (${cached.length} events)');
+      return;
+    }
+
+    // Compute fresh
     final cache = PanchangaCache();
     final now = DateTime.now();
     final useCache = cache.isInitialized && _year >= now.year - 1 && _year <= now.year + 1;
     final yearEvents = <String, List<DateTime>>{};
-    int dayCount = 0;
 
     for (int m = 1; m <= 12; m++) {
       final dim = DateUtils.getDaysInMonth(_year, m);
       for (int d = 1; d <= dim; d++) {
-        if (!mounted) return; // Stop if screen is gone
+        if (!mounted) return;
         try {
           List<AstroEvent> dayEvents;
           if (useCache) {
@@ -121,12 +136,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
             yearEvents[ev.name]!.add(DateTime(_year, m, d));
           }
         } catch (_) {}
-
-        dayCount++;
-        // Yield after every day to prevent ANR
         await Future.delayed(const Duration(milliseconds: 1));
       }
-      // Update progress after each month
       if (mounted) {
         setState(() {
           _eventsProgress = m;
@@ -140,6 +151,49 @@ class _MahitiScreenState extends State<MahitiScreen> {
         _yearEvents = yearEvents;
         _eventsLoading = false;
       });
+    }
+
+    // Save to cache for next time
+    _saveEventsCache(_year, yearEvents);
+  }
+
+  /// Get cache file path for a year
+  static Future<File> _cacheFile(int year) async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File('${dir.path}/events_cache_$year.json');
+  }
+
+  /// Load events from local cache file
+  static Future<Map<String, List<DateTime>>?> _loadEventsCache(int year) async {
+    try {
+      final file = await _cacheFile(year);
+      if (!await file.exists()) return null;
+      final json = jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+      final result = <String, List<DateTime>>{};
+      for (final entry in json.entries) {
+        result[entry.key] = (entry.value as List)
+            .map((s) => DateTime.parse(s as String))
+            .toList();
+      }
+      return result;
+    } catch (e) {
+      debugPrint('Events cache load error: $e');
+      return null;
+    }
+  }
+
+  /// Save events to local cache file
+  static Future<void> _saveEventsCache(int year, Map<String, List<DateTime>> events) async {
+    try {
+      final file = await _cacheFile(year);
+      final json = <String, dynamic>{};
+      for (final entry in events.entries) {
+        json[entry.key] = entry.value.map((d) => d.toIso8601String()).toList();
+      }
+      await file.writeAsString(jsonEncode(json));
+      debugPrint('Events cache saved for $year (${events.length} events)');
+    } catch (e) {
+      debugPrint('Events cache save error: $e');
     }
   }
 
