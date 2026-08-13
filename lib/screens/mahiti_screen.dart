@@ -2,12 +2,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../core/asta_calculator.dart';
 import '../core/adhika_masa_calculator.dart';
 import '../core/grahana_calculator.dart';
 import '../core/panchanga_calculator.dart';
 import '../core/masa_calculator.dart';
+import '../core/sankalpa_generator.dart';
 import '../core/ephemeris.dart';
 import '../core/events.dart';
 import '../services/location_service.dart';
@@ -31,6 +34,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
   bool _eventsLoading = false;
   int _eventsProgress = 0; // 0-12 months done
   int _year = DateTime.now().year;
+  String? _selectedKarya;
+  bool _sankalpaExpanded = false;
 
   @override
   void initState() {
@@ -197,6 +202,177 @@ class _MahitiScreenState extends State<MahitiScreen> {
     }
   }
 
+  /// Build the Maha Sankalpa section
+  Widget _buildSankalpaSection() {
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          GestureDetector(
+            onTap: () => setState(() => _sankalpaExpanded = !_sankalpaExpanded),
+            child: Row(
+              children: [
+                Text('🙏', style: TextStyle(fontSize: 20)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text('ಮಹಾ ಸಂಕಲ್ಪ', style: TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.bold, color: kGold)),
+                ),
+                Icon(
+                  _sankalpaExpanded ? Icons.expand_less : Icons.expand_more,
+                  color: kGold, size: 24,
+                ),
+              ],
+            ),
+          ),
+
+          if (_sankalpaExpanded) ...[
+            const SizedBox(height: 12),
+
+            // Vishesha Sankalpa dropdown
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: kBg, borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: kBorder),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: _selectedKarya,
+                  hint: Text('ವಿಶೇಷ ಸಂಕಲ್ಪ ಆಯ್ಕೆಮಾಡಿ', style: TextStyle(color: kMuted, fontSize: 13)),
+                  isExpanded: true,
+                  dropdownColor: kCard,
+                  style: TextStyle(color: kText, fontSize: 13),
+                  items: SankalpaGenerator.karyaNames.map((k) =>
+                    DropdownMenuItem(value: k, child: Text(k)),
+                  ).toList(),
+                  onChanged: (v) => setState(() => _selectedKarya = v),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Sankalpa text
+            Builder(builder: (_) {
+              final today = DateTime.now();
+              PanchangaData? data;
+              String masaName = '';
+              try {
+                data = PanchangaCalculator.calculate(
+                  year: today.year, month: today.month, day: today.day,
+                  lat: LocationService.lat, lon: LocationService.lon,
+                  tzOffset: LocationService.tzOffset,
+                );
+                final amanta = MasaCalculator.calculateAmanta(
+                  jdSunrise: data.sunriseJd,
+                  lat: LocationService.lat, lon: LocationService.lon,
+                  tzOffset: LocationService.tzOffset,
+                );
+                masaName = EventCalculator.masaKeyToKannada(amanta['masa'] as String);
+              } catch (_) {}
+
+              if (data == null) {
+                return Text('ಪಂಚಾಂಗ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ', style: TextStyle(color: kMuted));
+              }
+
+              final sankalpaText = SankalpaGenerator.generate(
+                data: data,
+                masaName: masaName,
+                date: today,
+                visheshaSankalpa: _selectedKarya,
+                kshetra: LocationService.cityName.isNotEmpty ? LocationService.cityName : '___',
+              );
+
+              return Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A2E),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: kGold.withAlpha(76)),
+                ),
+                child: SelectableText(
+                  sankalpaText,
+                  style: TextStyle(
+                    fontSize: 14, color: const Color(0xFFFFE0B2),
+                    height: 1.6,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            }),
+            const SizedBox(height: 10),
+
+            // Copy & Share buttons
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final text = _getSankalpaText();
+                      Clipboard.setData(ClipboardData(text: text));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('ಸಂಕಲ್ಪ ಕಾಪಿ ಆಯಿತು ✓'), duration: Duration(seconds: 2)),
+                      );
+                    },
+                    icon: Icon(Icons.copy_rounded, size: 16, color: Colors.white),
+                    label: Text('Copy', style: TextStyle(color: Colors.white, fontSize: 12)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kGold.withAlpha(180),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final text = _getSankalpaText();
+                      Share.share(text, subject: 'ಮಹಾ ಸಂಕಲ್ಪ');
+                    },
+                    icon: Icon(Icons.share_rounded, size: 16, color: Colors.white),
+                    label: Text('Share', style: TextStyle(color: Colors.white, fontSize: 12)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kGold.withAlpha(180),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  String _getSankalpaText() {
+    final today = DateTime.now();
+    try {
+      final data = PanchangaCalculator.calculate(
+        year: today.year, month: today.month, day: today.day,
+        lat: LocationService.lat, lon: LocationService.lon,
+        tzOffset: LocationService.tzOffset,
+      );
+      final amanta = MasaCalculator.calculateAmanta(
+        jdSunrise: data.sunriseJd,
+        lat: LocationService.lat, lon: LocationService.lon,
+        tzOffset: LocationService.tzOffset,
+      );
+      final masaName = EventCalculator.masaKeyToKannada(amanta['masa'] as String);
+      return SankalpaGenerator.generate(
+        data: data, masaName: masaName, date: today,
+        visheshaSankalpa: _selectedKarya,
+        kshetra: LocationService.cityName.isNotEmpty ? LocationService.cityName : '___',
+      );
+    } catch (_) {
+      return '';
+    }
+  }
+
   void _changeYear(int delta) {
     _year += delta;
     _computeAsta();
@@ -242,6 +418,10 @@ class _MahitiScreenState extends State<MahitiScreen> {
               child: CircularProgressIndicator(),
             ))
           else ...[
+            // ── Maha Sankalpa ──
+            _buildSankalpaSection(),
+            const SizedBox(height: 12),
+
             // ── Guru Asta (Jupiter Combustion) ──
             _buildAstaSection(
               icon: Icons.brightness_7_rounded,
