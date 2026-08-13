@@ -282,7 +282,6 @@ class _MahitiScreenState extends State<MahitiScreen> {
                 masaName: masaName,
                 date: today,
                 visheshaSankalpa: _selectedKarya,
-                kshetra: LocationService.cityName.isNotEmpty ? LocationService.cityName : '___',
               );
 
               return Container(
@@ -367,7 +366,6 @@ class _MahitiScreenState extends State<MahitiScreen> {
       return SankalpaGenerator.generate(
         data: data, masaName: masaName, date: today,
         visheshaSankalpa: _selectedKarya,
-        kshetra: LocationService.cityName.isNotEmpty ? LocationService.cityName : '___',
       );
     } catch (_) {
       return '';
