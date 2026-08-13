@@ -236,23 +236,29 @@ class _ShareCard extends StatelessWidget {
               )),
             ],
 
-            // ── Shraddha Info ──
+            // ── Shraddha Nirnaya ──
             _divider(),
             const SizedBox(height: 3),
-            const Text('🙏 ಶ್ರಾದ್ಧ ಮಾಹಿತಿ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00))),
-            const SizedBox(height: 3),
+            const Text('🪔 ಶ್ರಾದ್ಧ ನಿರ್ಣಯ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00))),
+            const SizedBox(height: 2),
+            Text('ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು',
+              style: TextStyle(fontSize: 7, color: Colors.grey[600], fontStyle: FontStyle.italic)),
+            const SizedBox(height: 4),
             Builder(builder: (_) {
               // Day duration in hours
               final dayDuration = (d.sunsetJd - d.sunriseJd) * 24.0;
               final oneKala = dayDuration / 5.0;
 
-              // Kutupa Muhurta = 2nd part of 5 parts (segment 2)
+              // Kutupa Kala = 2nd segment of 5 parts
               final kutupaStartJd = d.sunriseJd + (oneKala * 1 / 24.0);
               final kutupaEndJd = d.sunriseJd + (oneKala * 2 / 24.0);
 
-              // Aparahna Kala = 4th part of 5 parts (segment 4, index 3)
+              // Aparahna = 4th segment of 5 parts
               final aparahnaStartJd = d.sunriseJd + (oneKala * 3 / 24.0);
               final aparahnaEndJd = d.sunriseJd + (oneKala * 4 / 24.0);
+
+              // Kutupa duration in ghati
+              final kutupaGhati = ((kutupaEndJd - kutupaStartJd) * 60.0).toStringAsFixed(0);
 
               String fmtJd(double jd) {
                 final utcMs = ((jd - 2440587.5) * 86400000).round();
@@ -267,15 +273,75 @@ class _ShareCard extends StatelessWidget {
 
               final tithiName = AppLocale.t(d.tithi);
               final pakshaName = d.paksha == 'shukla' ? 'ಶುಕ್ಲ' : 'ಕೃಷ್ಣ';
+              final tithiEndTimeStr = d.tithiEndTime;
+
+              // Check: does tithi exist during Kutupa Kala?
+              // Tithi is present if it hasn't ended before Kutupa starts
+              final tithiInKutupa = d.tithiEndJd > kutupaStartJd;
+
+              final amantaName = AppLocale.t(d.amantaMasa);
+              final pournimantaName = AppLocale.t(d.pournimantaMasa);
+              final souraName = AppLocale.t(d.souraMasa);
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _kalaRow('ಕುತುಪ ಮುಹೂರ್ತ', '${fmtJd(kutupaStartJd)} - ${fmtJd(kutupaEndJd)}', const Color(0xFF4CAF50)),
-                  _kalaRow('ಅಪಾರಾಹ್ಣ ಕಾಲ', '${fmtJd(aparahnaStartJd)} - ${fmtJd(aparahnaEndJd)}', const Color(0xFF4CAF50)),
-                  const SizedBox(height: 3),
-                  Text('ಇಂದಿನ ಶ್ರಾದ್ಧ ತಿಥಿ: $pakshaName $tithiName',
+                  // Kutupa Kala
+                  Text('ಕುತುಪ ಕಾಲ: ${fmtJd(kutupaStartJd)} — ${fmtJd(kutupaEndJd)}  ($kutupaGhati ಘಟಿ)',
                     style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+                  const SizedBox(height: 2),
+                  // Aparahna
+                  Text('ಅಪರಾಹ್ಣ: ${fmtJd(aparahnaStartJd)} — ${fmtJd(aparahnaEndJd)}',
+                    style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+                  const SizedBox(height: 2),
+                  // Tithi end time
+                  Text('$pakshaName $tithiName ತಿಥಿ ಅಂತ್ಯ: $tithiEndTimeStr',
+                    style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+                  const SizedBox(height: 4),
+
+                  // Tithi present in Kutupa check
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+                    decoration: BoxDecoration(
+                      color: tithiInKutupa ? const Color(0xFFE8F5E9) : const Color(0xFFFFF3E0),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      tithiInKutupa
+                        ? '☑ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ'
+                        : '☐ $pakshaName $tithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ',
+                      style: TextStyle(
+                        fontSize: 8, fontWeight: FontWeight.bold,
+                        color: tithiInKutupa ? const Color(0xFF2E7D32) : const Color(0xFFE65100),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+
+                  // Amanta Shraddha
+                  Row(children: [
+                    Text('⚠️ ', style: TextStyle(fontSize: 8)),
+                    Text('ಅಮಾಂತ: ', style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold, color: Color(0xFF795548))),
+                    Text('$amantaName $pakshaName $tithiName ಶ್ರಾದ್ಧ',
+                      style: TextStyle(fontSize: 7.5, color: Color(0xFF333333))),
+                  ]),
+                  const SizedBox(height: 2),
+                  // Pournimanta Shraddha
+                  Row(children: [
+                    Text('⚠️ ', style: TextStyle(fontSize: 8)),
+                    Text('ಪೌರ್ಣಿಮಾಂತ: ', style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold, color: Color(0xFF795548))),
+                    Text('$pournimantaName $pakshaName $tithiName ಶ್ರಾದ್ಧ',
+                      style: TextStyle(fontSize: 7.5, color: Color(0xFF333333))),
+                  ]),
+                  const SizedBox(height: 2),
+                  // Sauramana Shraddha
+                  Row(children: [
+                    Text('⚠️ ', style: TextStyle(fontSize: 8)),
+                    Text('ಸೌರಮಾನ: ', style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold, color: Color(0xFF795548))),
+                    Text('$souraName $pakshaName $tithiName ಶ್ರಾದ್ಧ',
+                      style: TextStyle(fontSize: 7.5, color: Color(0xFF333333))),
+                  ]),
                 ],
               );
             }),
