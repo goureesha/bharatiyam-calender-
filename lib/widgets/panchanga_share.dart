@@ -223,19 +223,10 @@ class _ShareCard extends StatelessWidget {
             _row('ಪಕ್ಷ', d.paksha == 'shukla' ? 'ಶುಕ್ಲ ಪಕ್ಷ' : 'ಕೃಷ್ಣ ಪಕ್ಷ'),
             _row('ಋತು', '${AppLocale.t(d.rutu)} (ಸೌರ) / $vaidikaRutu (ವೈದಿಕ)'),
             _row('ಅಯನ', AppLocale.t(d.ayana)),
-            _divider(),
-
-            // ── Panchanga limbs with end times ──
-            const SizedBox(height: 3),
-            _limbRow('ತಿಥಿ', AppLocale.t(d.tithi), '${d.tithiEndTime} (${d.tithiEndGhati})${nd(d.tithiEndsNextDay)}'),
-            _limbRow('ನಕ್ಷತ್ರ', AppLocale.t(d.nakshatra), '${d.nakEndTime} (${d.nakEndGhati})${nd(d.nakEndsNextDay)}'),
-            _limbRow('ಯೋಗ', AppLocale.t(d.yoga), '${d.yogaEndTime} (${d.yogaEndGhati})${nd(d.yogaEndsNextDay)}'),
-            _limbRow('ಕರಣ', AppLocale.t(d.karana), '${d.karanaEndTime} (${d.karanaEndGhati})${nd(d.karanaEndsNextDay)}'),
 
             // ── Amruta / Visha Ghati ──
             if (d.amrutaPraghati.isNotEmpty || d.vishaPraghati.isNotEmpty) ...[
               _divider(),
-              const SizedBox(height: 3),
               if (d.amrutaPraghati.isNotEmpty)
                 _kalaRow('ಅಮೃತ ಘಟಿ', d.amrutaPraghati, const Color(0xFF2E7D32)),
               if (d.vishaPraghati.isNotEmpty)
@@ -247,7 +238,6 @@ class _ShareCard extends StatelessWidget {
               final dayDurMin = ((d.sunsetJd - d.sunriseJd) * 24 * 60).round();
               final dayH = dayDurMin ~/ 60;
               final dayM = dayDurMin % 60;
-              // Approx next sunrise = sunrise + 1 day
               final nightDurMin = ((24 * 60) - dayDurMin);
               final nightH = nightDurMin ~/ 60;
               final nightM = nightDurMin % 60;
@@ -263,7 +253,6 @@ class _ShareCard extends StatelessWidget {
                 sunriseJd: d.sunriseJd, sunsetJd: d.sunsetJd,
                 tzOffset: LocationService.tzOffset,
               );
-              // Godhuli: sunset ± 12 minutes (traditional)
               final godhuliStartJd = d.sunsetJd - (12.0 / 1440.0);
               final godhuliEndJd = d.sunsetJd + (12.0 / 1440.0);
               final godhuliStart = Ephemeris.formatTimeFromJd(godhuliStartJd, tzOffset: LocationService.tzOffset);
@@ -273,6 +262,14 @@ class _ShareCard extends StatelessWidget {
                 _kalaRow('ಗೋಧೂಳಿ ಮುಹೂರ್ತ', '$godhuliStart - $godhuliEnd', const Color(0xFF1565C0)),
               ]);
             }),
+            _divider(),
+
+            // ── Panchanga limbs with end times ──
+            const SizedBox(height: 3),
+            _limbRow('ತಿಥಿ', AppLocale.t(d.tithi), '${d.tithiEndTime} (${d.tithiEndGhati})${nd(d.tithiEndsNextDay)}'),
+            _limbRow('ನಕ್ಷತ್ರ', AppLocale.t(d.nakshatra), '${d.nakEndTime} (${d.nakEndGhati})${nd(d.nakEndsNextDay)}'),
+            _limbRow('ಯೋಗ', AppLocale.t(d.yoga), '${d.yogaEndTime} (${d.yogaEndGhati})${nd(d.yogaEndsNextDay)}'),
+            _limbRow('ಕರಣ', AppLocale.t(d.karana), '${d.karanaEndTime} (${d.karanaEndGhati})${nd(d.karanaEndsNextDay)}'),
 
             // ── Rahu Kala, Gulika Kala ──
             if (rahuKala.isNotEmpty || gulikaKala.isNotEmpty) ...[
