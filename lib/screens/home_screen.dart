@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/ephemeris.dart';
 import '../core/panchanga_calculator.dart';
 import '../core/kala_calculator.dart';
+import '../core/muhurta_calculator.dart';
 import '../core/ghati_calculator.dart';
 import '../core/masa_calculator.dart';
 import '../core/samvatsara.dart';
@@ -533,8 +534,39 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-
-
+          // ── Shubha Muhurta (Abhijit & Godhuli) ──
+          if (_data != null)
+            Builder(builder: (_) {
+              final d = _data!;
+              final abhijitM = MuhurtaCalculator.calculateAbhijit(
+                sunriseJd: d.sunriseJd, sunsetJd: d.sunsetJd,
+                tzOffset: LocationService.tzOffset,
+              );
+              final godhuliStartJd = d.sunsetJd - (12.0 / 1440.0);
+              final godhuliEndJd = d.sunsetJd + (12.0 / 1440.0);
+              final godhuliStart = Ephemeris.formatTimeFromJd(godhuliStartJd, tzOffset: LocationService.tzOffset);
+              final godhuliEnd = Ephemeris.formatTimeFromJd(godhuliEndJd, tzOffset: LocationService.tzOffset);
+              return AppCard(
+                child: Column(
+                  children: [
+                    SectionHeader(icon: Icons.auto_awesome, title: 'ಶುಭ ಮುಹೂರ್ತ'),
+                    const SizedBox(height: 8),
+                    KalaTimeBar(
+                      name: 'ಅಭಿಜಿತ್ ಮುಹೂರ್ತ',
+                      startTime: abhijitM.startTime,
+                      endTime: abhijitM.endTime,
+                      color: const Color(0xFF2E7D32),
+                    ),
+                    KalaTimeBar(
+                      name: 'ಗೋಧೂಳಿ ಮುಹೂರ್ತ',
+                      startTime: godhuliStart,
+                      endTime: godhuliEnd,
+                      color: const Color(0xFF1565C0),
+                    ),
+                  ],
+                ),
+              );
+            }),
           // ── Moon & Sun details ──
           AppCard(
             child: Column(
