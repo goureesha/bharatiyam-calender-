@@ -437,7 +437,136 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
+
+        // ── Privacy Policy ──
+        AppCard(
+          child: Column(
+            children: [
+              const SectionHeader(icon: Icons.privacy_tip_outlined, title: 'Privacy & Policy'),
+              const SizedBox(height: 8),
+              Text(
+                'ನಿಮ್ಮ ಗೌಪ್ಯತೆ ನಮಗೆ ಮುಖ್ಯ',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kGold),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'ಈ ಅಪ್ಲಿಕೇಶನ್ ನಿಮ್ಮ ಸ್ಥಳ ಮತ್ತು ಪ್ರೊಫೈಲ್ ಮಾಹಿತಿಯನ್ನು '
+                'ಪಂಚಾಂಗ ಲೆಕ್ಕಾಚಾರಕ್ಕಾಗಿ ಮಾತ್ರ ಬಳಸುತ್ತದೆ.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 10, color: kMuted, height: 1.5),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () => _showPrivacyPolicy(context),
+                  icon: Icon(Icons.article_outlined, size: 14),
+                  label: Text('Read Full Policy', style: TextStyle(fontSize: 11)),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: kGold,
+                    side: BorderSide(color: kGold.withAlpha(80)),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
+    );
+  }
+
+  void _showPrivacyPolicy(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: kCard,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          constraints: const BoxConstraints(maxHeight: 500),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.privacy_tip_rounded, color: kGold, size: 22),
+                  const SizedBox(width: 8),
+                  Text('Privacy Policy', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: kGold)),
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.close, color: kMuted, size: 20),
+                    onPressed: () => Navigator.pop(ctx),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Text(
+                    'ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ - ಗೌಪ್ಯತಾ ನೀತಿ\n'
+                    'Bharatiyam Panchanga - Privacy Policy\n'
+                    '━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n'
+                    'Last Updated: August 2024\n\n'
+                    '1. DATA WE COLLECT\n'
+                    '─────────────────\n'
+                    '• Location (GPS or manual city selection)\n'
+                    '  Used solely for calculating accurate sunrise,\n'
+                    '  sunset, and panchanga for your location.\n\n'
+                    '• Profile Info (Name, Address, Mobile)\n'
+                    '  Optional. Used only to display on shared\n'
+                    '  panchanga cards if you choose to share.\n\n'
+                    '• Device ID (anonymous UUID)\n'
+                    '  Generated once on first launch. Used to\n'
+                    '  track app usage statistics only.\n\n'
+                    '2. HOW WE USE DATA\n'
+                    '──────────────────\n'
+                    '• Panchanga calculations (Tithi, Nakshatra,\n'
+                    '  Yoga, Karana, Muhurta, etc.)\n'
+                    '• Generating shareable panchanga cards\n'
+                    '• Tracking last seen & share count for\n'
+                    '  app improvement analytics\n\n'
+                    '3. DATA STORAGE\n'
+                    '───────────────\n'
+                    '• Profile data is stored locally on your device\n'
+                    '  using SharedPreferences.\n'
+                    '• A copy is synced to Google Firebase Firestore\n'
+                    '  for backup and analytics.\n'
+                    '• No data is sold or shared with third parties.\n\n'
+                    '4. THIRD-PARTY SERVICES\n'
+                    '──────────────────────\n'
+                    '• Google Firebase (Firestore) — for data sync\n'
+                    '• Swiss Ephemeris — astronomical calculations\n'
+                    '  (all computations happen on-device)\n\n'
+                    '5. PERMISSIONS\n'
+                    '─────────────\n'
+                    '• Location: For accurate panchanga based on\n'
+                    '  your geographic position.\n'
+                    '• Internet: For Firebase sync and updates.\n'
+                    '• Storage: For saving shared panchanga images.\n\n'
+                    '6. DATA DELETION\n'
+                    '────────────────\n'
+                    '• Uninstalling the app removes all local data.\n'
+                    '• To delete Firebase data, contact:\n'
+                    '  bharatiyampanchanga@gmail.com\n\n'
+                    '7. CHILDREN\'S PRIVACY\n'
+                    '────────────────────\n'
+                    '• This app does not knowingly collect data\n'
+                    '  from children under 13.\n\n'
+                    '8. CONTACT\n'
+                    '──────────\n'
+                    '• For questions about this policy:\n'
+                    '  bharatiyampanchanga@gmail.com\n\n'
+                    '━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
+                    'By using this app, you agree to this policy.',
+                    style: TextStyle(fontSize: 11, color: kText, height: 1.6, fontFamily: 'monospace'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
