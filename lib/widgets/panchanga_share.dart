@@ -9,7 +9,10 @@ import 'package:share_plus/share_plus.dart';
 import '../models/panchanga_data.dart';
 import '../core/events.dart';
 import '../core/shraddha_calculator.dart';
+import '../core/muhurta_calculator.dart';
+import '../core/ephemeris.dart';
 import '../i18n/app_locale.dart';
+import '../services/location_service.dart';
 
 class PanchangaShare {
   static final GlobalKey _repaintKey = GlobalKey();
@@ -102,16 +105,14 @@ class _ShareCard extends StatelessWidget {
     // Next-day marker
     String nd(bool nextDay) => nextDay ? ' (+)' : '';
 
-    // Find Rahu Kala, Gulika Kala, Abhijit from kalas list
-    String rahuKala = '', gulikaKala = '', abhijit = '';
+    // Find Rahu Kala, Gulika Kala from kalas list
+    String rahuKala = '', gulikaKala = '';
     for (final k in kalas) {
       final name = k.name.toLowerCase();
       if (name.contains('rahu') || name.contains('ರಾಹು')) {
         rahuKala = '${k.startTime} - ${k.endTime}';
       } else if (name.contains('gulika') || name.contains('ಗುಳಿಕ')) {
         gulikaKala = '${k.startTime} - ${k.endTime}';
-      } else if (name.contains('abhijit') || name.contains('ಅಭಿಜಿತ್') || name.contains('abhijin')) {
-        abhijit = '${k.startTime} - ${k.endTime}';
       }
     }
 
@@ -160,38 +161,55 @@ class _ShareCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // ── Date + Vara ──
+            // ── Date with Sun/Moon on sides ──
             Builder(builder: (_) {
               final dt = DateTime.fromMillisecondsSinceEpoch(
                 ((d.sunriseJd - 2440587.5) * 86400000).round(), isUtc: true,
               ).add(const Duration(hours: 5, minutes: 30));
-              return Text(
-                '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF333333)),
+              return Row(
+                children: [
+                  // Sun rise/set (left)
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _iconTime('🌅', 'ಸೂರ್ಯೋದಯ', d.sunrise),
+                        const SizedBox(height: 4),
+                        _iconTime('🌇', 'ಸೂರ್ಯಾಸ್ತ', d.sunset),
+                      ],
+                    ),
+                  ),
+                  // Date + Vara (center)
+                  Column(
+                    children: [
+                      Text(
+                        '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}',
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF333333)),
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFF6B00),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(AppLocale.t(d.vara),
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                  // Moon rise/set (right)
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _iconTime('🌙', 'ಚಂದ್ರೋದಯ', d.chandraUdaya),
+                        const SizedBox(height: 4),
+                        _iconTime('🌑', 'ಚಂದ್ರಾಸ್ತ', d.chandraAsta),
+                      ],
+                    ),
+                  ),
+                ],
               );
             }),
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF6B00),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(AppLocale.t(d.vara),
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
-            ),
-            const SizedBox(height: 8),
-
-            // ── Sun/Moon ──
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _iconTime('🌅', 'ಸೂರ್ಯೋದಯ', d.sunrise),
-                _iconTime('🌇', 'ಸೂರ್ಯಾಸ್ತ', d.sunset),
-                _iconTime('🌙', 'ಚಂದ್ರೋದಯ', d.chandraUdaya),
-                _iconTime('🌑', 'ಚಂದ್ರಾಸ್ತ', d.chandraAsta),
-              ],
-            ),
             const SizedBox(height: 6),
             _divider(),
 
@@ -214,15 +232,56 @@ class _ShareCard extends StatelessWidget {
             _limbRow('ಯೋಗ', AppLocale.t(d.yoga), '${d.yogaEndTime} (${d.yogaEndGhati})${nd(d.yogaEndsNextDay)}'),
             _limbRow('ಕರಣ', AppLocale.t(d.karana), '${d.karanaEndTime} (${d.karanaEndGhati})${nd(d.karanaEndsNextDay)}'),
 
-            // ── Rahu Kala, Gulika Kala, Abhijit ──
-            if (rahuKala.isNotEmpty || gulikaKala.isNotEmpty || abhijit.isNotEmpty) ...[
+            // ── Amruta / Visha Ghati ──
+            if (d.amrutaPraghati.isNotEmpty || d.vishaPraghati.isNotEmpty) ...[
+              _divider(),
+              const SizedBox(height: 3),
+              if (d.amrutaPraghati.isNotEmpty)
+                _kalaRow('ಅಮೃತ ಘಟಿ', d.amrutaPraghati, const Color(0xFF2E7D32)),
+              if (d.vishaPraghati.isNotEmpty)
+                _kalaRow('ವಿಷ ಘಟಿ', d.vishaPraghati, Colors.red),
+            ],
+
+            // ── Diva Mana / Ratri Mana ──
+            Builder(builder: (_) {
+              final dayDurMin = ((d.sunsetJd - d.sunriseJd) * 24 * 60).round();
+              final dayH = dayDurMin ~/ 60;
+              final dayM = dayDurMin % 60;
+              // Approx next sunrise = sunrise + 1 day
+              final nightDurMin = ((24 * 60) - dayDurMin);
+              final nightH = nightDurMin ~/ 60;
+              final nightM = nightDurMin % 60;
+              return Column(children: [
+                _row('ದಿವಾ ಮಾನ', '${dayH} ಗಂ ${dayM} ನಿ'),
+                _row('ರಾತ್ರಿ ಮಾನ', '${nightH} ಗಂ ${nightM} ನಿ'),
+              ]);
+            }),
+
+            // ── Abhijit & Godhuli Muhurta ──
+            Builder(builder: (_) {
+              final abhijitM = MuhurtaCalculator.calculateAbhijit(
+                sunriseJd: d.sunriseJd, sunsetJd: d.sunsetJd,
+                tzOffset: LocationService.tzOffset,
+              );
+              // Godhuli: sunset ± 12 minutes (traditional)
+              final godhuliStartJd = d.sunsetJd - (12.0 / 1440.0);
+              final godhuliEndJd = d.sunsetJd + (12.0 / 1440.0);
+              final godhuliStart = Ephemeris.formatTimeFromJd(godhuliStartJd, tzOffset: LocationService.tzOffset);
+              final godhuliEnd = Ephemeris.formatTimeFromJd(godhuliEndJd, tzOffset: LocationService.tzOffset);
+              return Column(children: [
+                _kalaRow('ಅಭಿಜಿತ್ ಮುಹೂರ್ತ', '${abhijitM.startTime} - ${abhijitM.endTime}', const Color(0xFF2E7D32)),
+                _kalaRow('ಗೋಧೂಳಿ ಮುಹೂರ್ತ', '$godhuliStart - $godhuliEnd', const Color(0xFF1565C0)),
+              ]);
+            }),
+
+            // ── Rahu Kala, Gulika Kala ──
+            if (rahuKala.isNotEmpty || gulikaKala.isNotEmpty) ...[
               _divider(),
               const SizedBox(height: 3),
               const Text('⚠ ಕಾಲ ಸಮಯ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00))),
               const SizedBox(height: 3),
               if (rahuKala.isNotEmpty) _kalaRow('ರಾಹು ಕಾಲ', rahuKala, Colors.red),
               if (gulikaKala.isNotEmpty) _kalaRow('ಗುಳಿಕ ಕಾಲ', gulikaKala, Colors.red),
-              if (abhijit.isNotEmpty) _kalaRow('ಅಭಿಜಿತ್ ಮುಹೂರ್ತ', abhijit, Colors.green),
             ],
 
             // ── Events ──
