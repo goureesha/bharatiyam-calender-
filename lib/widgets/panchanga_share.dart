@@ -221,19 +221,13 @@ class _ShareCard extends StatelessWidget {
             _row('ಪೂರ್ಣಿಮಾಂತ ಮಾಸ', AppLocale.t(d.pournimantaMasa)),
             _row('ಸೌರ ಮಾಸ', '${AppLocale.t(d.souraMasa)} (${d.souraMasaGataDina} ದಿನ)'),
             _row('ಪಕ್ಷ', d.paksha == 'shukla' ? 'ಶುಕ್ಲ ಪಕ್ಷ' : 'ಕೃಷ್ಣ ಪಕ್ಷ'),
-            _row('ಋತು', '${AppLocale.t(d.rutu)} (ಸೌರ) / $vaidikaRutu (ವೈದಿಕ)'),
+            _row('ಋತು (ಸೌರ)', AppLocale.t(d.rutu)),
+            _row('ಋತು (ವೈದಿಕ)', vaidikaRutu),
             _row('ಅಯನ', AppLocale.t(d.ayana)),
-
-            // ── Amruta / Visha Ghati ──
-            if (d.amrutaPraghati.isNotEmpty || d.vishaPraghati.isNotEmpty) ...[
-              _divider(),
-              if (d.amrutaPraghati.isNotEmpty)
-                _kalaRow('ಅಮೃತ ಘಟಿ', d.amrutaPraghati, const Color(0xFF2E7D32)),
-              if (d.vishaPraghati.isNotEmpty)
-                _kalaRow('ವಿಷ ಘಟಿ', d.vishaPraghati, Colors.red),
-            ],
-
-            // ── Diva Mana / Ratri Mana ──
+            if (d.amrutaPraghati.isNotEmpty)
+              _row('ಅಮೃತ ಘಟಿ', d.amrutaPraghati),
+            if (d.vishaPraghati.isNotEmpty)
+              _row('ವಿಷ ಘಟಿ', d.vishaPraghati),
             Builder(builder: (_) {
               final dayDurMin = ((d.sunsetJd - d.sunriseJd) * 24 * 60).round();
               final dayH = dayDurMin ~/ 60;
@@ -246,8 +240,6 @@ class _ShareCard extends StatelessWidget {
                 _row('ರಾತ್ರಿ ಮಾನ', '${nightH} ಗಂ ${nightM} ನಿ'),
               ]);
             }),
-
-            // ── Abhijit & Godhuli Muhurta ──
             Builder(builder: (_) {
               final abhijitM = MuhurtaCalculator.calculateAbhijit(
                 sunriseJd: d.sunriseJd, sunsetJd: d.sunsetJd,
@@ -258,8 +250,8 @@ class _ShareCard extends StatelessWidget {
               final godhuliStart = Ephemeris.formatTimeFromJd(godhuliStartJd, tzOffset: LocationService.tzOffset);
               final godhuliEnd = Ephemeris.formatTimeFromJd(godhuliEndJd, tzOffset: LocationService.tzOffset);
               return Column(children: [
-                _kalaRow('ಅಭಿಜಿತ್ ಮುಹೂರ್ತ', '${abhijitM.startTime} - ${abhijitM.endTime}', const Color(0xFF2E7D32)),
-                _kalaRow('ಗೋಧೂಳಿ ಮುಹೂರ್ತ', '$godhuliStart - $godhuliEnd', const Color(0xFF1565C0)),
+                _row('ಅಭಿಜಿತ್ ಮುಹೂರ್ತ', '${abhijitM.startTime} - ${abhijitM.endTime}'),
+                _row('ಗೋಧೂಳಿ ಮುಹೂರ್ತ', '$godhuliStart - $godhuliEnd'),
               ]);
             }),
             _divider(),
