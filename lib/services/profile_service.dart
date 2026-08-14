@@ -1,9 +1,10 @@
 /// Profile Service — Manages user profile data (name, address, mobile).
 /// Stores locally via SharedPreferences and syncs to Cloud Firestore.
-/// Tracks lastSeen and shareCount.
+/// Tracks lastSeen, shareCount, and permanent deviceId.
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
 class ProfileService {
   static String _name = '';
@@ -11,6 +12,7 @@ class ProfileService {
   static String _mobile = '';
   static bool _profileComplete = false;
   static String _docId = '';
+  static String _deviceId = '';
   static bool _firebaseReady = false;
   static String _firebaseStatus = 'Not initialized';
 
@@ -20,6 +22,7 @@ class ProfileService {
   static bool get isProfileComplete => _profileComplete;
   static bool get isFirebaseReady => _firebaseReady;
   static String get firebaseStatus => _firebaseStatus;
+  static String get deviceId => _deviceId;
 
   /// Check and set Firebase status
   static Future<void> checkFirebase() async {
@@ -49,6 +52,19 @@ class ProfileService {
     return parts.join('\n');
   }
 
+  /// Generate or retrieve permanent device ID (UUID v4).
+  /// Created once on first launch, never changes.
+  static Future<String> _getOrCreateDeviceId() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? id = prefs.getString('device_id');
+    if (id == null || id.isEmpty) {
+      id = const Uuid().v4();
+      await prefs.setString('device_id', id);
+      debugPrint('Generated new device ID: $id');
+    }
+    return id;
+  }
+
   /// Load profile from local storage
   static Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -56,6 +72,7 @@ class ProfileService {
     _address = prefs.getString('profile_address') ?? '';
     _mobile = prefs.getString('profile_mobile') ?? '';
     _docId = prefs.getString('profile_doc_id') ?? '';
+    _deviceId = await _getOrCreateDeviceId();
     _profileComplete = _name.isNotEmpty;
   }
 
@@ -81,13 +98,16 @@ class ProfileService {
 
   /// Update lastSeen timestamp (call on app open)
   static Future<void> updateLastSeen() async {
-    if (_docId.isEmpty || !_firebaseReady) return;
+    if (_deviceId.isEmpty) return;
     try {
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(_docId)
-          .update({'lastSeen': FieldValue.serverTimestamp()});
-      debugPrint('lastSeen updated');
+          .doc(_deviceId)
+          .set({
+            'lastSeen': FieldValue.serverTimestamp(),
+            'deviceId': _deviceId,
+          }, SetOptions(merge: true));
+      debugPrint('lastSeen updated for device $_deviceId');
     } catch (e) {
       debugPrint('lastSeen update error: $e');
     }
@@ -95,11 +115,11 @@ class ProfileService {
 
   /// Increment share count (call after each panchanga share)
   static Future<void> incrementShareCount() async {
-    if (_docId.isEmpty) return;
+    if (_deviceId.isEmpty) return;
     try {
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(_docId)
+          .doc(_deviceId)
           .update({'shareCount': FieldValue.increment(1)});
       debugPrint('shareCount incremented');
     } catch (e) {
@@ -107,41 +127,40 @@ class ProfileService {
     }
   }
 
-  /// Sync profile to Cloud Firestore
+  /// Sync profile to Cloud Firestore using deviceId as document ID
   static Future<void> _syncToFirestore() async {
+    if (_deviceId.isEmpty) {
+      _deviceId = await _getOrCreateDeviceId();
+    }
     try {
       final collection = FirebaseFirestore.instance.collection('users');
-      final data = {
+      final data = <String, dynamic>{
         'name': _name,
         'address': _address,
         'mobile': _mobile,
+        'deviceId': _deviceId,
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
-      if (_docId.isNotEmpty) {
-        await collection.doc(_docId).update(data);
+      // Always use deviceId as the document ID — permanent per device
+      final docRef = collection.doc(_deviceId);
+      final doc = await docRef.get();
+
+      if (doc.exists) {
+        await docRef.update(data);
       } else {
-        final existing = await collection
-            .where('mobile', isEqualTo: _mobile)
-            .limit(1)
-            .get();
-
-        if (existing.docs.isNotEmpty) {
-          _docId = existing.docs.first.id;
-          await collection.doc(_docId).update(data);
-        } else {
-          data['createdAt'] = FieldValue.serverTimestamp();
-          data['lastSeen'] = FieldValue.serverTimestamp();
-          data['shareCount'] = 0;
-          final doc = await collection.add(data);
-          _docId = doc.id;
-        }
-
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('profile_doc_id', _docId);
+        // First time on this device
+        data['createdAt'] = FieldValue.serverTimestamp();
+        data['lastSeen'] = FieldValue.serverTimestamp();
+        data['shareCount'] = 0;
+        await docRef.set(data);
       }
 
-      debugPrint('Profile synced to Firestore: $_docId');
+      _docId = _deviceId;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('profile_doc_id', _docId);
+
+      debugPrint('Profile synced to Firestore: $_deviceId');
     } catch (e) {
       debugPrint('Firestore sync error: $e');
     }
