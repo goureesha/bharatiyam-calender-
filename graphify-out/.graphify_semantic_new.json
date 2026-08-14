@@ -1,0 +1,2400 @@
+{
+  "nodes": [
+    {
+      "id": "core_adhika_masa_calculator_masaperiodinfo",
+      "label": "MasaPeriodInfo",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/adhika_masa_calculator.dart"
+    },
+    {
+      "id": "core_adhika_masa_calculator_adhikamasacalculator",
+      "label": "AdhikaMasaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/adhika_masa_calculator.dart"
+    },
+    {
+      "id": "core_asta_calculator_astaperiod",
+      "label": "AstaPeriod",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/asta_calculator.dart"
+    },
+    {
+      "id": "core_asta_calculator_astacalculator",
+      "label": "AstaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/asta_calculator.dart"
+    },
+    {
+      "id": "core_chougadiya_calculator_chougadiyacalculator",
+      "label": "ChougadiyaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/chougadiya_calculator.dart"
+    },
+    {
+      "id": "core_ephemeris_ephemeris",
+      "label": "Ephemeris",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/ephemeris.dart"
+    },
+    {
+      "id": "core_events_astroevent",
+      "label": "AstroEvent",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/events.dart"
+    },
+    {
+      "id": "core_events_eventcalculator",
+      "label": "EventCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/events.dart"
+    },
+    {
+      "id": "core_ghati_calculator_ghaticalculator",
+      "label": "GhatiCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/ghati_calculator.dart"
+    },
+    {
+      "id": "core_grahana_calculator_grahanatype",
+      "label": "GrahanaType",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart"
+    },
+    {
+      "id": "core_grahana_calculator_grahanasubtype",
+      "label": "GrahanaSubtype",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart"
+    },
+    {
+      "id": "core_grahana_calculator_grahanaphase",
+      "label": "GrahanaPhase",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart"
+    },
+    {
+      "id": "core_grahana_calculator_grahanainfo",
+      "label": "GrahanaInfo",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart"
+    },
+    {
+      "id": "core_grahana_calculator_grahanacalculator",
+      "label": "GrahanaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart"
+    },
+    {
+      "id": "core_hora_calculator_horacalculator",
+      "label": "HoraCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/hora_calculator.dart"
+    },
+    {
+      "id": "core_kala_calculator_kalacalculator",
+      "label": "KalaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/kala_calculator.dart"
+    },
+    {
+      "id": "core_lagna_calculator_lagnacalculator",
+      "label": "LagnaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/lagna_calculator.dart"
+    },
+    {
+      "id": "core_masa_calculator_masacalculator",
+      "label": "MasaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/masa_calculator.dart"
+    },
+    {
+      "id": "core_muhurta_calculator_muhurtacalculator",
+      "label": "MuhurtaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/muhurta_calculator.dart"
+    },
+    {
+      "id": "core_panchanga_calculator_panchangacalculator",
+      "label": "PanchangaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/panchanga_calculator.dart"
+    },
+    {
+      "id": "core_samvatsara_samvatsaracalculator",
+      "label": "SamvatsaraCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/samvatsara.dart"
+    },
+    {
+      "id": "core_sankalpa_generator_sankalpagenerator",
+      "label": "SankalpaGenerator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/sankalpa_generator.dart"
+    },
+    {
+      "id": "core_shraddha_calculator_shraddhainfo",
+      "label": "ShraddhaInfo",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/shraddha_calculator.dart"
+    },
+    {
+      "id": "core_shraddha_calculator_shraddhacalculator",
+      "label": "ShraddhaCalculator",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/core/shraddha_calculator.dart"
+    },
+    {
+      "id": "models_panchanga_data_panchangadata",
+      "label": "PanchangaData",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/models/panchanga_data.dart"
+    },
+    {
+      "id": "models_panchanga_data_lagnatransit",
+      "label": "LagnaTransit",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/models/panchanga_data.dart"
+    },
+    {
+      "id": "models_panchanga_data_muhurtatiming",
+      "label": "MuhurtaTiming",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/models/panchanga_data.dart"
+    },
+    {
+      "id": "models_panchanga_data_kalatiming",
+      "label": "KalaTiming",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/models/panchanga_data.dart"
+    },
+    {
+      "id": "models_panchanga_data_horatiming",
+      "label": "HoraTiming",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/models/panchanga_data.dart"
+    },
+    {
+      "id": "models_panchanga_data_chougadiyatiming",
+      "label": "ChougadiyaTiming",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/models/panchanga_data.dart"
+    },
+    {
+      "id": "lib_main_main",
+      "label": "main",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/main.dart"
+    },
+    {
+      "id": "lib_main_initfirebase",
+      "label": "_initFirebase",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/main.dart"
+    },
+    {
+      "id": "lib_main_bharatiyampanchangaapp",
+      "label": "BharatiyamPanchangaApp",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/main.dart"
+    },
+    {
+      "id": "lib_main_appgate",
+      "label": "_AppGate",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/main.dart"
+    },
+    {
+      "id": "lib_main_appgatestate",
+      "label": "_AppGateState",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/main.dart"
+    },
+    {
+      "id": "lib_firebase_options_defaultfirebaseoptions",
+      "label": "DefaultFirebaseOptions",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/firebase_options.dart"
+    },
+    {
+      "id": "i18n_app_locale_applocale",
+      "label": "AppLocale",
+      "file_type": "code",
+      "source_file": "D:/bharatiyam calender/lib/i18n/app_locale.dart"
+    },
+    {
+      "id": "screens_calendar_screen_calendar_screen",
+      "label": "CalendarScreen",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart"
+    },
+    {
+      "id": "screens_calendar_screen_calendar_screen_state",
+      "label": "_CalendarScreenState",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart"
+    },
+    {
+      "id": "screens_calendar_screen_datacache",
+      "label": "_dataCache",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart"
+    },
+    {
+      "id": "screens_calendar_screen_eventscache",
+      "label": "_eventsCache",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart"
+    },
+    {
+      "id": "screens_home_screen_home_screen",
+      "label": "HomeScreen",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart"
+    },
+    {
+      "id": "screens_home_screen_home_screen_state",
+      "label": "_HomeScreenState",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart"
+    },
+    {
+      "id": "screens_mahiti_screen_mahiti_screen",
+      "label": "MahitiScreen",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart"
+    },
+    {
+      "id": "screens_mahiti_screen_mahiti_screen_state",
+      "label": "_MahitiScreenState",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart"
+    },
+    {
+      "id": "screens_panchanga_screen_panchanga_screen",
+      "label": "PanchangaScreen",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart"
+    },
+    {
+      "id": "screens_panchanga_screen_panchanga_screen_state",
+      "label": "_PanchangaScreenState",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart"
+    },
+    {
+      "id": "screens_profile_setup_screen_profile_setup_screen",
+      "label": "ProfileSetupScreen",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\profile_setup_screen.dart"
+    },
+    {
+      "id": "screens_profile_setup_screen_profile_setup_screen_state",
+      "label": "_ProfileSetupScreenState",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\profile_setup_screen.dart"
+    },
+    {
+      "id": "screens_settings_screen_settings_screen",
+      "label": "SettingsScreen",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart"
+    },
+    {
+      "id": "screens_settings_screen_settings_screen_state",
+      "label": "_SettingsScreenState",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart"
+    },
+    {
+      "id": "services_export_service_export_service",
+      "label": "ExportService",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\export_service.dart"
+    },
+    {
+      "id": "services_location_service_location_service",
+      "label": "LocationService",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\location_service.dart"
+    },
+    {
+      "id": "services_panchanga_cache_panchanga_cache",
+      "label": "PanchangaCache",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\panchanga_cache.dart"
+    },
+    {
+      "id": "services_panchanga_cache_day_cache",
+      "label": "_DayCache",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\panchanga_cache.dart"
+    },
+    {
+      "id": "services_precomputed_data_precomputed_data",
+      "label": "PrecomputedData",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\precomputed_data.dart"
+    },
+    {
+      "id": "services_profile_service_profile_service",
+      "label": "ProfileService",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\profile_service.dart"
+    },
+    {
+      "id": "widgets_common_app_theme_preset",
+      "label": "AppThemePreset",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_theme_service",
+      "label": "ThemeService",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_app_card",
+      "label": "AppCard",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_section_header",
+      "label": "SectionHeader",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_info_row",
+      "label": "InfoRow",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_time_chip",
+      "label": "TimeChip",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_nature_pill",
+      "label": "NaturePill",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_kala_time_bar",
+      "label": "KalaTimeBar",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_muhurta_list_item",
+      "label": "MuhurtaListItem",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_lagna_list_item",
+      "label": "LagnaListItem",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_responsive_center",
+      "label": "ResponsiveCenter",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_common_app_theme",
+      "label": "appTheme",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart"
+    },
+    {
+      "id": "widgets_panchanga_share_panchanga_share",
+      "label": "PanchangaShare",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\panchanga_share.dart"
+    },
+    {
+      "id": "widgets_panchanga_share_share_card",
+      "label": "_ShareCard",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\panchanga_share.dart"
+    },
+    {
+      "id": "constants_places_city_data",
+      "label": "CityData",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart"
+    },
+    {
+      "id": "constants_places_karnataka_cities",
+      "label": "karnatakaCities",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart"
+    },
+    {
+      "id": "constants_places_other_indian_cities",
+      "label": "otherIndianCities",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart"
+    },
+    {
+      "id": "constants_places_world_cities",
+      "label": "worldCities",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart"
+    },
+    {
+      "id": "constants_places_indian_cities",
+      "label": "indianCities",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart"
+    },
+    {
+      "id": "constants_places_world_cities_db",
+      "label": "WorldCitiesDb",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart"
+    },
+    {
+      "id": "strings_kn_kn_strings",
+      "label": "knStrings",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\kn.dart"
+    },
+    {
+      "id": "strings_en_en_strings",
+      "label": "enStrings",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\en.dart"
+    },
+    {
+      "id": "strings_hi_hi_strings",
+      "label": "hiStrings",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\hi.dart"
+    },
+    {
+      "id": "strings_sa_sa_strings",
+      "label": "saStrings",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\sa.dart"
+    },
+    {
+      "id": "strings_ta_ta_strings",
+      "label": "taStrings",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\ta.dart"
+    },
+    {
+      "id": "strings_te_te_strings",
+      "label": "teStrings",
+      "file_type": "code",
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\te.dart"
+    },
+    {
+      "id": "test_generate_panchanga_data_test",
+      "label": "generate_panchanga_data_test.dart",
+      "file_type": "code",
+      "source_file": "test/generate_panchanga_data_test.dart"
+    },
+    {
+      "id": "test_generate_panchanga_data_test_main",
+      "label": "main() / Generate 3-year panchanga JSON test",
+      "file_type": "code",
+      "source_file": "test/generate_panchanga_data_test.dart"
+    },
+    {
+      "id": "workflows_build_ci_pipeline",
+      "label": "GitHub Actions Build Pipeline (build.yml)",
+      "file_type": "document",
+      "source_file": ".github/workflows/build.yml"
+    },
+    {
+      "id": "workflows_build_web_job",
+      "label": "build-web CI Job",
+      "file_type": "document",
+      "source_file": ".github/workflows/build.yml"
+    },
+    {
+      "id": "workflows_build_apk_job",
+      "label": "build-apk CI Job",
+      "file_type": "document",
+      "source_file": ".github/workflows/build.yml"
+    },
+    {
+      "id": "admin_index_html",
+      "label": "Admin Dashboard (admin/index.html)",
+      "file_type": "code",
+      "source_file": "admin/index.html"
+    },
+    {
+      "id": "admin_index_signin",
+      "label": "signIn() / Google Auth Handler",
+      "file_type": "code",
+      "source_file": "admin/index.html"
+    },
+    {
+      "id": "admin_index_refreshdata",
+      "label": "refreshData() / Firestore User Query",
+      "file_type": "code",
+      "source_file": "admin/index.html"
+    },
+    {
+      "id": "admin_index_exportcsv",
+      "label": "exportCSV() / Export Users CSV",
+      "file_type": "code",
+      "source_file": "admin/index.html"
+    },
+    {
+      "id": "admin_index_firebase_config",
+      "label": "Firebase Admin Config",
+      "file_type": "document",
+      "source_file": "admin/index.html"
+    },
+    {
+      "id": "analysis_options_yaml",
+      "label": "analysis_options.yaml",
+      "file_type": "document",
+      "source_file": "analysis_options.yaml"
+    },
+    {
+      "id": "pubspec_yaml",
+      "label": "pubspec.yaml",
+      "file_type": "document",
+      "source_file": "pubspec.yaml"
+    },
+    {
+      "id": "pubspec_dependencies",
+      "label": "Flutter Project Dependencies",
+      "file_type": "document",
+      "source_file": "pubspec.yaml"
+    },
+    {
+      "id": "pubspec_flutter_launcher_icons",
+      "label": "flutter_launcher_icons Configuration",
+      "file_type": "document",
+      "source_file": "pubspec.yaml"
+    },
+    {
+      "id": "firebase_json",
+      "label": "firebase.json (Firebase Hosting Config)",
+      "file_type": "document",
+      "source_file": "firebase.json"
+    },
+    {
+      "id": "fix_const_dart",
+      "label": "fix_const.dart Script",
+      "file_type": "code",
+      "source_file": "fix_const.dart"
+    },
+    {
+      "id": "fix_const_py",
+      "label": "fix_const.py Script",
+      "file_type": "code",
+      "source_file": "fix_const.py"
+    },
+    {
+      "id": "android_app_google_services_json",
+      "label": "google-services.json (Android Firebase Config)",
+      "file_type": "document",
+      "source_file": "android/app/google-services.json"
+    },
+    {
+      "id": "android_app_generatedpluginregistrant",
+      "label": "GeneratedPluginRegistrant.java",
+      "file_type": "code",
+      "source_file": "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java"
+    },
+    {
+      "id": "android_gradlew",
+      "label": "gradlew (Gradle Wrapper Script)",
+      "file_type": "code",
+      "source_file": "android/gradlew"
+    },
+    {
+      "id": "assets_app_icon_png",
+      "label": "App Icon (Panchanga emblem with Ganesha, Diyas, and Kannada title)",
+      "file_type": "image",
+      "source_file": "assets/app_icon.png"
+    },
+    {
+      "id": "android_mipmap_hdpi_ic_launcher",
+      "label": "ic_launcher.png (mipmap-hdpi)",
+      "file_type": "image",
+      "source_file": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+      "id": "android_mipmap_mdpi_ic_launcher",
+      "label": "ic_launcher.png (mipmap-mdpi)",
+      "file_type": "image",
+      "source_file": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+      "id": "android_mipmap_xhdpi_ic_launcher",
+      "label": "ic_launcher.png (mipmap-xhdpi)",
+      "file_type": "image",
+      "source_file": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+      "id": "android_mipmap_xxhdpi_ic_launcher",
+      "label": "ic_launcher.png (mipmap-xxhdpi)",
+      "file_type": "image",
+      "source_file": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+      "id": "android_mipmap_xxxhdpi_ic_launcher",
+      "label": "ic_launcher.png (mipmap-xxxhdpi)",
+      "file_type": "image",
+      "source_file": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+      "id": "lib_i18n_strings_ml_strings",
+      "label": "mlStrings (Malayalam Localization Dictionary)",
+      "file_type": "code",
+      "source_file": "lib/i18n/strings/ml.dart"
+    },
+    {
+      "id": "assets_panchanga_3yr_json",
+      "label": "panchanga_3yr.json (Bundled 3-Year Panchanga Cache)",
+      "file_type": "document",
+      "source_file": "assets/panchanga_3yr.json"
+    },
+    {
+      "id": "assets_world_cities_json",
+      "label": "world_cities.json (Global Cities Geo/TZ Database)",
+      "file_type": "document",
+      "source_file": "assets/world_cities.json"
+    }
+  ],
+  "edges": [
+    {
+      "source": "core_adhika_masa_calculator_adhikamasacalculator",
+      "target": "core_adhika_masa_calculator_masaperiodinfo",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/adhika_masa_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_adhika_masa_calculator_adhikamasacalculator",
+      "target": "core_masa_calculator_masacalculator",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "D:/bharatiyam calender/lib/core/adhika_masa_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_asta_calculator_astacalculator",
+      "target": "core_asta_calculator_astaperiod",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/asta_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_asta_calculator_astacalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/asta_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_chougadiya_calculator_chougadiyacalculator",
+      "target": "models_panchanga_data_chougadiyatiming",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/chougadiya_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_chougadiya_calculator_chougadiyacalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/chougadiya_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_chougadiya_calculator_chougadiyacalculator",
+      "target": "core_hora_calculator_horacalculator",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "D:/bharatiyam calender/lib/core/chougadiya_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_ghati_calculator_ghaticalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/ghati_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_grahana_calculator_grahanacalculator",
+      "target": "core_grahana_calculator_grahanainfo",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_grahana_calculator_grahanacalculator",
+      "target": "core_grahana_calculator_grahanaphase",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_grahana_calculator_grahanainfo",
+      "target": "core_grahana_calculator_grahanaphase",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_grahana_calculator_grahanainfo",
+      "target": "core_grahana_calculator_grahanatype",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_grahana_calculator_grahanainfo",
+      "target": "core_grahana_calculator_grahanasubtype",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/grahana_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_hora_calculator_horacalculator",
+      "target": "models_panchanga_data_horatiming",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/hora_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_hora_calculator_horacalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/hora_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_kala_calculator_kalacalculator",
+      "target": "models_panchanga_data_kalatiming",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/kala_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_kala_calculator_kalacalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/kala_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_kala_calculator_kalacalculator",
+      "target": "core_muhurta_calculator_muhurtacalculator",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "D:/bharatiyam calender/lib/core/kala_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_lagna_calculator_lagnacalculator",
+      "target": "models_panchanga_data_lagnatransit",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/lagna_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_lagna_calculator_lagnacalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/lagna_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_masa_calculator_masacalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/masa_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_muhurta_calculator_muhurtacalculator",
+      "target": "models_panchanga_data_muhurtatiming",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/muhurta_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_muhurta_calculator_muhurtacalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/muhurta_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_panchanga_calculator_panchangacalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/panchanga_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_panchanga_calculator_panchangacalculator",
+      "target": "models_panchanga_data_panchangadata",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/panchanga_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_events_eventcalculator",
+      "target": "core_events_astroevent",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/events.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_events_eventcalculator",
+      "target": "core_masa_calculator_masacalculator",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:/bharatiyam calender/lib/core/events.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_sankalpa_generator_sankalpagenerator",
+      "target": "models_panchanga_data_panchangadata",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/sankalpa_generator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_sankalpa_generator_sankalpagenerator",
+      "target": "core_samvatsara_samvatsaracalculator",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:/bharatiyam calender/lib/core/sankalpa_generator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_shraddha_calculator_shraddhacalculator",
+      "target": "core_shraddha_calculator_shraddhainfo",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/shraddha_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_shraddha_calculator_shraddhacalculator",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/core/shraddha_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_shraddha_calculator_shraddhacalculator",
+      "target": "models_panchanga_data_panchangadata",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:/bharatiyam calender/lib/core/shraddha_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_main_main",
+      "target": "lib_main_initfirebase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/main.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_main_main",
+      "target": "lib_main_bharatiyampanchangaapp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/main.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_main_initfirebase",
+      "target": "lib_firebase_options_defaultfirebaseoptions",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/main.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_main_bharatiyampanchangaapp",
+      "target": "lib_main_appgate",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/main.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_main_appgate",
+      "target": "lib_main_appgatestate",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:/bharatiyam calender/lib/main.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_panchanga_calculator_panchangacalculator",
+      "target": "core_ghati_calculator_ghaticalculator",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "D:/bharatiyam calender/lib/core/panchanga_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_panchanga_calculator_panchangacalculator",
+      "target": "core_samvatsara_samvatsaracalculator",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "D:/bharatiyam calender/lib/core/panchanga_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "core_panchanga_calculator_panchangacalculator",
+      "target": "core_masa_calculator_masacalculator",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "D:/bharatiyam calender/lib/core/panchanga_calculator.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "i18n_app_locale_applocale",
+      "target": "core_events_eventcalculator",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "D:/bharatiyam calender/lib/i18n/app_locale.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen",
+      "target": "screens_calendar_screen_calendar_screen_state",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "services_precomputed_data_precomputed_data",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "services_location_service_location_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "core_panchanga_calculator_panchanga_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "core_masa_calculator_masa_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "core_events_event_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "core_samvatsara_samvatsara_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "core_ghati_calculator_ghati_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "core_kala_calculator_kala_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "widgets_common_app_card",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "widgets_common_section_header",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "widgets_common_kala_time_bar",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "screens_calendar_screen_datacache",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_calendar_screen_calendar_screen_state",
+      "target": "screens_calendar_screen_eventscache",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\calendar_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen",
+      "target": "screens_home_screen_home_screen_state",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "services_location_service_location_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "services_profile_service_profile_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "services_precomputed_data_precomputed_data",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "core_panchanga_calculator_panchanga_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "core_masa_calculator_masa_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "core_samvatsara_samvatsara_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "core_ghati_calculator_ghati_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "core_kala_calculator_kala_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "core_shraddha_calculator_shraddha_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "widgets_panchanga_share_panchanga_share",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "screens_calendar_screen_calendar_screen",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "screens_mahiti_screen_mahiti_screen",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "screens_panchanga_screen_panchanga_screen",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "screens_settings_screen_settings_screen",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "widgets_common_app_card",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "widgets_common_info_row",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_home_screen_home_screen_state",
+      "target": "widgets_common_kala_time_bar",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\home_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen",
+      "target": "screens_mahiti_screen_mahiti_screen_state",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen_state",
+      "target": "core_asta_calculator_asta_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen_state",
+      "target": "core_adhika_masa_calculator_adhika_masa_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen_state",
+      "target": "core_sankalpa_generator_sankalpa_generator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen_state",
+      "target": "services_panchanga_cache_panchanga_cache",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen_state",
+      "target": "services_location_service_location_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen_state",
+      "target": "core_panchanga_calculator_panchanga_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen_state",
+      "target": "core_masa_calculator_masa_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen_state",
+      "target": "core_events_event_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_mahiti_screen_mahiti_screen_state",
+      "target": "widgets_common_app_card",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\mahiti_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen",
+      "target": "screens_panchanga_screen_panchanga_screen_state",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "core_muhurta_calculator_muhurta_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "core_hora_calculator_hora_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "core_chougadiya_calculator_chougadiya_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "core_lagna_calculator_lagna_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "services_export_service_export_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "widgets_common_muhurta_list_item",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "widgets_common_lagna_list_item",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "widgets_common_nature_pill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_panchanga_screen_panchanga_screen_state",
+      "target": "widgets_common_kala_time_bar",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\panchanga_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_profile_setup_screen_profile_setup_screen",
+      "target": "screens_profile_setup_screen_profile_setup_screen_state",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\profile_setup_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_profile_setup_screen_profile_setup_screen_state",
+      "target": "services_profile_service_profile_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\profile_setup_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_settings_screen_settings_screen",
+      "target": "screens_settings_screen_settings_screen_state",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_settings_screen_settings_screen_state",
+      "target": "services_profile_service_profile_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_settings_screen_settings_screen_state",
+      "target": "widgets_common_theme_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_settings_screen_settings_screen_state",
+      "target": "services_location_service_location_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_settings_screen_settings_screen_state",
+      "target": "constants_places_indian_cities",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_settings_screen_settings_screen_state",
+      "target": "constants_places_city_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_settings_screen_settings_screen_state",
+      "target": "widgets_common_app_card",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "screens_settings_screen_settings_screen_state",
+      "target": "widgets_common_section_header",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\screens\\settings_screen.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_export_service_export_service",
+      "target": "models_panchanga_data_panchanga_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\export_service.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_export_service_export_service",
+      "target": "i18n_app_locale_app_locale",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\export_service.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_location_service_location_service",
+      "target": "constants_places_city_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\location_service.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_location_service_location_service",
+      "target": "constants_places_indian_cities",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\location_service.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_location_service_location_service",
+      "target": "constants_places_world_cities_db",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\location_service.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_panchanga_cache_panchanga_cache",
+      "target": "core_panchanga_calculator_panchanga_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\panchanga_cache.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_panchanga_cache_panchanga_cache",
+      "target": "core_masa_calculator_masa_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\panchanga_cache.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_panchanga_cache_panchanga_cache",
+      "target": "core_events_event_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\panchanga_cache.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_panchanga_cache_panchanga_cache",
+      "target": "core_ephemeris_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\panchanga_cache.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_panchanga_cache_panchanga_cache",
+      "target": "services_panchanga_cache_day_cache",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\panchanga_cache.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_panchanga_cache_panchanga_cache",
+      "target": "services_location_service_location_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\panchanga_cache.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_panchanga_cache_panchanga_cache",
+      "target": "services_precomputed_data_precomputed_data",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\panchanga_cache.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_precomputed_data_precomputed_data",
+      "target": "models_panchanga_data_panchanga_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\precomputed_data.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_precomputed_data_precomputed_data",
+      "target": "core_events_astro_event",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\precomputed_data.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_profile_service_profile_service",
+      "target": "screens_profile_setup_screen_profile_setup_screen_state",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\profile_service.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "services_profile_service_profile_service",
+      "target": "screens_settings_screen_settings_screen_state",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\services\\profile_service.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_common_theme_service",
+      "target": "widgets_common_app_theme_preset",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_common_app_theme",
+      "target": "widgets_common_theme_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_common_app_card",
+      "target": "widgets_common_app_theme",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_common_section_header",
+      "target": "widgets_common_app_theme",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_common_info_row",
+      "target": "widgets_common_app_theme",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_common_time_chip",
+      "target": "widgets_common_app_theme",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_common_nature_pill",
+      "target": "widgets_common_app_theme",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_common_kala_time_bar",
+      "target": "widgets_common_time_chip",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_common_muhurta_list_item",
+      "target": "widgets_common_nature_pill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\common.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_panchanga_share_panchanga_share",
+      "target": "widgets_panchanga_share_share_card",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\panchanga_share.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_panchanga_share_share_card",
+      "target": "models_panchanga_data_panchanga_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\panchanga_share.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_panchanga_share_share_card",
+      "target": "core_events_astro_event",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\panchanga_share.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_panchanga_share_share_card",
+      "target": "core_shraddha_calculator_shraddha_info",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\panchanga_share.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_panchanga_share_share_card",
+      "target": "i18n_app_locale_app_locale",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\panchanga_share.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "widgets_panchanga_share_panchanga_share",
+      "target": "services_export_service_export_service",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "D:\\bharatiyam calender\\lib\\widgets\\panchanga_share.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "constants_places_indian_cities",
+      "target": "constants_places_karnataka_cities",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "constants_places_indian_cities",
+      "target": "constants_places_other_indian_cities",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "constants_places_indian_cities",
+      "target": "constants_places_world_cities",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "constants_places_karnataka_cities",
+      "target": "constants_places_city_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "constants_places_other_indian_cities",
+      "target": "constants_places_city_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "constants_places_world_cities",
+      "target": "constants_places_city_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "constants_places_world_cities_db",
+      "target": "constants_places_city_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\bharatiyam calender\\lib\\constants\\places.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_kn_kn_strings",
+      "target": "strings_en_en_strings",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\kn.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_kn_kn_strings",
+      "target": "strings_hi_hi_strings",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\kn.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_kn_kn_strings",
+      "target": "strings_sa_sa_strings",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\kn.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_kn_kn_strings",
+      "target": "strings_ta_ta_strings",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\kn.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_kn_kn_strings",
+      "target": "strings_te_te_strings",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\kn.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_en_en_strings",
+      "target": "i18n_app_locale_app_locale",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\en.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_kn_kn_strings",
+      "target": "i18n_app_locale_app_locale",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\kn.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_hi_hi_strings",
+      "target": "i18n_app_locale_app_locale",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\hi.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_sa_sa_strings",
+      "target": "i18n_app_locale_app_locale",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\sa.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_ta_ta_strings",
+      "target": "i18n_app_locale_app_locale",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\ta.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "strings_te_te_strings",
+      "target": "i18n_app_locale_app_locale",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "D:\\bharatiyam calender\\lib\\i18n\\strings\\te.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "test_generate_panchanga_data_test_main",
+      "target": "test_generate_panchanga_data_test",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/generate_panchanga_data_test.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "test_generate_panchanga_data_test",
+      "target": "assets_panchanga_3yr_json",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/generate_panchanga_data_test.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "test_generate_panchanga_data_test",
+      "target": "core_ephemeris",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/generate_panchanga_data_test.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "test_generate_panchanga_data_test",
+      "target": "core_panchanga_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/generate_panchanga_data_test.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "test_generate_panchanga_data_test",
+      "target": "core_masa_calculator",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/generate_panchanga_data_test.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "test_generate_panchanga_data_test",
+      "target": "core_samvatsara",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/generate_panchanga_data_test.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "test_generate_panchanga_data_test",
+      "target": "core_events",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/generate_panchanga_data_test.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "workflows_build_ci_pipeline",
+      "target": "workflows_build_web_job",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/build.yml",
+      "weight": 1.0
+    },
+    {
+      "source": "workflows_build_ci_pipeline",
+      "target": "workflows_build_apk_job",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/build.yml",
+      "weight": 1.0
+    },
+    {
+      "source": "workflows_build_web_job",
+      "target": "test_generate_panchanga_data_test",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/build.yml",
+      "weight": 1.0
+    },
+    {
+      "source": "workflows_build_web_job",
+      "target": "pubspec_yaml",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/build.yml",
+      "weight": 1.0
+    },
+    {
+      "source": "workflows_build_apk_job",
+      "target": "test_generate_panchanga_data_test",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/build.yml",
+      "weight": 1.0
+    },
+    {
+      "source": "workflows_build_apk_job",
+      "target": "pubspec_yaml",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/build.yml",
+      "weight": 1.0
+    },
+    {
+      "source": "workflows_build_apk_job",
+      "target": "assets_app_icon_png",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": ".github/workflows/build.yml",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_index_html",
+      "target": "admin_index_firebase_config",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "admin/index.html",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_index_html",
+      "target": "admin_index_signin",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "admin/index.html",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_index_html",
+      "target": "admin_index_refreshdata",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "admin/index.html",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_index_html",
+      "target": "admin_index_exportcsv",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "admin/index.html",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_index_firebase_config",
+      "target": "android_app_google_services_json",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "admin/index.html",
+      "weight": 1.0
+    },
+    {
+      "source": "firebase_json",
+      "target": "admin_index_html",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "firebase.json",
+      "weight": 1.0
+    },
+    {
+      "source": "analysis_options_yaml",
+      "target": "pubspec_yaml",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "analysis_options.yaml",
+      "weight": 1.0
+    },
+    {
+      "source": "pubspec_yaml",
+      "target": "pubspec_dependencies",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "pubspec.yaml",
+      "weight": 1.0
+    },
+    {
+      "source": "pubspec_yaml",
+      "target": "pubspec_flutter_launcher_icons",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "pubspec.yaml",
+      "weight": 1.0
+    },
+    {
+      "source": "pubspec_flutter_launcher_icons",
+      "target": "assets_app_icon_png",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "pubspec.yaml",
+      "weight": 1.0
+    },
+    {
+      "source": "pubspec_yaml",
+      "target": "assets_panchanga_3yr_json",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "pubspec.yaml",
+      "weight": 1.0
+    },
+    {
+      "source": "pubspec_yaml",
+      "target": "assets_world_cities_json",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "pubspec.yaml",
+      "weight": 1.0
+    },
+    {
+      "source": "fix_const_dart",
+      "target": "fix_const_py",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "fix_const.dart",
+      "weight": 1.0
+    },
+    {
+      "source": "android_app_google_services_json",
+      "target": "firebase_json",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "android/app/google-services.json",
+      "weight": 1.0
+    },
+    {
+      "source": "android_app_generatedpluginregistrant",
+      "target": "pubspec_dependencies",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "weight": 1.0
+    },
+    {
+      "source": "android_gradlew",
+      "target": "workflows_build_apk_job",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "android/gradlew",
+      "weight": 1.0
+    },
+    {
+      "source": "assets_app_icon_png",
+      "target": "android_mipmap_hdpi_ic_launcher",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "assets/app_icon.png",
+      "weight": 1.0
+    },
+    {
+      "source": "assets_app_icon_png",
+      "target": "android_mipmap_mdpi_ic_launcher",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "assets/app_icon.png",
+      "weight": 1.0
+    },
+    {
+      "source": "assets_app_icon_png",
+      "target": "android_mipmap_xhdpi_ic_launcher",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "assets/app_icon.png",
+      "weight": 1.0
+    },
+    {
+      "source": "assets_app_icon_png",
+      "target": "android_mipmap_xxhdpi_ic_launcher",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "assets/app_icon.png",
+      "weight": 1.0
+    },
+    {
+      "source": "assets_app_icon_png",
+      "target": "android_mipmap_xxxhdpi_ic_launcher",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "assets/app_icon.png",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_i18n_strings_ml_strings",
+      "target": "lib_i18n_strings_kn_strings",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "lib/i18n/strings/ml.dart",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

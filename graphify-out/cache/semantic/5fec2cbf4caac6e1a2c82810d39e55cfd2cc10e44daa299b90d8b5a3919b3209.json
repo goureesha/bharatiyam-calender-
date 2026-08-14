@@ -1,0 +1,1 @@
+{"nodes": [{"id": "analysis_options_yaml", "label": "analysis_options.yaml", "file_type": "document", "source_file": "analysis_options.yaml"}], "edges": [{"source": "analysis_options_yaml", "target": "pubspec_yaml", "relation": "references", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "analysis_options.yaml", "weight": 1.0}], "hyperedges": []}

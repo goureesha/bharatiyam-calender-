@@ -1,0 +1,1 @@
+{"nodes": [{"id": "strings_te_te_strings", "label": "teStrings", "file_type": "code", "source_file": "lib/i18n/strings/te.dart"}], "edges": [{"source": "strings_te_te_strings", "target": "i18n_app_locale_app_locale", "relation": "shares_data_with", "confidence": "INFERRED", "confidence_score": 0.95, "source_file": "lib/i18n/strings/te.dart", "weight": 1.0}], "hyperedges": []}

@@ -1,0 +1,43 @@
+THIRD-PARTY NOTICES
+====================
+
+This application uses the following open-source libraries:
+
+1. Swiss Ephemeris (via sweph Dart package)
+   ─────────────────────────────────────────
+   Copyright (c) Astrodienst AG, Switzerland
+   License: GNU Affero General Public License v3.0 (AGPL-3.0)
+   Website: https://www.astro.com/swisseph/
+   
+   The Swiss Ephemeris is used for astronomical calculations including:
+   - Planetary positions (Sun, Moon, planets, Rahu/Ketu)
+   - Sunrise/sunset calculations
+   - Ayanamsha (Lahiri sidereal mode)
+   - Tithi, Nakshatra, Yoga, Karana computations
+   
+   Source code for the sweph Dart wrapper:
+   https://pub.dev/packages/sweph
+
+2. Firebase (firebase_core, cloud_firestore)
+   ──────────────────────────────────────────
+   Copyright (c) Google LLC
+   License: BSD-3-Clause
+   
+3. Flutter SDK
+   ────────────
+   Copyright (c) Google LLC
+   License: BSD-3-Clause
+
+4. uuid
+   ─────
+   License: MIT
+
+5. Other Flutter packages (shared_preferences, geolocator, 
+   share_plus, url_launcher, path_provider, intl, pdf)
+   ────────────────────────────────────────────────────
+   Various open-source licenses (MIT, BSD)
+   See individual package pages on pub.dev for details.
+
+====================
+This project is licensed under AGPL-3.0 to comply with the
+Swiss Ephemeris licensing requirements. See LICENSE file.

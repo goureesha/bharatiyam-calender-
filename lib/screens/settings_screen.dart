@@ -390,6 +390,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 8),
               Text('v1.0.0', style: TextStyle(fontSize: 10, color: kMuted)),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: kBg,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: kBorder),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      '⚖️ Open Source License',
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Swiss Ephemeris © Astrodienst AG\n'
+                      'Licensed under AGPL-3.0\n'
+                      'astro.com/swisseph',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 9, color: kMuted, height: 1.5),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () => showLicensePage(
+                          context: context,
+                          applicationName: 'ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ',
+                          applicationVersion: 'v1.0.0',
+                          applicationLegalese: '© 2024 Bharatiyam\nSwiss Ephemeris © Astrodienst AG (AGPL-3.0)',
+                        ),
+                        icon: Icon(Icons.description_outlined, size: 14),
+                        label: Text('View All Licenses', style: TextStyle(fontSize: 11)),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: kGold,
+                          side: BorderSide(color: kGold.withAlpha(80)),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
