@@ -224,34 +224,6 @@ class _PanchangaScreenState extends State<PanchangaScreen> with SingleTickerProv
       child: ListView(
         padding: const EdgeInsets.only(bottom: 24, top: 8),
         children: [
-          // Special muhurtas
-          if (_abhijit != null || _varjyam != null || _isAmritaSiddhi)
-            AppCard(
-              child: Column(
-                children: [
-                  SectionHeader(icon: Icons.star_rounded, title: AppLocale.t('specialMuhurta')),
-                  const SizedBox(height: 8),
-                  if (_abhijit != null)
-                    KalaTimeBar(name: AppLocale.t('abhijit'), startTime: _abhijit!.startTime, endTime: _abhijit!.endTime, color: kShubha),
-                  for (final dm in _durmuhurtas)
-                    KalaTimeBar(name: AppLocale.t('durmuhurta'), startTime: dm.startTime, endTime: dm.endTime, color: kAshubha),
-                  if (_varjyam != null)
-                    KalaTimeBar(name: AppLocale.t('varjya'), startTime: _varjyam!.startTime, endTime: _varjyam!.endTime, color: kAshubha),
-                  if (_isAmritaSiddhi)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        children: [
-                          Icon(Icons.auto_awesome, color: kShubha, size: 16),
-                          const SizedBox(width: 8),
-                          Text(AppLocale.t('amritaSiddhi'), style: TextStyle(fontSize: 12, color: kShubha, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ),
-
           // Day muhurtas
           AppCard(
             child: Column(
