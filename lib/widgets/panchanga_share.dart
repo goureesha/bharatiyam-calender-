@@ -213,21 +213,13 @@ class _ShareCard extends StatelessWidget {
             const SizedBox(height: 6),
             _divider(),
 
-            // ── Calendar info ──
+            // ── Calendar info (2-column) ──
             const SizedBox(height: 3),
-            _row('ಸಂವತ್ಸರ', AppLocale.t(d.samvatsara)),
-            _row('ವಾರ', AppLocale.t(d.vara)),
-            _row('ಅಮಾಂತ ಮಾಸ', AppLocale.t(d.amantaMasa)),
-            _row('ಪೂರ್ಣಿಮಾಂತ ಮಾಸ', AppLocale.t(d.pournimantaMasa)),
-            _row('ಸೌರ ಮಾಸ', '${AppLocale.t(d.souraMasa)} (${d.souraMasaGataDina} ದಿನ)'),
-            _row('ಪಕ್ಷ', d.paksha == 'shukla' ? 'ಶುಕ್ಲ ಪಕ್ಷ' : 'ಕೃಷ್ಣ ಪಕ್ಷ'),
-            _row('ಋತು (ಸೌರ)', AppLocale.t(d.rutu)),
-            _row('ಋತು (ವೈದಿಕ)', vaidikaRutu),
-            _row('ಅಯನ', AppLocale.t(d.ayana)),
-            if (d.amrutaPraghati.isNotEmpty)
-              _row('ಅಮೃತ ಘಟಿ', d.amrutaPraghati),
-            if (d.vishaPraghati.isNotEmpty)
-              _row('ವಿಷ ಘಟಿ', d.vishaPraghati),
+            _dualRow('ಸಂವತ್ಸರ', AppLocale.t(d.samvatsara), 'ವಾರ', AppLocale.t(d.vara)),
+            _dualRow('ಅಮಾಂತ ಮಾಸ', AppLocale.t(d.amantaMasa), 'ಪೂರ್ಣಿಮಾಂತ ಮಾಸ', AppLocale.t(d.pournimantaMasa)),
+            _dualRow('ಸೌರ ಮಾಸ', '${AppLocale.t(d.souraMasa)} (${d.souraMasaGataDina} ದಿನ)', 'ಪಕ್ಷ', d.paksha == 'shukla' ? 'ಶುಕ್ಲ ಪಕ್ಷ' : 'ಕೃಷ್ಣ ಪಕ್ಷ'),
+            _dualRow('ಋತು (ಸೌರ)', AppLocale.t(d.rutu), 'ಋತು (ವೈದಿಕ)', vaidikaRutu),
+            _dualRow('ಅಯನ', AppLocale.t(d.ayana), 'ಅಮೃತ ಘಟಿ', d.amrutaPraghati.isNotEmpty ? d.amrutaPraghati : '--'),
             Builder(builder: (_) {
               final dayDurMin = ((d.sunsetJd - d.sunriseJd) * 24 * 60).round();
               final dayH = dayDurMin ~/ 60;
@@ -235,12 +227,6 @@ class _ShareCard extends StatelessWidget {
               final nightDurMin = ((24 * 60) - dayDurMin);
               final nightH = nightDurMin ~/ 60;
               final nightM = nightDurMin % 60;
-              return Column(children: [
-                _row('ದಿವಾ ಮಾನ', '${dayH} ಗಂ ${dayM} ನಿ'),
-                _row('ರಾತ್ರಿ ಮಾನ', '${nightH} ಗಂ ${nightM} ನಿ'),
-              ]);
-            }),
-            Builder(builder: (_) {
               final abhijitM = MuhurtaCalculator.calculateAbhijit(
                 sunriseJd: d.sunriseJd, sunsetJd: d.sunsetJd,
                 tzOffset: LocationService.tzOffset,
@@ -250,8 +236,9 @@ class _ShareCard extends StatelessWidget {
               final godhuliStart = Ephemeris.formatTimeFromJd(godhuliStartJd, tzOffset: LocationService.tzOffset);
               final godhuliEnd = Ephemeris.formatTimeFromJd(godhuliEndJd, tzOffset: LocationService.tzOffset);
               return Column(children: [
-                _row('ಅಭಿಜಿತ್ ಮುಹೂರ್ತ', '${abhijitM.startTime} - ${abhijitM.endTime}'),
-                _row('ಗೋಧೂಳಿ ಮುಹೂರ್ತ', '$godhuliStart - $godhuliEnd'),
+                _dualRow('ವಿಷ ಘಟಿ', d.vishaPraghati.isNotEmpty ? d.vishaPraghati : '--', 'ದಿವಾ ಮಾನ', '${dayH} ಗಂ ${dayM} ನಿ'),
+                _dualRow('ರಾತ್ರಿ ಮಾನ', '${nightH} ಗಂ ${nightM} ನಿ', 'ಅಭಿಜಿತ್ ಮುಹೂರ್ತ', '${abhijitM.startTime} - ${abhijitM.endTime}'),
+                _dualRow('ಗೋಧೂಳಿ ಮುಹೂರ್ತ', '$godhuliStart - $godhuliEnd', '', ''),
               ]);
             }),
             _divider(),
@@ -381,6 +368,24 @@ class _ShareCard extends StatelessWidget {
       child: Row(children: [
         SizedBox(width: 120, child: Text(label, style: const TextStyle(fontSize: 8.5, color: Color(0xFF666666)))),
         Expanded(child: Text(value, style: const TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, color: Color(0xFF333333)))),
+      ]),
+    );
+  }
+
+  Widget _dualRow(String l1, String v1, String l2, String v2) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1.5),
+      child: Row(children: [
+        // Left column
+        SizedBox(width: 80, child: Text(l1, style: const TextStyle(fontSize: 7.5, color: Color(0xFF666666)))),
+        Expanded(child: Text(v1, style: const TextStyle(fontSize: 7.5, fontWeight: FontWeight.w600, color: Color(0xFF333333)))),
+        const SizedBox(width: 6),
+        // Right column
+        if (l2.isNotEmpty) ...[
+          SizedBox(width: 80, child: Text(l2, style: const TextStyle(fontSize: 7.5, color: Color(0xFF666666)))),
+          Expanded(child: Text(v2, style: const TextStyle(fontSize: 7.5, fontWeight: FontWeight.w600, color: Color(0xFF333333)))),
+        ] else
+          const Expanded(child: SizedBox()),
       ]),
     );
   }
