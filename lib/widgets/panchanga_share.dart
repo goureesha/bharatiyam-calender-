@@ -105,12 +105,14 @@ class _ShareCard extends StatelessWidget {
     // Next-day marker
     String nd(bool nextDay) => nextDay ? ' (+)' : '';
 
-    // Find Rahu Kala, Gulika Kala from kalas list
-    String rahuKala = '', gulikaKala = '';
+    // Find Rahu Kala, Yamaganda Kala, Gulika Kala from kalas list
+    String rahuKala = '', yamagandaKala = '', gulikaKala = '';
     for (final k in kalas) {
       final name = k.name.toLowerCase();
       if (name.contains('rahu') || name.contains('ರಾಹು')) {
         rahuKala = '${k.startTime} - ${k.endTime}';
+      } else if (name.contains('yama') || name.contains('ಯಮ')) {
+        yamagandaKala = '${k.startTime} - ${k.endTime}';
       } else if (name.contains('gulika') || name.contains('ಗುಳಿಕ')) {
         gulikaKala = '${k.startTime} - ${k.endTime}';
       }
@@ -251,12 +253,13 @@ class _ShareCard extends StatelessWidget {
             _limbRow('ಕರಣ', AppLocale.t(d.karana), '${d.karanaEndTime} (${d.karanaEndGhati})${nd(d.karanaEndsNextDay)}'),
 
             // ── Rahu Kala, Gulika Kala ──
-            if (rahuKala.isNotEmpty || gulikaKala.isNotEmpty) ...[
+            if (rahuKala.isNotEmpty || yamagandaKala.isNotEmpty || gulikaKala.isNotEmpty) ...[
               _divider(),
               const SizedBox(height: 3),
               const Text('⚠ ಕಾಲ ಸಮಯ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00))),
               const SizedBox(height: 3),
               if (rahuKala.isNotEmpty) _kalaRow('ರಾಹು ಕಾಲ', rahuKala, Colors.red),
+              if (yamagandaKala.isNotEmpty) _kalaRow('ಯಮಗಂಡ ಕಾಲ', yamagandaKala, Colors.red),
               if (gulikaKala.isNotEmpty) _kalaRow('ಗುಳಿಕ ಕಾಲ', gulikaKala, Colors.red),
             ],
 
