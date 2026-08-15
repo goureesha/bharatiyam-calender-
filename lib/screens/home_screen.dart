@@ -1,4 +1,4 @@
-/// Home Screen â€” Main entry with date selector, quick panchanga summary, and navigation.
+/// Home Screen — Main entry with date selector, quick panchanga summary, and navigation.
 import 'package:flutter/material.dart';
 import '../core/ephemeris.dart';
 import '../core/panchanga_calculator.dart';
@@ -39,12 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Vaidika Rutu from Pournimanta Masa
   static String _vaidikaRutu(String pMasa) {
     const map = {
-      'cm0': 'à²µà²¸à²‚à²¤', 'cm1': 'à²µà²¸à²‚à²¤',       // Chaitra, Vaishakha
-      'cm2': 'à²—à³à²°à³€à²·à³à²®', 'cm3': 'à²—à³à²°à³€à²·à³à²®',     // Jyeshtha, Ashadha
-      'cm4': 'à²µà²°à³à²·à²¾', 'cm5': 'à²µà²°à³à²·à²¾',       // Shravana, Bhadrapada
-      'cm6': 'à²¶à²°à²¦à³', 'cm7': 'à²¶à²°à²¦à³',         // Ashwina, Kartika
-      'cm8': 'à²¹à³‡à²®à²‚à²¤', 'cm9': 'à²¹à³‡à²®à²‚à²¤',     // Margashira, Pushya
-      'cm10': 'à²¶à²¿à²¶à²¿à²°', 'cm11': 'à²¶à²¿à²¶à²¿à²°',     // Magha, Phalguna
+      'cm0': 'ವಸಂತ', 'cm1': 'ವಸಂತ',       // Chaitra, Vaishakha
+      'cm2': 'ಗ್ರೀಷ್ಮ', 'cm3': 'ಗ್ರೀಷ್ಮ',     // Jyeshtha, Ashadha
+      'cm4': 'ವರ್ಷಾ', 'cm5': 'ವರ್ಷಾ',       // Shravana, Bhadrapada
+      'cm6': 'ಶರದ್', 'cm7': 'ಶರದ್',         // Ashwina, Kartika
+      'cm8': 'ಹೇಮಂತ', 'cm9': 'ಹೇಮಂತ',     // Margashira, Pushya
+      'cm10': 'ಶಿಶಿರ', 'cm11': 'ಶಿಶಿರ',     // Magha, Phalguna
     };
     return map[pMasa] ?? '';
   }
@@ -266,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
           items: [
             BottomNavigationBarItem(icon: const Icon(Icons.home_rounded), label: AppLocale.t('home')),
             BottomNavigationBarItem(icon: const Icon(Icons.calendar_month_rounded), label: 'Calendar'),
-            BottomNavigationBarItem(icon: const Icon(Icons.info_outline_rounded), label: 'à²®à²¾à²¹à²¿à²¤à²¿'),
+            BottomNavigationBarItem(icon: const Icon(Icons.info_outline_rounded), label: 'ಮಾಹಿತಿ'),
             BottomNavigationBarItem(icon: const Icon(Icons.settings_rounded), label: AppLocale.t('settings')),
           ],
         ),
@@ -304,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(AppLocale.t('appName'),
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold,
                     fontFamily: 'NotoSansKannada')),
-                Text('ðŸ“ ${AppLocale.isKannada ? LocationService.cityNameKn : LocationService.cityName}',
+                Text('📍 ${AppLocale.isKannada ? LocationService.cityNameKn : LocationService.cityName}',
                   style: TextStyle(fontSize: 11, color: kMuted)),
               ],
             ),
@@ -319,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: kGold.withAlpha(76)),
               ),
-              child: Text(AppLocale.languageNames[AppLocale.current] ?? 'à²•à²¨à³à²¨à²¡',
+              child: Text(AppLocale.languageNames[AppLocale.current] ?? 'ಕನ್ನಡ',
                 style: TextStyle(fontSize: 11, color: kGold, fontWeight: FontWeight.bold)),
             ),
           ),
@@ -402,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [
-          // â”€â”€ Sunrise/Sunset + Moon rise/set banner â”€â”€
+          // ── Sunrise/Sunset + Moon rise/set banner ──
           AppCard(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(
@@ -410,9 +410,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _sunTimeWidget('ðŸŒ…', AppLocale.t('sunrise'), d.sunrise),
+                    _sunTimeWidget('🌅', AppLocale.t('sunrise'), d.sunrise),
                     Container(width: 1, height: 36, color: kBorder),
-                    _sunTimeWidget('ðŸŒ‡', AppLocale.t('sunset'), d.sunset),
+                    _sunTimeWidget('🌇', AppLocale.t('sunset'), d.sunset),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -421,36 +421,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _sunTimeWidget('ðŸŒ™', 'à²šà²‚à²¦à³à²°à³‹à²¦à²¯', d.chandraUdaya),
+                    _sunTimeWidget('🌙', 'ಚಂದ್ರೋದಯ', d.chandraUdaya),
                     Container(width: 1, height: 36, color: kBorder),
-                    _sunTimeWidget('ðŸŒ‘', 'à²šà²‚à²¦à³à²°à²¾à²¸à³à²¤', d.chandraAsta),
+                    _sunTimeWidget('🌑', 'ಚಂದ್ರಾಸ್ತ', d.chandraAsta),
                   ],
                 ),
               ],
             ),
           ),
 
-          // â”€â”€ Samvatsara / Shaka / Calendar â”€â”€
+          // ── Samvatsara / Shaka / Calendar ──
           AppCard(
             child: Column(
               children: [
-                const SectionHeader(icon: Icons.calendar_today_rounded, title: 'à²¸à²‚à²µà²¤à³à²¸à²° / à²ªà²‚à²šà²¾à²‚à²— à²µà²¿à²µà²°'),
+                const SectionHeader(icon: Icons.calendar_today_rounded, title: 'ಸಂವತ್ಸರ / ಪಂಚಾಂಗ ವಿವರ'),
                 const SizedBox(height: 8),
-                InfoRow(label: 'à²¶à²• à²µà²°à³à²· (Shaka)', value: '${d.shakaVarsha}'),
+                InfoRow(label: 'ಶಕ ವರ್ಷ (Shaka)', value: '${d.shakaVarsha}'),
                 InfoRow(label: AppLocale.t('samvatsara'), value: AppLocale.t(d.samvatsara)),
-                InfoRow(label: 'à²ªà²•à³à²· (Paksha)', value: d.paksha == 'shukla' ? 'à²¶à³à²•à³à²² à²ªà²•à³à²·' : 'à²•à³ƒà²·à³à²£ à²ªà²•à³à²·'),
-                InfoRow(label: 'à²šà²‚à²¦à³à²° à²®à²¾à²¸ (Amanta)', value: AppLocale.t(d.amantaMasa)),
-                InfoRow(label: 'à²šà²‚à²¦à³à²° à²®à²¾à²¸ (Pournimanta)', value: AppLocale.t(d.pournimantaMasa)),
+                InfoRow(label: 'ಪಕ್ಷ (Paksha)', value: d.paksha == 'shukla' ? 'ಶುಕ್ಲ ಪಕ್ಷ' : 'ಕೃಷ್ಣ ಪಕ್ಷ'),
+                InfoRow(label: 'ಚಂದ್ರ ಮಾಸ (Amanta)', value: AppLocale.t(d.amantaMasa)),
+                InfoRow(label: 'ಚಂದ್ರ ಮಾಸ (Pournimanta)', value: AppLocale.t(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('souraMasa'), value: AppLocale.t(d.souraMasa)),
-                InfoRow(label: 'à²¸à³Œà²° à²®à²¾à²¸ à²—à²¤ à²¦à²¿à²¨', value: '${d.souraMasaGataDina} à²¦à²¿à²¨'),
-                InfoRow(label: 'à²¸à³Œà²° à²‹à²¤à³', value: AppLocale.t(d.rutu)),
-                InfoRow(label: 'à²µà³ˆà²¦à²¿à²• à²‹à²¤à³', value: _vaidikaRutu(d.pournimantaMasa)),
+                InfoRow(label: 'ಸೌರ ಮಾಸ ಗತ ದಿನ', value: '${d.souraMasaGataDina} ದಿನ'),
+                InfoRow(label: 'ಸೌರ ಋತು', value: AppLocale.t(d.rutu)),
+                InfoRow(label: 'ವೈದಿಕ ಋತು', value: _vaidikaRutu(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('ayana'), value: AppLocale.t(d.ayana)),
               ],
             ),
           ),
 
-          // â”€â”€ 5 Limbs (Panchangam) with Ghati-Vighati â”€â”€
+          // ── 5 Limbs (Panchangam) with Ghati-Vighati ──
           AppCard(
             child: Column(
               children: [
@@ -507,7 +507,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('à²‰à²¦à²¯à²¾à²¦à²¿ à²˜à²Ÿà²¿: ', style: TextStyle(fontSize: 11, color: kMuted)),
+                      Text('ಉದಯಾದಿ ಘಟಿ: ', style: TextStyle(fontSize: 11, color: kMuted)),
                       Text(d.udayadiGhati, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
                     ],
                   ),
@@ -516,7 +516,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // â”€â”€ Ashubha Kala â”€â”€
+          // ── Ashubha Kala ──
           if (_kalas != null)
             AppCard(
               child: Column(
@@ -534,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-          // â”€â”€ Shubha Muhurta (Abhijit & Godhuli) â”€â”€
+          // ── Shubha Muhurta (Abhijit & Godhuli) ──
           if (_data != null)
             Builder(builder: (_) {
               final d = _data!;
@@ -549,16 +549,16 @@ class _HomeScreenState extends State<HomeScreen> {
               return AppCard(
                 child: Column(
                   children: [
-                    SectionHeader(icon: Icons.auto_awesome, title: 'à²¶à³à²­ à²®à³à²¹à³‚à²°à³à²¤'),
+                    SectionHeader(icon: Icons.auto_awesome, title: 'ಶುಭ ಮುಹೂರ್ತ'),
                     const SizedBox(height: 8),
                     KalaTimeBar(
-                      name: 'à²…à²­à²¿à²œà²¿à²¤à³ à²®à³à²¹à³‚à²°à³à²¤',
+                      name: 'ಅಭಿಜಿತ್ ಮುಹೂರ್ತ',
                       startTime: abhijitM.startTime,
                       endTime: abhijitM.endTime,
                       color: const Color(0xFF2E7D32),
                     ),
                     KalaTimeBar(
-                      name: 'à²—à³‹à²§à³‚à²³à²¿ à²®à³à²¹à³‚à²°à³à²¤',
+                      name: 'ಗೋಧೂಳಿ ಮುಹೂರ್ತ',
                       startTime: godhuliStart,
                       endTime: godhuliEnd,
                       color: const Color(0xFF1565C0),
@@ -567,7 +567,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             }),
-          // â”€â”€ Moon & Sun details â”€â”€
+          // ── Moon & Sun details ──
           AppCard(
             child: Column(
               children: [
@@ -583,10 +583,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // â”€â”€ Shraddha Details â”€â”€
+          // ── Shraddha Details ──
           _buildShraddhaCard(d),
 
-          // â”€â”€ View Full Details button â”€â”€
+          // ── View Full Details button ──
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ElevatedButton(
@@ -604,7 +604,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   const Icon(Icons.article_rounded, size: 20),
                   const SizedBox(width: 8),
-                  Text('${AppLocale.t("panchanga")} â€” ${AppLocale.t("muhurta")} / ${AppLocale.t("hora")} / ${AppLocale.t("lagna")}',
+                  Text('${AppLocale.t("panchanga")} — ${AppLocale.t("muhurta")} / ${AppLocale.t("hora")} / ${AppLocale.t("lagna")}',
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                 ],
               ),
@@ -654,7 +654,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // â”€â”€ Sunrise Anga â”€â”€
+          // ── Sunrise Anga ──
           // Row 1: label + name + end time
           Row(
             children: [
@@ -663,11 +663,11 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(child: Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText))),
               Text(endTime, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
               if (endsNextDay)
-                Text(' (à²®à²°à³à²¦à²¿à²¨)', style: TextStyle(fontSize: 9, color: kAshubha)),
+                Text(' (ಮರುದಿನ)', style: TextStyle(fontSize: 9, color: kAshubha)),
               if (endGhati.isNotEmpty) ...[
                 Text(' (', style: TextStyle(fontSize: 9, color: kMuted)),
                 Text(endGhati, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kMuted)),
-                Text(' à²˜)', style: TextStyle(fontSize: 9, color: kMuted)),
+                Text(' ಘ)', style: TextStyle(fontSize: 9, color: kMuted)),
               ],
             ],
           ),
@@ -675,16 +675,16 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 3),
           Row(
             children: [
-              Text(hasTransitioned ? '(à²‰à²¦à²¯ à²•à²¾à²²)  ' : 'â˜€  ', style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
-              _ghatiTag('à²—à²¤', gata, kGold),
+              Text(hasTransitioned ? '(ಉದಯ ಕಾಲ)  ' : '☀  ', style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
+              _ghatiTag('ಗತ', gata, kGold),
               const SizedBox(width: 4),
-              _ghatiTag('à²¶à³‡à²·', shesha, kTeal),
+              _ghatiTag('ಶೇಷ', shesha, kTeal),
               const SizedBox(width: 4),
-              _ghatiTag('à²ªà²°à²®', parama, kMuted),
+              _ghatiTag('ಪರಮ', parama, kMuted),
             ],
           ),
 
-          // â”€â”€ Current Anga (when transitioned) â”€â”€
+          // ── Current Anga (when transitioned) ──
           if (hasTransitioned) ...[
             const SizedBox(height: 6),
             Container(height: 1, color: kTeal.withAlpha(30)),
@@ -703,25 +703,25 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 3),
             Row(
               children: [
-                Text('(à²ˆà²—)  ', style: TextStyle(fontSize: 9, color: kTeal, fontStyle: FontStyle.italic)),
-                _ghatiTag('à²—à²¤', gataNow, const Color(0xFFFF9800)),
+                Text('(ಈಗ)  ', style: TextStyle(fontSize: 9, color: kTeal, fontStyle: FontStyle.italic)),
+                _ghatiTag('ಗತ', gataNow, const Color(0xFFFF9800)),
                 const SizedBox(width: 4),
-                _ghatiTag('à²¶à³‡à²·', sheshaNow, const Color(0xFF4CAF50)),
+                _ghatiTag('ಶೇಷ', sheshaNow, const Color(0xFF4CAF50)),
                 if (currentParama.isNotEmpty) ...[
                   const SizedBox(width: 4),
-                  _ghatiTag('à²ªà²°à²®', currentParama, kMuted),
+                  _ghatiTag('ಪರಮ', currentParama, kMuted),
                 ],
               ],
             ),
           ] else ...[
-            // No transition â€” just show current ghati
+            // No transition — just show current ghati
             const SizedBox(height: 3),
             Row(
               children: [
-                Text('â±  ', style: TextStyle(fontSize: 9, color: kMuted)),
-                _ghatiTag('à²—à²¤', gataNow, const Color(0xFFFF9800)),
+                Text('⏱  ', style: TextStyle(fontSize: 9, color: kMuted)),
+                _ghatiTag('ಗತ', gataNow, const Color(0xFFFF9800)),
                 const SizedBox(width: 4),
-                _ghatiTag('à²¶à³‡à²·', sheshaNow, const Color(0xFF4CAF50)),
+                _ghatiTag('ಶೇಷ', sheshaNow, const Color(0xFF4CAF50)),
               ],
             ),
           ],
@@ -748,7 +748,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildShraddhaCard(PanchangaData d) {
-  Widget _buildShraddhaCard(PanchangaData d) {
     final info = ShraddhaCalculator.calculate(
       tithiIndex: d.tithiIndex,
       nakshatraIndex: d.nakshatraIndex,
@@ -767,7 +766,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           SectionHeader(
             icon: Icons.self_improvement_rounded,
-            title: '\u0cb6\u0ccd\u0cb0\u0cbe\u0ca6\u0ccd\u0ca7 \u0ca8\u0cbf\u0cb0\u0ccd\u0ca3\u0caf',
+            title: 'ಶ್ರಾದ್ಧ ನಿರ್ಣಯ',
           ),
           const SizedBox(height: 8),
 
@@ -788,14 +787,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(children: [
                     Icon(Icons.warning_amber_rounded, color: const Color(0xFFE65100), size: 16),
                     const SizedBox(width: 6),
-                    Expanded(child: Text('\u0c95\u0ccd\u0cb7\u0caf \u0ca4\u0cbf\u0ca5\u0cbf \u2014 \u0c8e\u0cb0\u0ca1\u0cc1 \u0cb6\u0ccd\u0cb0\u0cbe\u0ca6\u0ccd\u0ca7 \u0c87\u0c82\u0ca6\u0cc1', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFE65100)))),
+                    Expanded(child: Text('ಕ್ಷಯ ತಿಥಿ — ಎರಡು ಶ್ರಾದ್ಧ ಇಂದು',
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFE65100)))),
                   ]),
                   const SizedBox(height: 6),
                   Text(info.kshayaTithiExplanation, style: TextStyle(fontSize: 9.5, color: kText, height: 1.5)),
                 ],
               ),
             ),
-
           // Multi-day Alert
           if ((info.isFirstDay || info.isSecondDay) && info.multiDayExplanation.isNotEmpty)
             Container(
@@ -814,7 +813,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icon(Icons.info_outline_rounded, color: const Color(0xFF1565C0), size: 16),
                     const SizedBox(width: 6),
                     Expanded(child: Text(
-                      info.isFirstDay ? '\u0ca4\u0cbf\u0ca5\u0cbf \u0c8e\u0cb0\u0ca1\u0cc2 \u0ca6\u0cbf\u0ca8 \u0c87\u0ca6\u0cc6 (\u0caa\u0ccd\u0cb0\u0ca5\u0cae \u0ca6\u0cbf\u0ca8)' : '\u0ca4\u0cbf\u0ca5\u0cbf \u0c8e\u0cb0\u0ca1\u0cc2 \u0ca6\u0cbf\u0ca8 \u0c87\u0ca6\u0cc6 (\u0ca6\u0ccd\u0cb5\u0cbf\u0ca4\u0cc0\u0caf \u0ca6\u0cbf\u0ca8)',
+                      info.isFirstDay
+                        ? 'ತಿಥಿ ಎರಡೂ ದಿನ ಇದೆ (ಪ್ರಥಮ ದಿನ)'
+                        : 'ತಿಥಿ ಎರಡೂ ದಿನ ಇದೆ (ದ್ವಿತೀಯ ದಿನ)',
                       style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFF1565C0)),
                     )),
                   ]),
@@ -824,7 +825,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-          // Kutupa and Aparahna Timing
+          // Shraddha Rule & Timing
+          const SizedBox(height: 10),
+          Text('📋 ಶ್ರಾದ್ಧ ನಿಯಮ', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
+          const SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF455A64).withAlpha(12),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: const Color(0xFF455A64).withAlpha(30)),
+            ),
+            child: Text(info.ruleText, style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic, height: 1.4)),
+          ),
+          const SizedBox(height: 6),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(8),
@@ -836,81 +851,111 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [
-                  Text('\u0c95\u0cc1\u0ca4\u0cc1\u0caa \u0c95\u0cbe\u0cb2: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                  Text('${info.aparahnaStart} \u2014 ${info.aparahnaEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
-                  Text('  (${info.aparahnaStartGhati} \u0c98\u0c9f\u0cbf)', style: TextStyle(fontSize: 8, color: kMuted)),
-                ]),
+                Row(
+                  children: [
+                    Text('ಕುತುಪ ಕಾಲ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${info.aparahnaStart} — ${info.aparahnaEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+                    Text('  (${info.aparahnaStartGhati} ಘಟಿ)', style: TextStyle(fontSize: 8, color: kMuted)),
+                  ],
+                ),
                 const SizedBox(height: 3),
-                Row(children: [
-                  Text('\u0c85\u0caa\u0cb0\u0cbe\u0cb9\u0ccd\u0ca8: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                  Text('${info.aparahnaTimeStart} \u2014 ${info.aparahnaTimeEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
-                ]),
+                Row(
+                  children: [
+                    Text('ಅಪರಾಹ್ನ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${info.aparahnaTimeStart} — ${info.aparahnaTimeEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+                  ],
+                ),
                 const SizedBox(height: 3),
-                Row(children: [
-                  Text('${info.sunriseTithiName} \u0ca4\u0cbf\u0ca5\u0cbf \u0c85\u0c82\u0ca4\u0ccd\u0caf: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                  Text(info.tithiEndTimeForRule, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
-                ]),
+                Row(
+                  children: [
+                    Text('${info.sunriseTithiName} ತಿಥಿ ಅಂತ್ಯ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text(info.tithiEndTimeForRule, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+                  ],
+                ),
                 const SizedBox(height: 6),
                 Text(info.tithiStatusAtAparahna, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: info.isTithiPresentAtAparahna ? const Color(0xFF388E3C) : kAshubha)),
+                const SizedBox(height: 6),
+                // ── Amanta Shraddha ──
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: kGold.withAlpha(12),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: kGold.withAlpha(40)),
+                  ),
+                  child: Row(
+                    children: [
+                      Text('🙏 ', style: TextStyle(fontSize: 10)),
+                      Text('ಅಮಾಂತ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Expanded(child: Text(info.varshikaChandraAmanta, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // ── Pournimanta Shraddha ──
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: kGold.withAlpha(12),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: kGold.withAlpha(40)),
+                  ),
+                  child: Row(
+                    children: [
+                      Text('🙏 ', style: TextStyle(fontSize: 10)),
+                      Text('ಪೌರ್ಣಿಮಾಂತ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Expanded(child: Text(info.varshikaChandraPournimanta, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // ── Soura Mana Shraddha ──
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: kGold.withAlpha(12),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: kGold.withAlpha(40)),
+                  ),
+                  child: Row(
+                    children: [
+                      Text('🙏 ', style: TextStyle(fontSize: 10)),
+                      Text('ಸೌರಮಾನ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Expanded(child: Text(info.varshikaSoura, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                    ],
+                  ),
+                ),
+                if (info.nextTithiShraddha.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: kGold.withAlpha(12),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: kGold.withAlpha(40)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('🙏 ${info.nextTithiShraddha} ಮಾಡಬಹುದು', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
+                        const SizedBox(height: 3),
+                        Text(info.nextTithiStatus, style: TextStyle(fontSize: 9, color: kMuted)),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
-          ),
-          const SizedBox(height: 8),
-
-          // Today's Shraddha Names
-          Text('\ud83d\ude4f \u0c87\u0c82\u0ca6\u0cbf\u0ca8 \u0cb6\u0ccd\u0cb0\u0cbe\u0ca6\u0ccd\u0ca7', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
-          const SizedBox(height: 6),
-          _shraddhaManaTile('\u0c85\u0cae\u0cbe\u0c82\u0ca4', info.varshikaChandraAmanta),
-          const SizedBox(height: 4),
-          _shraddhaManaTile('\u0caa\u0ccc\u0cb0\u0ccd\u0ca3\u0cbf\u0cae\u0cbe\u0c82\u0ca4', info.varshikaChandraPournimanta),
-          const SizedBox(height: 4),
-          _shraddhaManaTile('\u0cb8\u0ccc\u0cb0\u0cae\u0cbe\u0ca8', info.varshikaSoura),
-
-          // Next Tithi Shraddha
-          if (info.nextTithiShraddha.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE65100).withAlpha(10),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFE65100).withAlpha(40)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('\ud83d\ude4f \u0cae\u0cc1\u0c82\u0ca6\u0cbf\u0ca8 \u0ca4\u0cbf\u0ca5\u0cbf \u0cb6\u0ccd\u0cb0\u0cbe\u0ca6\u0ccd\u0ca7\u0cb5\u0cc2 \u0c87\u0c82\u0ca6\u0cc1', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFE65100))),
-                  const SizedBox(height: 6),
-                  Text(info.nextTithiShraddha, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
-                  const SizedBox(height: 3),
-                  Text(info.nextTithiStatus, style: TextStyle(fontSize: 9, color: kMuted, height: 1.4)),
-                  if (info.nextTithiEndTime.isNotEmpty) ...[
-                    const SizedBox(height: 3),
-                    Text('\u0ca4\u0cbf\u0ca5\u0cbf \u0c85\u0c82\u0ca4\u0ccd\u0caf: ${info.nextTithiEndTime}', style: TextStyle(fontSize: 9, color: kMuted)),
-                  ],
-                ],
-              ),
-            ),
-          ],
-
-          // Rule text
-          const SizedBox(height: 8),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: const Color(0xFF455A64).withAlpha(12),
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: const Color(0xFF455A64).withAlpha(30)),
-            ),
-            child: Text('\ud83d\udccb ${info.ruleText}', style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic, height: 1.4)),
           ),
         ],
       ),
     );
   }
+
   Widget _shraddhaManaTile(String manaLabel, String shraddhaText) {
     return Container(
       width: double.infinity,
