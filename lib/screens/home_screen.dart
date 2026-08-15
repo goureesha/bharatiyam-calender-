@@ -767,11 +767,11 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           SectionHeader(
             icon: Icons.self_improvement_rounded,
-            title: 'à²¶à³à²°à²¾à²¦à³à²§ à²¨à²¿à²°à³à²£à²¯',
+            title: '\u0cb6\u0ccd\u0cb0\u0cbe\u0ca6\u0ccd\u0ca7 \u0ca8\u0cbf\u0cb0\u0ccd\u0ca3\u0caf',
           ),
           const SizedBox(height: 8),
 
-          // â”€â”€ Kshaya Tithi Alert â”€â”€
+          // Kshaya Tithi Alert
           if (info.isKshayaTithi && info.kshayaTithiExplanation.isNotEmpty)
             Container(
               width: double.infinity,
@@ -788,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(children: [
                     Icon(Icons.warning_amber_rounded, color: const Color(0xFFE65100), size: 16),
                     const SizedBox(width: 6),
-                    Expanded(child: Text('à²•à³à²·à²¯ à²¤à²¿à²¥à²¿ â€” à²Žà²°à²¡à³ à²¶à³à²°à²¾à²¦à³à²§ à²‡à²‚à²¦à³', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFE65100)))),
+                    Expanded(child: Text('\u0c95\u0ccd\u0cb7\u0caf \u0ca4\u0cbf\u0ca5\u0cbf \u2014 \u0c8e\u0cb0\u0ca1\u0cc1 \u0cb6\u0ccd\u0cb0\u0cbe\u0ca6\u0ccd\u0ca7 \u0c87\u0c82\u0ca6\u0cc1', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFE65100)))),
                   ]),
                   const SizedBox(height: 6),
                   Text(info.kshayaTithiExplanation, style: TextStyle(fontSize: 9.5, color: kText, height: 1.5)),
@@ -796,7 +796,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-          // â”€â”€ Multi-day Alert â”€â”€
+          // Multi-day Alert
           if ((info.isFirstDay || info.isSecondDay) && info.multiDayExplanation.isNotEmpty)
             Container(
               width: double.infinity,
@@ -814,7 +814,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icon(Icons.info_outline_rounded, color: const Color(0xFF1565C0), size: 16),
                     const SizedBox(width: 6),
                     Expanded(child: Text(
-                      info.isFirstDay ? 'à²¤à²¿à²¥à²¿ à²Žà²°à²¡à³‚ à²¦à²¿à²¨ à²‡à²¦à³† (à²ªà³à²°à²¥à²® à²¦à²¿à²¨)' : 'à²¤à²¿à²¥à²¿ à²Žà²°à²¡à³‚ à²¦à²¿à²¨ à²‡à²¦à³† (à²¦à³à²µà²¿à²¤à³€à²¯ à²¦à²¿à²¨)',
+                      info.isFirstDay ? '\u0ca4\u0cbf\u0ca5\u0cbf \u0c8e\u0cb0\u0ca1\u0cc2 \u0ca6\u0cbf\u0ca8 \u0c87\u0ca6\u0cc6 (\u0caa\u0ccd\u0cb0\u0ca5\u0cae \u0ca6\u0cbf\u0ca8)' : '\u0ca4\u0cbf\u0ca5\u0cbf \u0c8e\u0cb0\u0ca1\u0cc2 \u0ca6\u0cbf\u0ca8 \u0c87\u0ca6\u0cc6 (\u0ca6\u0ccd\u0cb5\u0cbf\u0ca4\u0cc0\u0caf \u0ca6\u0cbf\u0ca8)',
                       style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFF1565C0)),
                     )),
                   ]),
@@ -824,7 +824,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-          // â”€â”€ Kutupa & Aparahna Timing â”€â”€
+          // Kutupa and Aparahna Timing
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(8),
@@ -837,18 +837,18 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(children: [
-                  Text('à²•à³à²¤à³à²ª à²•à²¾à²²: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                  Text('${info.aparahnaStart} â€” ${info.aparahnaEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
-                  Text('  (${info.aparahnaStartGhati} à²˜à²Ÿà²¿)', style: TextStyle(fontSize: 8, color: kMuted)),
+                  Text('\u0c95\u0cc1\u0ca4\u0cc1\u0caa \u0c95\u0cbe\u0cb2: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                  Text('${info.aparahnaStart} \u2014 ${info.aparahnaEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+                  Text('  (${info.aparahnaStartGhati} \u0c98\u0c9f\u0cbf)', style: TextStyle(fontSize: 8, color: kMuted)),
                 ]),
                 const SizedBox(height: 3),
                 Row(children: [
-                  Text('à²…à²ªà²°à²¾à²¹à³à²¨: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                  Text('${info.aparahnaTimeStart} â€” ${info.aparahnaTimeEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+                  Text('\u0c85\u0caa\u0cb0\u0cbe\u0cb9\u0ccd\u0ca8: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                  Text('${info.aparahnaTimeStart} \u2014 ${info.aparahnaTimeEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                 ]),
                 const SizedBox(height: 3),
                 Row(children: [
-                  Text('${info.sunriseTithiName} à²¤à²¿à²¥à²¿ à²…à²‚à²¤à³à²¯: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                  Text('${info.sunriseTithiName} \u0ca4\u0cbf\u0ca5\u0cbf \u0c85\u0c82\u0ca4\u0ccd\u0caf: ', style: TextStyle(fontSize: 9, color: kMuted)),
                   Text(info.tithiEndTimeForRule, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                 ]),
                 const SizedBox(height: 6),
@@ -858,16 +858,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 8),
 
-          // â”€â”€ Today's Shraddha Names â”€â”€
-          Text('ðŸ™ à²‡à²‚à²¦à²¿à²¨ à²¶à³à²°à²¾à²¦à³à²§', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
+          // Today's Shraddha Names
+          Text('\ud83d\ude4f \u0c87\u0c82\u0ca6\u0cbf\u0ca8 \u0cb6\u0ccd\u0cb0\u0cbe\u0ca6\u0ccd\u0ca7', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
           const SizedBox(height: 6),
-          _shraddhaManaTile('à²…à²®à²¾à²‚à²¤', info.varshikaChandraAmanta),
+          _shraddhaManaTile('\u0c85\u0cae\u0cbe\u0c82\u0ca4', info.varshikaChandraAmanta),
           const SizedBox(height: 4),
-          _shraddhaManaTile('à²ªà³Œà²°à³à²£à²¿à²®à²¾à²‚à²¤', info.varshikaChandraPournimanta),
+          _shraddhaManaTile('\u0caa\u0ccc\u0cb0\u0ccd\u0ca3\u0cbf\u0cae\u0cbe\u0c82\u0ca4', info.varshikaChandraPournimanta),
           const SizedBox(height: 4),
-          _shraddhaManaTile('à²¸à³Œà²°à²®à²¾à²¨', info.varshikaSoura),
+          _shraddhaManaTile('\u0cb8\u0ccc\u0cb0\u0cae\u0cbe\u0ca8', info.varshikaSoura),
 
-          // â”€â”€ Next Tithi Shraddha (Kshaya / same-day) â”€â”€
+          // Next Tithi Shraddha
           if (info.nextTithiShraddha.isNotEmpty) ...[
             const SizedBox(height: 10),
             Container(
@@ -881,21 +881,21 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('ðŸ™ à²®à³à²‚à²¦à²¿à²¨ à²¤à²¿à²¥à²¿ à²¶à³à²°à²¾à²¦à³à²§à²µà³‚ à²‡à²‚à²¦à³', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFE65100))),
+                  Text('\ud83d\ude4f \u0cae\u0cc1\u0c82\u0ca6\u0cbf\u0ca8 \u0ca4\u0cbf\u0ca5\u0cbf \u0cb6\u0ccd\u0cb0\u0cbe\u0ca6\u0ccd\u0ca7\u0cb5\u0cc2 \u0c87\u0c82\u0ca6\u0cc1', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFE65100))),
                   const SizedBox(height: 6),
                   Text(info.nextTithiShraddha, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
                   const SizedBox(height: 3),
                   Text(info.nextTithiStatus, style: TextStyle(fontSize: 9, color: kMuted, height: 1.4)),
                   if (info.nextTithiEndTime.isNotEmpty) ...[
                     const SizedBox(height: 3),
-                    Text('à²¤à²¿à²¥à²¿ à²…à²‚à²¤à³à²¯: ${info.nextTithiEndTime}', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('\u0ca4\u0cbf\u0ca5\u0cbf \u0c85\u0c82\u0ca4\u0ccd\u0caf: ${info.nextTithiEndTime}', style: TextStyle(fontSize: 9, color: kMuted)),
                   ],
                 ],
               ),
             ),
           ],
 
-          // â”€â”€ Rule text â”€â”€
+          // Rule text
           const SizedBox(height: 8),
           Container(
             width: double.infinity,
@@ -905,49 +905,10 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(6),
               border: Border.all(color: const Color(0xFF455A64).withAlpha(30)),
             ),
-            child: Text('ðŸ“‹ ${info.ruleText}', style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic, height: 1.4)),
+            child: Text('\ud83d\udccb ${info.ruleText}', style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic, height: 1.4)),
           ),
         ],
       ),
     );
   }
 
-
-  Widget _shraddhaManaTile(String manaLabel, String shraddhaText) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      decoration: BoxDecoration(
-        color: kTeal.withAlpha(10),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: kTeal.withAlpha(30)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(manaLabel, style: TextStyle(fontSize: 8, color: kMuted, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 2),
-          Text(shraddhaText, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
-        ],
-      ),
-    );
-  }
-
-  Widget _shraddhaTag(String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withAlpha(20),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: color.withAlpha(76)),
-      ),
-      child: Text(text, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
-    );
-  }
-
-  Widget _buildSettings() {
-    return SettingsScreen(onLocationChanged: () {
-      _compute();
-    });
-  }
-}

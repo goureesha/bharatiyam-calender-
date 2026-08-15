@@ -428,7 +428,6 @@ class ShraddhaCalculator {
       // If only at tomorrow's Kutupa â†’ tomorrow's shraddha, don't show here
 
       if (showNextTithiToday) {
-      if (showNextTithiToday) {
         // Build next tithi shraddha name
         if (ntIsAmavasya || ntIsPurnima) {
           nextTithiShraddha = '$amantaName $ntTithiName ಶ್ರಾದ್ಧ';
