@@ -911,4 +911,41 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  Widget _shraddhaManaTile(String manaLabel, String shraddhaText) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: kTeal.withAlpha(10),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: kTeal.withAlpha(30)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(manaLabel, style: TextStyle(fontSize: 8, color: kMuted, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 2),
+          Text(shraddhaText, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
+        ],
+      ),
+    );
+  }
 
+  Widget _shraddhaTag(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withAlpha(20),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withAlpha(76)),
+      ),
+      child: Text(text, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
+    );
+  }
+
+  Widget _buildSettings() {
+    return SettingsScreen(onLocationChanged: () {
+      _compute();
+    });
+  }
+}
