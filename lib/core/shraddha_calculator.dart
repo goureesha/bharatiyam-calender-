@@ -42,6 +42,13 @@ class ShraddhaInfo {
   final String nextTithiStatus;     // Next tithi's kutupa status
   final String nextTithiEndTime;    // Next tithi's end time
 
+  // Kshaya / Multi-day scenario tracking
+  final bool isKshayaTithi;
+  final bool isFirstDay;
+  final bool isSecondDay;
+  final String kshayaTithiExplanation;
+  final String multiDayExplanation;
+
   const ShraddhaInfo({
     this.varshikaChandraAmanta = '',
     this.varshikaChandraPournimanta = '',
@@ -67,6 +74,11 @@ class ShraddhaInfo {
     this.nextTithiShraddha = '',
     this.nextTithiStatus = '',
     this.nextTithiEndTime = '',
+    this.isKshayaTithi = false,
+    this.isFirstDay = false,
+    this.isSecondDay = false,
+    this.kshayaTithiExplanation = '',
+    this.multiDayExplanation = '',
   });
 }
 
@@ -438,6 +450,23 @@ class ShraddhaCalculator {
       ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು';
     }
 
+    // Build Kshaya / Multi-day explanations
+    String kshayaTithiExplanation = '';
+    if (isKshayaTithi) {
+      kshayaTithiExplanation = '$pakshaName $tithiName ತಿಥಿ ಇಂದು ಮತ್ತು ನಾಳೆ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ.\n'
+          'ಇದು ಕ್ಷಯ ತಿಥಿ. ಕ್ಷಯೇ ಪೂರ್ವ ನಿಯಮದಂತೆ ಇಂದು ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು.\n'
+          'ಈ ತಿಥಿಯ ಮತ್ತು ಮುಂದಿನ ತಿಥಿಯ ಎರಡೂ ಶ್ರಾದ್ಧ ಇಂದು ಬರುತ್ತದೆ.';
+    }
+
+    String multiDayExplanation = '';
+    if (isFirstDay) {
+      multiDayExplanation = '$pakshaName $tithiName ತಿಥಿ ಇಂದು ಮತ್ತು ನಾಳೆ ಎರಡೂ ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ.\n'
+          'ಪ್ರಥಮ ದಿನ (ಇಂದು) ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು. ನಾಳೆಯೂ ಮಾಡಬಹುದು.';
+    } else if (isSecondDay) {
+      multiDayExplanation = '$pakshaName $tithiName ತಿಥಿ ನಿನ್ನೆ ಮತ್ತು ಇಂದು ಎರಡೂ ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ.\n'
+          'ಪ್ರಥಮ ದಿನ (ನಿನ್ನೆ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ. ಆದರೆ ಇಂದೂ ಮಾಡಬಹುದು.';
+    }
+
     // ── Pitru Paksha / Mahalaya ──
     int krishnaIdx = -1;
     if (isKrishna) {
@@ -470,6 +499,11 @@ class ShraddhaCalculator {
         nextTithiShraddha: nextTithiShraddha,
         nextTithiStatus: nextTithiStatus,
         nextTithiEndTime: nextTithiEndTime,
+        isKshayaTithi: isKshayaTithi,
+        isFirstDay: isFirstDay,
+        isSecondDay: isSecondDay,
+        kshayaTithiExplanation: kshayaTithiExplanation,
+        multiDayExplanation: multiDayExplanation,
       );
     }
 
@@ -492,6 +526,11 @@ class ShraddhaCalculator {
       nextTithiShraddha: nextTithiShraddha,
       nextTithiStatus: nextTithiStatus,
       nextTithiEndTime: nextTithiEndTime,
+      isKshayaTithi: isKshayaTithi,
+      isFirstDay: isFirstDay,
+      isSecondDay: isSecondDay,
+      kshayaTithiExplanation: kshayaTithiExplanation,
+      multiDayExplanation: multiDayExplanation,
     );
   }
 }
