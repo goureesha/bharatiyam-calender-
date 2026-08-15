@@ -770,6 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 8),
 
+
           // Kshaya Tithi Alert
           if (info.isKshayaTithi && info.kshayaTithiExplanation.isNotEmpty)
             Container(
