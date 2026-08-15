@@ -1,10 +1,10 @@
-/// Shraddha Calculator — Varshika Shraddha Nirnaya and Mahalaya Shraddha.
+/// Shraddha Calculator â€” Varshika Shraddha Nirnaya and Mahalaya Shraddha.
 ///
 /// Covers:
 /// - Varshika Shraddha: Annual ancestor rites based on masa+paksha+tithi
 ///   - Chandra Mana (Amanta/Pournimanta) and Soura Mana
 /// - Mahalaya Shraddha: Pitru Paksha (Krishna Paksha of Bhadrapada)
-/// - Aparahna Shraddha Rule: Tithi must be present ≥2 ghati after Aparahna start
+/// - Aparahna Shraddha Rule: Tithi must be present â‰¥2 ghati after Aparahna start
 
 import 'ephemeris.dart';
 import 'package:sweph/sweph.dart';
@@ -32,7 +32,7 @@ class ShraddhaInfo {
   final String tithiStatusAtAparahna;  // Status text
   final String aparahnaStartGhati;  // Kutupa ghati from sunrise
   final String tithiEndTimeForRule; // Tithi end time
-  final String sunriseTithiName;    // Sunrise tithi name (e.g. 'ಕೃಷ್ಣ ಷಷ್ಠಿ')
+  final String sunriseTithiName;    // Sunrise tithi name (e.g. 'à²•à³ƒà²·à³à²£ à²·à²·à³à² à²¿')
   final String aparahnaShraddha;    // Which shraddha can be done
   final String aparahnaTimeStart;   // Aparahna (4th of 5 parts) start
   final String aparahnaTimeEnd;     // Aparahna (4th of 5 parts) end
@@ -85,47 +85,47 @@ class ShraddhaInfo {
 class ShraddhaCalculator {
 
   static const _tithiNames = [
-    'ಪ್ರತಿಪದಾ', 'ದ್ವಿತೀಯಾ', 'ತೃತೀಯಾ', 'ಚತುರ್ಥೀ', 'ಪಂಚಮೀ',
-    'ಷಷ್ಠೀ', 'ಸಪ್ತಮೀ', 'ಅಷ್ಟಮೀ', 'ನವಮೀ', 'ದಶಮೀ',
-    'ಏಕಾದಶಿ', 'ದ್ವಾದಶಿ', 'ತ್ರಯೋದಶಿ', 'ಚತುರ್ದಶಿ',
+    'à²ªà³à²°à²¤à²¿à²ªà²¦à²¾', 'à²¦à³à²µà²¿à²¤à³€à²¯à²¾', 'à²¤à³ƒà²¤à³€à²¯à²¾', 'à²šà²¤à³à²°à³à²¥à³€', 'à²ªà²‚à²šà²®à³€',
+    'à²·à²·à³à² à³€', 'à²¸à²ªà³à²¤à²®à³€', 'à²…à²·à³à²Ÿà²®à³€', 'à²¨à²µà²®à³€', 'à²¦à²¶à²®à³€',
+    'à²à²•à²¾à²¦à²¶à²¿', 'à²¦à³à²µà²¾à²¦à²¶à²¿', 'à²¤à³à²°à²¯à³‹à²¦à²¶à²¿', 'à²šà²¤à³à²°à³à²¦à²¶à²¿',
   ];
 
   static const _chandraMasaNames = [
-    'ಚೈತ್ರ', 'ವೈಶಾಖ', 'ಜ್ಯೇಷ್ಠ', 'ಆಷಾಢ',
-    'ಶ್ರಾವಣ', 'ಭಾದ್ರಪದ', 'ಆಶ್ವಿನ', 'ಕಾರ್ತಿಕ',
-    'ಮಾರ್ಗಶಿರ', 'ಪುಷ್ಯ', 'ಮಾಘ', 'ಫಾಲ್ಗುಣ',
+    'à²šà³ˆà²¤à³à²°', 'à²µà³ˆà²¶à²¾à²–', 'à²œà³à²¯à³‡à²·à³à² ', 'à²†à²·à²¾à²¢',
+    'à²¶à³à²°à²¾à²µà²£', 'à²­à²¾à²¦à³à²°à²ªà²¦', 'à²†à²¶à³à²µà²¿à²¨', 'à²•à²¾à²°à³à²¤à²¿à²•',
+    'à²®à²¾à²°à³à²—à²¶à²¿à²°', 'à²ªà³à²·à³à²¯', 'à²®à²¾à²˜', 'à²«à²¾à²²à³à²—à³à²£',
   ];
 
   static const _souraMasaNames = [
-    'ಮೇಷ', 'ವೃಷಭ', 'ಮಿಥುನ', 'ಕರ್ಕ',
-    'ಸಿಂಹ', 'ಕನ್ಯಾ', 'ತುಲಾ', 'ವೃಶ್ಚಿಕ',
-    'ಧನು', 'ಮಕರ', 'ಕುಂಭ', 'ಮೀನ',
+    'à²®à³‡à²·', 'à²µà³ƒà²·à²­', 'à²®à²¿à²¥à³à²¨', 'à²•à²°à³à²•',
+    'à²¸à²¿à²‚à²¹', 'à²•à²¨à³à²¯à²¾', 'à²¤à³à²²à²¾', 'à²µà³ƒà²¶à³à²šà²¿à²•',
+    'à²§à²¨à³', 'à²®à²•à²°', 'à²•à³à²‚à²­', 'à²®à³€à²¨',
   ];
 
   static const _pitruPakshaSignificanceKn = [
-    'ಪ್ರತಿಪದಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
-    'ದ್ವಿತೀಯಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
-    'ತೃತೀಯಾ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
-    'ಚತುರ್ಥೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ; ಸುಹಾಗಿನ/ವಿಧವೆ ಸ್ತ್ರೀಯರಿಗೂ',
-    'ಪಂಚಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ; ಅವಿವಾಹಿತರಿಗೆ',
-    'ಷಷ್ಠೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
-    'ಸಪ್ತಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
-    'ಅಷ್ಟಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
-    'ಅವಿಧವಾ ನವಮೀ — ಸೌಭಾಗ್ಯವತಿ ಸ್ತ್ರೀಯರ ಶ್ರಾದ್ಧ',
-    'ದಶಮೀ ತಿಥಿಯಲ್ಲಿ ಮೃತರಾದ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
-    'ಏಕಾದಶಿ — ಸನ್ಯಾಸಿಗಳು/ಯತಿಗಳ ಶ್ರಾದ್ಧ',
-    'ದ್ವಾದಶಿ — ಸನ್ಯಾಸಿಗಳ ಶ್ರಾದ್ಧ; ವೈಷ್ಣವ ಶ್ರಾದ್ಧ',
-    'ಮಘಾ ಶ್ರಾದ್ಧ — ತಿಥಿ ತಿಳಿಯದವರ ಶ್ರಾದ್ಧಕ್ಕೆ ಸೂಕ್ತ',
-    'ಘಾತ ಚತುರ್ದಶಿ — ಶಸ್ತ್ರ/ಅಪಘಾತ/ಅಕಾಲ ಮರಣದ ಶ್ರಾದ್ಧ',
-    'ಸರ್ವ ಪಿತೃ ಅಮಾವಾಸ್ಯೆ (ಮಹಾಲಯ) — ಎಲ್ಲ ಪಿತೃಗಳ ಶ್ರಾದ್ಧ',
+    'à²ªà³à²°à²¤à²¿à²ªà²¦à²¾ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²®à³ƒà²¤à²°à²¾à²¦ à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²¦à³à²µà²¿à²¤à³€à²¯à²¾ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²®à³ƒà²¤à²°à²¾à²¦ à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²¤à³ƒà²¤à³€à²¯à²¾ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²®à³ƒà²¤à²°à²¾à²¦ à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²šà²¤à³à²°à³à²¥à³€ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²®à³ƒà²¤à²°à²¾à²¦ à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§; à²¸à³à²¹à²¾à²—à²¿à²¨/à²µà²¿à²§à²µà³† à²¸à³à²¤à³à²°à³€à²¯à²°à²¿à²—à³‚',
+    'à²ªà²‚à²šà²®à³€ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²®à³ƒà²¤à²°à²¾à²¦ à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§; à²…à²µà²¿à²µà²¾à²¹à²¿à²¤à²°à²¿à²—à³†',
+    'à²·à²·à³à² à³€ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²®à³ƒà²¤à²°à²¾à²¦ à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²¸à²ªà³à²¤à²®à³€ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²®à³ƒà²¤à²°à²¾à²¦ à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²…à²·à³à²Ÿà²®à³€ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²®à³ƒà²¤à²°à²¾à²¦ à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²…à²µà²¿à²§à²µà²¾ à²¨à²µà²®à³€ â€” à²¸à³Œà²­à²¾à²—à³à²¯à²µà²¤à²¿ à²¸à³à²¤à³à²°à³€à²¯à²° à²¶à³à²°à²¾à²¦à³à²§',
+    'à²¦à²¶à²®à³€ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²®à³ƒà²¤à²°à²¾à²¦ à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²à²•à²¾à²¦à²¶à²¿ â€” à²¸à²¨à³à²¯à²¾à²¸à²¿à²—à²³à³/à²¯à²¤à²¿à²—à²³ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²¦à³à²µà²¾à²¦à²¶à²¿ â€” à²¸à²¨à³à²¯à²¾à²¸à²¿à²—à²³ à²¶à³à²°à²¾à²¦à³à²§; à²µà³ˆà²·à³à²£à²µ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²®à²˜à²¾ à²¶à³à²°à²¾à²¦à³à²§ â€” à²¤à²¿à²¥à²¿ à²¤à²¿à²³à²¿à²¯à²¦à²µà²° à²¶à³à²°à²¾à²¦à³à²§à²•à³à²•à³† à²¸à³‚à²•à³à²¤',
+    'à²˜à²¾à²¤ à²šà²¤à³à²°à³à²¦à²¶à²¿ â€” à²¶à²¸à³à²¤à³à²°/à²…à²ªà²˜à²¾à²¤/à²…à²•à²¾à²² à²®à²°à²£à²¦ à²¶à³à²°à²¾à²¦à³à²§',
+    'à²¸à²°à³à²µ à²ªà²¿à²¤à³ƒ à²…à²®à²¾à²µà²¾à²¸à³à²¯à³† (à²®à²¹à²¾à²²à²¯) â€” à²Žà²²à³à²² à²ªà²¿à²¤à³ƒà²—à²³ à²¶à³à²°à²¾à²¦à³à²§',
   ];
 
   static const _krishnaTithiKn = [
-    'ಕೃಷ್ಣ ಪ್ರತಿಪದಾ', 'ಕೃಷ್ಣ ದ್ವಿತೀಯಾ', 'ಕೃಷ್ಣ ತೃತೀಯಾ',
-    'ಕೃಷ್ಣ ಚತುರ್ಥೀ', 'ಕೃಷ್ಣ ಪಂಚಮೀ', 'ಕೃಷ್ಣ ಷಷ್ಠೀ',
-    'ಕೃಷ್ಣ ಸಪ್ತಮೀ', 'ಕೃಷ್ಣ ಅಷ್ಟಮೀ', 'ಕೃಷ್ಣ ನವಮೀ',
-    'ಕೃಷ್ಣ ದಶಮೀ', 'ಕೃಷ್ಣ ಏಕಾದಶಿ', 'ಕೃಷ್ಣ ದ್ವಾದಶಿ',
-    'ಕೃಷ್ಣ ತ್ರಯೋದಶಿ', 'ಕೃಷ್ಣ ಚತುರ್ದಶಿ', 'ಅಮಾವಾಸ್ಯೆ',
+    'à²•à³ƒà²·à³à²£ à²ªà³à²°à²¤à²¿à²ªà²¦à²¾', 'à²•à³ƒà²·à³à²£ à²¦à³à²µà²¿à²¤à³€à²¯à²¾', 'à²•à³ƒà²·à³à²£ à²¤à³ƒà²¤à³€à²¯à²¾',
+    'à²•à³ƒà²·à³à²£ à²šà²¤à³à²°à³à²¥à³€', 'à²•à³ƒà²·à³à²£ à²ªà²‚à²šà²®à³€', 'à²•à³ƒà²·à³à²£ à²·à²·à³à² à³€',
+    'à²•à³ƒà²·à³à²£ à²¸à²ªà³à²¤à²®à³€', 'à²•à³ƒà²·à³à²£ à²…à²·à³à²Ÿà²®à³€', 'à²•à³ƒà²·à³à²£ à²¨à²µà²®à³€',
+    'à²•à³ƒà²·à³à²£ à²¦à²¶à²®à³€', 'à²•à³ƒà²·à³à²£ à²à²•à²¾à²¦à²¶à²¿', 'à²•à³ƒà²·à³à²£ à²¦à³à²µà²¾à²¦à²¶à²¿',
+    'à²•à³ƒà²·à³à²£ à²¤à³à²°à²¯à³‹à²¦à²¶à²¿', 'à²•à³ƒà²·à³à²£ à²šà²¤à³à²°à³à²¦à²¶à²¿', 'à²…à²®à²¾à²µà²¾à²¸à³à²¯à³†',
   ];
 
   static String _resolveChandraMasa(String masaKey) {
@@ -153,10 +153,10 @@ class ShraddhaCalculator {
   static bool _isPitruPakshaMasa(String amantaMasa) {
     final lower = amantaMasa.toLowerCase();
     return lower.contains('bhadrapada') ||
-           lower.contains('ಭಾದ್ರಪದ') ||
+           lower.contains('à²­à²¾à²¦à³à²°à²ªà²¦') ||
            lower.contains('cm5') ||
            lower.contains('ashwin') ||
-           lower.contains('ಆಶ್ವಿನ');
+           lower.contains('à²†à²¶à³à²µà²¿à²¨');
   }
 
   /// Calculate Kutupa Kala timing.
@@ -220,13 +220,13 @@ class ShraddhaCalculator {
     final isPitruPakshaMasa = _isPitruPakshaMasa(amantaMasa);
     final isPitruPaksha = isPitruPakshaMasa && isKrishna;
 
-    // ── Varshika Shraddha ──
-    final pakshaName = isKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+    // â”€â”€ Varshika Shraddha â”€â”€
+    final pakshaName = isKrishna ? 'à²•à³ƒà²·à³à²£' : 'à²¶à³à²•à³à²²';
     String tithiName;
     if (isAmavasya) {
-      tithiName = 'ಅಮಾವಾಸ್ಯೆ';
+      tithiName = 'à²…à²®à²¾à²µà²¾à²¸à³à²¯à³†';
     } else if (isPurnima) {
-      tithiName = 'ಹುಣ್ಣಿಮೆ';
+      tithiName = 'à²¹à³à²£à³à²£à²¿à²®à³†';
     } else {
       final tithiInPaksha = isKrishna ? tithiIndex - 15 : tithiIndex;
       tithiName = (tithiInPaksha >= 0 && tithiInPaksha < 14) ? _tithiNames[tithiInPaksha] : '';
@@ -241,13 +241,13 @@ class ShraddhaCalculator {
     String varshikaChandraPournimanta;
     String varshikaSoura;
 
-    // ── Kutupa Kala Rule ──
+    // â”€â”€ Kutupa Kala Rule â”€â”€
     // Kutupa = 8th of 15 day muhurtas
     final kutupa = _calcKutupa(sunriseJd, sunsetJd);
     final kutupaStartJd = kutupa['startJd']!;
     final kutupaEndJd = kutupa['endJd']!;
 
-    // ── Aparahna (4th of 5 parts) ──
+    // â”€â”€ Aparahna (4th of 5 parts) â”€â”€
     final aparahna = _calcAparahna(sunriseJd, sunsetJd);
     final aparahnaStartJd = aparahna['startJd']!;
     final aparahnaEndJd = aparahna['endJd']!;
@@ -265,7 +265,7 @@ class ShraddhaCalculator {
     final endDt = DateTime.fromMillisecondsSinceEpoch(endMs, isUtc: true)
         .add(Duration(milliseconds: (tzOffset * 3600000).round()));
     final tithiEndDayLabel = (endDt.day != sunriseDt.day || endDt.month != sunriseDt.month)
-        ? ' (ಮರುದಿನ)' : '';
+        ? ' (à²®à²°à³à²¦à²¿à²¨)' : '';
     final tithiEndTimeForRule = '$tithiEndTimeStr$tithiEndDayLabel';
 
     // Kutupa start in ghati from sunrise
@@ -275,7 +275,7 @@ class ShraddhaCalculator {
     // Check if tithi is present during Kutupa Kala
     final isTithiPresent = tithiEndJd >= kutupaStartJd;
 
-    // ── 2-day Kutupa detection ──
+    // â”€â”€ 2-day Kutupa detection â”€â”€
     // Yesterday's Kutupa (approx 24h earlier)
     final yesterdayKutupaStartJd = kutupaStartJd - 1.0;
     final yesterdayKutupaEndJd = kutupaEndJd - 1.0;
@@ -292,10 +292,10 @@ class ShraddhaCalculator {
 
     if (isTithiPresent) {
       if (willBeAtTomorrowKutupa) {
-        // Tithi at today AND tomorrow → today is first day
+        // Tithi at today AND tomorrow â†’ today is first day
         isFirstDay = true;
       } else if (wasAtYesterdayKutupa) {
-        // Tithi at yesterday AND today → today is second day
+        // Tithi at yesterday AND today â†’ today is second day
         isSecondDay = true;
       }
     }
@@ -312,12 +312,12 @@ class ShraddhaCalculator {
     final kpIsKrishna = kutupaTithiIdx >= 15;
     final kpIsAmavasya = kutupaTithiIdx == 29;
     final kpIsPurnima = kutupaTithiIdx == 14;
-    final kpPakshaName = kpIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+    final kpPakshaName = kpIsKrishna ? 'à²•à³ƒà²·à³à²£' : 'à²¶à³à²•à³à²²';
     String kpTithiName;
     if (kpIsAmavasya) {
-      kpTithiName = 'ಅಮಾವಾಸ್ಯೆ';
+      kpTithiName = 'à²…à²®à²¾à²µà²¾à²¸à³à²¯à³†';
     } else if (kpIsPurnima) {
-      kpTithiName = 'ಹುಣ್ಣಿಮೆ';
+      kpTithiName = 'à²¹à³à²£à³à²£à²¿à²®à³†';
     } else {
       final kpTithiInPaksha = kpIsKrishna ? kutupaTithiIdx - 15 : kutupaTithiIdx;
       kpTithiName = (kpTithiInPaksha >= 0 && kpTithiInPaksha < 14) ? _tithiNames[kpTithiInPaksha] : '';
@@ -327,62 +327,64 @@ class ShraddhaCalculator {
     // (tithi and paksha are same across all 3 calendar systems, only masa changes)
     String aparahnaShraddha;
     if (kpIsAmavasya || kpIsPurnima) {
-      aparahnaShraddha = '$amantaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
-      varshikaChandraAmanta = '$amantaName $kpTithiName ಶ್ರಾದ್ಧ';
-      varshikaChandraPournimanta = '$pournimantaName $kpTithiName ಶ್ರಾದ್ಧ';
-      varshikaSoura = '$souraName $kpTithiName ಶ್ರಾದ್ಧ';
+      aparahnaShraddha = '$amantaName $kpTithiName à²¶à³à²°à²¾à²¦à³à²§ à²®à²¾à²¡à²¬à²¹à³à²¦à³';
+      varshikaChandraAmanta = '$amantaName $kpTithiName à²¶à³à²°à²¾à²¦à³à²§';
+      varshikaChandraPournimanta = '$pournimantaName $kpTithiName à²¶à³à²°à²¾à²¦à³à²§';
+      varshikaSoura = '$souraName $kpTithiName à²¶à³à²°à²¾à²¦à³à²§';
     } else {
-      aparahnaShraddha = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
-      varshikaChandraAmanta = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
-      varshikaChandraPournimanta = '$pournimantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
-      varshikaSoura = '$souraName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
+      aparahnaShraddha = '$amantaName $kpPakshaName $kpTithiName à²¶à³à²°à²¾à²¦à³à²§ à²®à²¾à²¡à²¬à²¹à³à²¦à³';
+      varshikaChandraAmanta = '$amantaName $kpPakshaName $kpTithiName à²¶à³à²°à²¾à²¦à³à²§';
+      varshikaChandraPournimanta = '$pournimantaName $kpPakshaName $kpTithiName à²¶à³à²°à²¾à²¦à³à²§';
+      varshikaSoura = '$souraName $kpPakshaName $kpTithiName à²¶à³à²°à²¾à²¦à³à²§';
     }
 
-    // ── Kshaya Tithi detection (for sunrise tithi) ──
+    // â”€â”€ Kshaya Tithi detection (for sunrise tithi) â”€â”€
     final isKshayaTithi = !isTithiPresent &&
         tithiStartJd > yesterdayKutupaEndJd &&
         tithiEndJd < kutupaStartJd;
 
-    // ── Status: based on Kutupa tithi ──
+    // â”€â”€ Status: based on Kutupa tithi â”€â”€
     String tithiStatus;
     if (kutupaTithiIdx == tithiIndex) {
       // Sunrise tithi IS at Kutupa
       if (isFirstDay) {
-        tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ (ಪ್ರಥಮ ದಿನ)';
+        tithiStatus = 'âœ… $kpPakshaName $kpTithiName â€” à²•à³à²¤à³à²ª à²•à²¾à²²à²¦à²²à³à²²à²¿ à²‡à²¦à³† (à²ªà³à²°à²¥à²® à²¦à²¿à²¨)';
       } else if (isSecondDay) {
-        tithiStatus = '⚠️ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ (ದ್ವಿತೀಯ ದಿನ)\n📌 ಹಿಂದಿನ ದಿನ (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
+        tithiStatus = 'âš ï¸ $kpPakshaName $kpTithiName â€” à²•à³à²¤à³à²ª à²•à²¾à²²à²¦à²²à³à²²à²¿ à²‡à²¦à³† (à²¦à³à²µà²¿à²¤à³€à²¯ à²¦à²¿à²¨)\nðŸ“Œ à²¹à²¿à²‚à²¦à²¿à²¨ à²¦à²¿à²¨ (à²ªà³à²°à²¥à²® à²¦à²¿à²¨) à²¶à³à²°à²¾à²¦à³à²§ à²¯à³‹à²—à³à²¯';
       } else {
-        tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
+        tithiStatus = 'âœ… $kpPakshaName $kpTithiName â€” à²•à³à²¤à³à²ª à²•à²¾à²²à²¦à²²à³à²²à²¿ à²‡à²¦à³†';
       }
     } else {
       // Sunrise tithi ended before Kutupa, next tithi is at Kutupa
-      tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
+      tithiStatus = 'âœ… $kpPakshaName $kpTithiName â€” à²•à³à²¤à³à²ª à²•à²¾à²²à²¦à²²à³à²²à²¿ à²‡à²¦à³†';
     }
 
-    // ── Next Tithi Shraddha ──
-    // If sunrise tithi ends before sunset, the next tithi starts during this day.
+    // â”€â”€ Next Tithi Shraddha â”€â”€
     // Check if the next tithi is Kshaya (misses Kutupa on both today AND tomorrow).
-    // If Kshaya → by Kshaye Purva, its shraddha is TODAY (the first day).
-    // If present at today's Kutupa → shraddha is also today.
-    // If present only at tomorrow's Kutupa → shraddha is tomorrow, not shown here.
+    // We must check even if sunrise tithi ends after sunset â€” the next tithi could
+    // still start at night and end before tomorrow's Kutupa (Kshaya).
+    // If Kshaya â†’ by Kshaye Purva, its shraddha is TODAY (the first day).
+    // If present at today's Kutupa â†’ shraddha is also today.
+    // If present only at tomorrow's Kutupa â†’ shraddha is tomorrow, not shown here.
     String nextTithiShraddha = '';
     String nextTithiStatus = '';
     String nextTithiEndTime = '';
 
     final nextTithiIdx = (tithiIndex + 1) % 30;
-    final bool sunriseTithiEndsDuringDay = tithiEndJd < sunsetJd;
+    // Check next tithi if it starts within 24 hours (before tomorrow's sunrise)
+    final bool checkNextTithi = tithiEndJd < (sunriseJd + 1.0);
 
-    if (sunriseTithiEndsDuringDay) {
+    if (checkNextTithi) {
       // Next tithi starts at tithiEndJd
       final ntIsKrishna = nextTithiIdx >= 15;
       final ntIsAmavasya = nextTithiIdx == 29;
       final ntIsPurnima = nextTithiIdx == 14;
-      final ntPakshaName = ntIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+      final ntPakshaName = ntIsKrishna ? 'à²•à³ƒà²·à³à²£' : 'à²¶à³à²•à³à²²';
       String ntTithiName;
       if (ntIsAmavasya) {
-        ntTithiName = 'ಅಮಾವಾಸ್ಯೆ';
+        ntTithiName = 'à²…à²®à²¾à²µà²¾à²¸à³à²¯à³†';
       } else if (ntIsPurnima) {
-        ntTithiName = 'ಹುಣ್ಣಿಮೆ';
+        ntTithiName = 'à²¹à³à²£à³à²£à²¿à²®à³†';
       } else {
         final ntTithiInPaksha = ntIsKrishna ? nextTithiIdx - 15 : nextTithiIdx;
         ntTithiName = (ntTithiInPaksha >= 0 && ntTithiInPaksha < 14) ? _tithiNames[ntTithiInPaksha] : '';
@@ -417,14 +419,15 @@ class ShraddhaCalculator {
       // Determine if we should show this next tithi's shraddha TODAY
       bool showNextTithiToday = false;
       if (nextAtTodayKutupa) {
-        // Next tithi IS at today's Kutupa → shraddha today
+        // Next tithi IS at today's Kutupa â†’ shraddha today
         showNextTithiToday = true;
       } else if (isNextTithiKshaya) {
-        // Kshaye Purva: Kshaya tithi → shraddha on first day (today)
+        // Kshaye Purva: Kshaya tithi â†’ shraddha on first day (today)
         showNextTithiToday = true;
       }
-      // If only at tomorrow's Kutupa → tomorrow's shraddha, don't show here
+      // If only at tomorrow's Kutupa â†’ tomorrow's shraddha, don't show here
 
+      if (showNextTithiToday) {
       if (showNextTithiToday) {
         // Build next tithi shraddha name
         if (ntIsAmavasya || ntIsPurnima) {
@@ -433,41 +436,49 @@ class ShraddhaCalculator {
           nextTithiShraddha = '$amantaName $ntPakshaName $ntTithiName ಶ್ರಾದ್ಧ';
         }
 
+        final ntStartTimeStr = Ephemeris.formatTimeFromJd(tithiEndJd, tzOffset: tzOffset);
         nextTithiEndTime = Ephemeris.formatTimeFromJd(nextTithiEndJd, tzOffset: tzOffset);
 
+        // Check if next tithi end is on a different day
+        final ntEndMs = ((nextTithiEndJd - 2440587.5) * 86400000).round();
+        final ntEndDt = DateTime.fromMillisecondsSinceEpoch(ntEndMs, isUtc: true)
+            .add(Duration(milliseconds: (tzOffset * 3600000).round()));
+        final ntEndDayLabel = (ntEndDt.day != sunriseDt.day || ntEndDt.month != sunriseDt.month)
+            ? ' (ಮರುದಿನ)' : '';
+
         if (isNextTithiKshaya) {
-          nextTithiStatus = '⚠️ $ntPakshaName $ntTithiName — ಕ್ಷಯ ತಿಥಿ\n📜 ಕ್ಷಯೇ ಪೂರ್ವ — ಇಂದು (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+          nextTithiStatus = '⚠️ $ntPakshaName $ntTithiName — ಕ್ಷಯ ತಿಥಿ\nಪ್ರಾರಂಭ: $ntStartTimeStr | ಅಂತ್ಯ: $nextTithiEndTime$ntEndDayLabel\nಇಂದು ಮತ್ತು ನಾಳೆ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ\n📜 ಕ್ಷಯೇ ಪೂರ್ವ — ಇಂದು ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
         } else {
-          nextTithiStatus = '✅ $ntPakshaName $ntTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
+          nextTithiStatus = '✅ $ntPakshaName $ntTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ\nಪ್ರಾರಂಭ: $ntStartTimeStr | ಅಂತ್ಯ: $nextTithiEndTime$ntEndDayLabel';
         }
       }
     }
 
     String ruleText;
     if (isKshayaTithi) {
-      ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು\nಕ್ಷಯೇ ಪೂರ್ವ: ಕ್ಷಯ ತಿಥಿಯಲ್ಲಿ ಪ್ರಥಮ ದಿನ ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+      ruleText = 'à²¨à²¿à²¯à²®: à²¶à³à²°à²¾à²¦à³à²§ à²¤à²¿à²¥à²¿ à²•à³à²¤à³à²ª à²•à²¾à²²à²¦à²²à³à²²à²¿ à²‡à²°à²¬à³‡à²•à³\nà²•à³à²·à²¯à³‡ à²ªà³‚à²°à³à²µ: à²•à³à²·à²¯ à²¤à²¿à²¥à²¿à²¯à²²à³à²²à²¿ à²ªà³à²°à²¥à²® à²¦à²¿à²¨ à²¶à³à²°à²¾à²¦à³à²§ à²®à²¾à²¡à²¬à³‡à²•à³';
     } else {
-      ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು';
+      ruleText = 'à²¨à²¿à²¯à²®: à²¶à³à²°à²¾à²¦à³à²§ à²¤à²¿à²¥à²¿ à²•à³à²¤à³à²ª à²•à²¾à²²à²¦à²²à³à²²à²¿ à²‡à²°à²¬à³‡à²•à³';
     }
 
     // Build Kshaya / Multi-day explanations
     String kshayaTithiExplanation = '';
     if (isKshayaTithi) {
-      kshayaTithiExplanation = '$pakshaName $tithiName ತಿಥಿ ಇಂದು ಮತ್ತು ನಾಳೆ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ.\n'
-          'ಇದು ಕ್ಷಯ ತಿಥಿ. ಕ್ಷಯೇ ಪೂರ್ವ ನಿಯಮದಂತೆ ಇಂದು ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು.\n'
-          'ಈ ತಿಥಿಯ ಮತ್ತು ಮುಂದಿನ ತಿಥಿಯ ಎರಡೂ ಶ್ರಾದ್ಧ ಇಂದು ಬರುತ್ತದೆ.';
+      kshayaTithiExplanation = '$pakshaName $tithiName à²¤à²¿à²¥à²¿ à²‡à²‚à²¦à³ à²®à²¤à³à²¤à³ à²¨à²¾à²³à³† à²•à³à²¤à³à²ª à²•à²¾à²²à²¦à²²à³à²²à²¿ à²‡à²²à³à²².\n'
+          'à²‡à²¦à³ à²•à³à²·à²¯ à²¤à²¿à²¥à²¿. à²•à³à²·à²¯à³‡ à²ªà³‚à²°à³à²µ à²¨à²¿à²¯à²®à²¦à²‚à²¤à³† à²‡à²‚à²¦à³ à²¶à³à²°à²¾à²¦à³à²§ à²®à²¾à²¡à²¬à³‡à²•à³.\n'
+          'à²ˆ à²¤à²¿à²¥à²¿à²¯ à²®à²¤à³à²¤à³ à²®à³à²‚à²¦à²¿à²¨ à²¤à²¿à²¥à²¿à²¯ à²Žà²°à²¡à³‚ à²¶à³à²°à²¾à²¦à³à²§ à²‡à²‚à²¦à³ à²¬à²°à³à²¤à³à²¤à²¦à³†.';
     }
 
     String multiDayExplanation = '';
     if (isFirstDay) {
-      multiDayExplanation = '$pakshaName $tithiName ತಿಥಿ ಇಂದು ಮತ್ತು ನಾಳೆ ಎರಡೂ ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ.\n'
-          'ಪ್ರಥಮ ದಿನ (ಇಂದು) ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು. ನಾಳೆಯೂ ಮಾಡಬಹುದು.';
+      multiDayExplanation = '$pakshaName $tithiName à²¤à²¿à²¥à²¿ à²‡à²‚à²¦à³ à²®à²¤à³à²¤à³ à²¨à²¾à²³à³† à²Žà²°à²¡à³‚ à²¦à²¿à²¨ à²•à³à²¤à³à²ª à²•à²¾à²²à²¦à²²à³à²²à²¿ à²‡à²¦à³†.\n'
+          'à²ªà³à²°à²¥à²® à²¦à²¿à²¨ (à²‡à²‚à²¦à³) à²¶à³à²°à²¾à²¦à³à²§ à²®à²¾à²¡à²¬à²¹à³à²¦à³. à²¨à²¾à²³à³†à²¯à³‚ à²®à²¾à²¡à²¬à²¹à³à²¦à³.';
     } else if (isSecondDay) {
-      multiDayExplanation = '$pakshaName $tithiName ತಿಥಿ ನಿನ್ನೆ ಮತ್ತು ಇಂದು ಎರಡೂ ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ.\n'
-          'ಪ್ರಥಮ ದಿನ (ನಿನ್ನೆ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ. ಆದರೆ ಇಂದೂ ಮಾಡಬಹುದು.';
+      multiDayExplanation = '$pakshaName $tithiName à²¤à²¿à²¥à²¿ à²¨à²¿à²¨à³à²¨à³† à²®à²¤à³à²¤à³ à²‡à²‚à²¦à³ à²Žà²°à²¡à³‚ à²¦à²¿à²¨ à²•à³à²¤à³à²ª à²•à²¾à²²à²¦à²²à³à²²à²¿ à²‡à²¦à³†.\n'
+          'à²ªà³à²°à²¥à²® à²¦à²¿à²¨ (à²¨à²¿à²¨à³à²¨à³†) à²¶à³à²°à²¾à²¦à³à²§ à²¯à³‹à²—à³à²¯. à²†à²¦à²°à³† à²‡à²‚à²¦à³‚ à²®à²¾à²¡à²¬à²¹à³à²¦à³.';
     }
 
-    // ── Pitru Paksha / Mahalaya ──
+    // â”€â”€ Pitru Paksha / Mahalaya â”€â”€
     int krishnaIdx = -1;
     if (isKrishna) {
       krishnaIdx = isAmavasya ? 14 : tithiIndex - 15;
