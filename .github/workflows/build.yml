@@ -55,10 +55,20 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Backup signing files
+        run: |
+          cp android/app/bharatiyam-release.jks /tmp/bharatiyam-release.jks || true
+          cp android/key.properties /tmp/key.properties || true
+
       - name: Generate platform files
         run: |
           flutter create --project-name bharatiyam_panchanga --org com.bharatiyam --platforms=android,web .
           rm -f test/widget_test.dart
+
+      - name: Restore signing files
+        run: |
+          cp /tmp/bharatiyam-release.jks android/app/bharatiyam-release.jks || true
+          cp /tmp/key.properties android/key.properties || true
 
       - name: Setup Android
         run: |
