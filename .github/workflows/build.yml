@@ -96,6 +96,24 @@ jobs:
       - name: Generate App Icons
         run: dart run flutter_launcher_icons
 
+      - name: Setup Release Signing
+        run: |
+          # Inject signingConfigs into build.gradle.kts
+          cat >> android/app/build.gradle.kts << 'SIGNING_EOF'
+
+          android.signingConfigs {
+              create("release") {
+                  storeFile = file("bharatiyam-release.jks")
+                  storePassword = "bharatiyam123"
+                  keyAlias = "bharatiyam"
+                  keyPassword = "bharatiyam123"
+              }
+          }
+          android.buildTypes.getByName("release") {
+              signingConfig = android.signingConfigs.getByName("release")
+          }
+          SIGNING_EOF
+
       - name: Build APK (split per ABI)
         run: flutter build apk --split-per-abi --release
 
