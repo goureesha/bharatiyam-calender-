@@ -18,6 +18,7 @@ import '../widgets/panchanga_share.dart';
 import '../core/events.dart';
 import 'panchanga_screen.dart';
 import 'settings_screen.dart';
+import '../services/ad_service.dart';
 import 'calendar_screen.dart';
 import 'mahiti_screen.dart';
 
@@ -256,7 +257,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 : _buildSettings(),
         ),
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const BannerAdWidget(),
+          Container(
         decoration: BoxDecoration(
           border: Border(top: BorderSide(color: kCardBorder, width: 1)),
         ),
@@ -270,6 +275,8 @@ class _HomeScreenState extends State<HomeScreen> {
             BottomNavigationBarItem(icon: const Icon(Icons.settings_rounded), label: AppLocale.t('settings')),
           ],
         ),
+      ),
+        ],
       ),
     );
   }

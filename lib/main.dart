@@ -4,6 +4,7 @@ import 'firebase_options.dart';
 import 'screens/home_screen.dart';
 import 'screens/profile_setup_screen.dart';
 import 'services/profile_service.dart';
+import 'services/ad_service.dart';
 import 'widgets/common.dart';
 
 void main() async {
@@ -13,6 +14,9 @@ void main() async {
 
   // Firebase init — background with 3s timeout, never blocks app launch
   _initFirebase();
+
+  // Initialize AdMob (non-blocking)
+  AdService.initialize();
 
   runApp(const BharatiyamPanchangaApp());
 }
