@@ -15,8 +15,10 @@ void main() async {
   // Firebase init — background with 3s timeout, never blocks app launch
   _initFirebase();
 
-  // Initialize AdMob (non-blocking)
-  AdService.initialize();
+  // Initialize AdMob (delayed, non-blocking, never crashes the app)
+  Future.delayed(const Duration(seconds: 2), () {
+    try { AdService.initialize(); } catch (_) {}
+  });
 
   runApp(const BharatiyamPanchangaApp());
 }

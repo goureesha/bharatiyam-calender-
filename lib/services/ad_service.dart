@@ -20,15 +20,22 @@ class AdService {
   // TODO: Replace with your actual Interstitial Ad Unit ID
   static const String _realInterstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
 
-  /// Initialize the Mobile Ads SDK
+  /// Initialize the Mobile Ads SDK (safe, never crashes)
   static Future<void> initialize() async {
     if (_initialized || kIsWeb) return;
     try {
-      await MobileAds.instance.initialize();
+      await MobileAds.instance.initialize().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          debugPrint('AdMob init timed out');
+          return MobileAds.instance.initialize(); // just return something
+        },
+      );
       _initialized = true;
       debugPrint('AdMob initialized');
     } catch (e) {
-      debugPrint('AdMob init failed: $e');
+      debugPrint('AdMob init failed (non-fatal): $e');
+      // Don't set _initialized = true, ads just won't show
     }
   }
 
