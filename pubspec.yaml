@@ -24,7 +24,7 @@ dependencies:
   intl: any
   firebase_core: any
   cloud_firestore: any
-  google_mobile_ads: ^9.1.0
+  # google_mobile_ads: ^9.1.0  # Uncomment when you have real AdMob App ID
 
 dev_dependencies:
   flutter_test:
