@@ -109,6 +109,13 @@
       cursor: pointer; font-weight: bold; font-size: 13px;
     }
     .export-btn:hover { background: rgba(76,175,80,0.3); }
+    .del-btn {
+      padding: 4px 10px; background: rgba(239,83,80,0.15); color: #ef5350;
+      border: 1px solid rgba(239,83,80,0.3); border-radius: 6px;
+      cursor: pointer; font-size: 11px; font-weight: bold;
+      transition: background 0.2s;
+    }
+    .del-btn:hover { background: rgba(239,83,80,0.35); }
   </style>
 </head>
 <body>
@@ -180,6 +187,7 @@
             <th onclick="sortBy('shareCount')">Shares ↕</th>
             <th onclick="sortBy('lastSeen')">Last Seen ↕</th>
             <th onclick="sortBy('createdAt')">Joined ↕</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="usersBody"></tbody>
@@ -326,6 +334,7 @@
           <td class="share-col">${u.shareCount || 0}</td>
           <td class="date-col ${lastSeenClass}">${lastSeenText}</td>
           <td class="date-col">${formatDate(u.createdAt)}</td>
+          <td><button class="del-btn" onclick="deleteUser('${u.id}', '${esc(u.name || 'Unknown')}')">🗑 Delete</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -381,6 +390,19 @@
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `bharatiyam_users_${new Date().toISOString().split('T')[0]}.csv`;
       a.click();
+    }
+
+    async function deleteUser(docId, userName) {
+      if (!confirm(`Are you sure you want to delete "${userName}"?\n\nThis cannot be undone.`)) return;
+      try {
+        await db.collection('users').doc(docId).delete();
+        allUsers = allUsers.filter(u => u.id !== docId);
+        document.getElementById('totalCount').textContent = allUsers.length;
+        renderTable();
+        alert(`"${userName}" deleted successfully.`);
+      } catch (e) {
+        alert('Error deleting user: ' + e.message);
+      }
     }
   </script>
 </body>
