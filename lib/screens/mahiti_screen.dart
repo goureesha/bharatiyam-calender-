@@ -11,6 +11,7 @@ import '../core/grahana_calculator.dart';
 import '../core/panchanga_calculator.dart';
 import '../core/masa_calculator.dart';
 import '../core/sankalpa_generator.dart';
+import '../services/ad_service.dart';
 import '../core/ephemeris.dart';
 import '../core/events.dart';
 import '../models/panchanga_data.dart';
@@ -221,7 +222,16 @@ class _MahitiScreenState extends State<MahitiScreen> {
         children: [
           // Header
           GestureDetector(
-            onTap: () => setState(() => _sankalpaExpanded = !_sankalpaExpanded),
+            onTap: () {
+              if (!_sankalpaExpanded) {
+                // Show interstitial ad when opening Maha Sankalpa
+                AdService.showInterstitial(onAdDismissed: () {
+                  if (mounted) setState(() => _sankalpaExpanded = true);
+                });
+              } else {
+                setState(() => _sankalpaExpanded = false);
+              }
+            },
             child: Row(
               children: [
                 Text('🙏', style: TextStyle(fontSize: 20)),

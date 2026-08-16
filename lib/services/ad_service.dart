@@ -15,6 +15,11 @@ class AdService {
   // TODO: Replace these with your actual AdMob Ad Unit IDs
   static const String _realBannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
 
+  // Interstitial Ad IDs
+  static const String _testInterstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
+  // TODO: Replace with your actual Interstitial Ad Unit ID
+  static const String _realInterstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
+
   /// Initialize the Mobile Ads SDK
   static Future<void> initialize() async {
     if (_initialized || kIsWeb) return;
@@ -31,6 +36,46 @@ class AdService {
   static String get bannerAdUnitId {
     if (kDebugMode) return _testBannerAdUnitId;
     return _realBannerAdUnitId;
+  }
+
+  /// Get the interstitial ad unit ID
+  static String get interstitialAdUnitId {
+    if (kDebugMode) return _testInterstitialAdUnitId;
+    return _realInterstitialAdUnitId;
+  }
+
+  /// Load and show an interstitial ad
+  /// [onAdDismissed] is called after the ad is closed (or if it fails to load)
+  static void showInterstitial({VoidCallback? onAdDismissed}) {
+    if (kIsWeb || !_initialized) {
+      onAdDismissed?.call();
+      return;
+    }
+
+    InterstitialAd.load(
+      adUnitId: interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+              onAdDismissed?.call();
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              debugPrint('Interstitial failed to show: ${error.message}');
+              ad.dispose();
+              onAdDismissed?.call();
+            },
+          );
+          ad.show();
+        },
+        onAdFailedToLoad: (error) {
+          debugPrint('Interstitial failed to load: ${error.message}');
+          onAdDismissed?.call();
+        },
+      ),
+    );
   }
 
   /// Check if ads are supported (not on web)
