@@ -212,14 +212,9 @@ class EventCalculator {
       events.add(AstroEvent(name: 'ಪ್ರದೋಷ ವ್ರತ', description: 'ಶಿವನ ಆರಾಧನೆ. ಸಂಧ್ಯಾ ಕಾಲದಲ್ಲಿ ತ್ರಯೋದಶಿ ಇರಬೇಕು.'));
     }
 
-    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ — Kr. Chaturthi at MOONRISE, Para Viddha (prefer second day)
+    // ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ — Krishna Chaturthi at MOONRISE time = Sankashtha day
+    // Simple rule: if tithi at moonrise is Krishna Chaturthi (index 18), it's Sankashtha
     if (moonriseTithiIdx == 18) {
-      // Para Viddha: skip if next day also has same tithi (prefer second day)
-      if (nextDayTithiIdx != 18) {
-        events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.'));
-      }
-    } else if (t(18) && moonriseTithiIdx != null && moonriseTithiIdx != 18) {
-      // Kshaya at chandrodaya: Chaturthi at sunrise but not at moonrise → fallback
       events.add(AstroEvent(name: 'ಸಂಕಷ್ಟಹರ ಚತುರ್ಥಿ', description: 'ವಿಘ್ನೇಶ್ವರನ ಚಂದ್ರೋದಯ ಪೂಜೆ. ಉಪವಾಸ ಮತ್ತು ಚಂದ್ರ ದರ್ಶನ.'));
     }
 
