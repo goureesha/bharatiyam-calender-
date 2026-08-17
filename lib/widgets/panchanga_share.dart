@@ -13,6 +13,8 @@ import '../core/muhurta_calculator.dart';
 import '../core/ephemeris.dart';
 import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
+import 'dart:io';
+import '../services/profile_image_service.dart';
 
 class PanchangaShare {
   static final GlobalKey _repaintKey = GlobalKey();
@@ -146,6 +148,25 @@ class _ShareCard extends StatelessWidget {
                       width: 100,
                       child: Text(purohitDetails,
                         style: const TextStyle(fontSize: 7, color: Color(0xFF666666), height: 1.3)),
+                    ),
+                  ),
+                // Profile image (right-aligned)
+                if (ProfileImageService.hasImage)
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      width: 45, height: 45,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: const Color(0xFFFF6B00), width: 1.5),
+                      ),
+                      child: ClipOval(
+                        child: Image.file(
+                          File(ProfileImageService.imagePath!),
+                          width: 45, height: 45, fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => const SizedBox(),
+                        ),
+                      ),
                     ),
                   ),
                 // Title (always centered)

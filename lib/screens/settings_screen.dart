@@ -5,7 +5,9 @@ import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
 import '../services/profile_service.dart';
 import '../constants/places.dart';
+import 'dart:io';
 import '../widgets/common.dart';
+import '../services/profile_image_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   final VoidCallback? onLocationChanged;
@@ -55,6 +57,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SectionHeader(icon: Icons.person_rounded, title: 'ಪ್ರೊಫೈಲ್ / Profile'),
+              const SizedBox(height: 8),
+              // Profile Photo Upload
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    final ok = await ProfileImageService.pickAndSave();
+                    if (ok && mounted) setState(() {});
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: 80, height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: kGold, width: 2),
+                          color: kCard,
+                        ),
+                        child: ProfileImageService.hasImage
+                          ? ClipOval(child: Image.file(File(ProfileImageService.imagePath!), width: 80, height: 80, fit: BoxFit.cover))
+                          : Icon(Icons.person, size: 40, color: kMuted),
+                      ),
+                      Positioned(
+                        bottom: 0, right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(shape: BoxShape.circle, color: kGold),
+                          child: Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (ProfileImageService.hasImage)
+                Center(
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      await ProfileImageService.remove();
+                      if (mounted) setState(() {});
+                    },
+                    icon: Icon(Icons.delete_outline, size: 16, color: Colors.red),
+                    label: Text('Remove Photo', style: TextStyle(fontSize: 12, color: Colors.red)),
+                  ),
+                ),
               const SizedBox(height: 12),
               _profileField(_nameCtrl, 'ಹೆಸರು / Name', Icons.person_outline_rounded),
               const SizedBox(height: 10),

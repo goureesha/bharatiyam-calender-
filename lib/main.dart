@@ -4,6 +4,7 @@ import 'firebase_options.dart';
 import 'screens/home_screen.dart';
 import 'screens/profile_setup_screen.dart';
 import 'services/profile_service.dart';
+import 'services/profile_image_service.dart';
 import 'services/ad_service.dart';
 import 'widgets/common.dart';
 
@@ -11,6 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ThemeService.loadTheme();
   await ProfileService.load();
+  await ProfileImageService.init();
 
   // Firebase init — background with 3s timeout, never blocks app launch
   _initFirebase();
