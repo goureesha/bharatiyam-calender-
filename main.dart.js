@@ -33829,11 +33829,11 @@ for(s=!1,r=!1,q=0;q<30;++q){i=h+q*0.041666666666666664
 p=i+0.041666666666666664
 o=A.adv(i,d,e)
 n=A.adv(p,d,e)
-if(!s&&o<-0.5667&&n>=-0.5667){for(m=p,l=i,k=0;k<20;++k){j=(l+m)/2
-if(A.adv(j,d,e)<-0.5667)l=j
+if(!s&&o<-0.2667&&n>=-0.2667){for(m=p,l=i,k=0;k<20;++k){j=(l+m)/2
+if(A.adv(j,d,e)<-0.2667)l=j
 else m=j}g=(l+m)/2
-s=!0}if(!r&&o>-0.5667&&n<=-0.5667){for(m=p,l=i,k=0;k<20;++k){j=(l+m)/2
-if(A.adv(j,d,e)>-0.5667)l=j
+s=!0}if(!r&&o>-0.2667&&n<=-0.2667){for(m=p,l=i,k=0;k<20;++k){j=(l+m)/2
+if(A.adv(j,d,e)>-0.2667)l=j
 else m=j}f=(l+m)/2
 r=!0}if(s&&r)break}return A.b([g,f],t.n)},
 eV(a,b,c){var s,r,q,p,o,n,m,l,k
