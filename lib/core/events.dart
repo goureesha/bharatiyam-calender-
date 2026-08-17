@@ -168,7 +168,8 @@ class EventCalculator {
       if (t(5)) events.add(AstroEvent(name: 'ಸುಬ್ರಹ್ಮಣ್ಯ ಷಷ್ಠಿ (ಚಂಪಾ ಷಷ್ಠಿ)', description: 'ಸುಬ್ರಹ್ಮಣ್ಯ ಸ್ವಾಮಿಯ ಆರಾಧನೆ.'));
       if (tPara(10)) events.add(AstroEvent(name: 'ಗೀತಾ ಜಯಂತಿ / ವೈಕುಂಠ ಏಕಾದಶಿ', description: 'ಭಗವದ್ಗೀತೆ ಬೋಧಿಸಿದ ದಿನ.'));
       if (t(14)) events.add(AstroEvent(name: 'ದತ್ತಾತ್ರೇಯ ಜಯಂತಿ', description: 'ದತ್ತಾತ್ರೇಯನ ಅವತಾರ.'));
-      if (t(22)) events.add(AstroEvent(name: 'ಕಾಲಭೈರವ ಅಷ್ಟಮಿ', description: 'ಕಾಲಭೈರವನ ಆರಾಧನೆ.'));
+      // ಕಾಲಭೈರವ ಅಷ್ಟಮಿ — Kr. Ashtami at NISHITHA (midnight) per Dharma Sindhu
+      if (midnightTithiIdx == 22) events.add(AstroEvent(name: 'ಕಾಲಭೈರವ ಅಷ್ಟಮಿ', description: 'ಕಾಲಭೈರವನ ಆರಾಧನೆ. ನಿಶೀಥ ಕಾಲದಲ್ಲಿ ಅಷ್ಟಮಿ ಇರಬೇಕು.'));
     }
 
     // 10. ಪುಷ್ಯ ಮಾಸ
