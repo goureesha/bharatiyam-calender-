@@ -254,14 +254,27 @@
     });
 
     // ── Data ──
-    async function refreshData() {
+    let unsubscribe = null;
+
+    function refreshData() {
       document.getElementById('loadingMsg').style.display = 'block';
       document.getElementById('usersTable').style.display = 'none';
       document.getElementById('emptyState').style.display = 'none';
 
-      try {
-        const snap = await db.collection('users').orderBy('createdAt', 'desc').get();
+      // Unsubscribe from previous listener if any
+      if (unsubscribe) unsubscribe();
+
+      // Real-time listener — auto-updates when new entries are added
+      unsubscribe = db.collection('users').onSnapshot(snap => {
         allUsers = snap.docs.map((doc, i) => ({ id: doc.id, index: i + 1, ...doc.data() }));
+
+        // Sort by createdAt descending (entries without createdAt go to the end)
+        allUsers.sort((a, b) => {
+          const da = a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate() : new Date(a.createdAt)) : new Date(0);
+          const db2 = b.createdAt ? (b.createdAt.toDate ? b.createdAt.toDate() : new Date(b.createdAt)) : new Date(0);
+          return db2 - da;
+        });
+        allUsers.forEach((u, i) => u.index = i + 1);
 
         document.getElementById('totalCount').textContent = allUsers.length;
 
@@ -286,11 +299,11 @@
         });
         document.getElementById('activeCount').textContent = activeUsers.length;
         renderTable();
-      } catch (e) {
+      }, e => {
         console.error('Error:', e);
         document.getElementById('loadingMsg').innerHTML =
           '❌ Error: ' + e.message;
-      }
+      });
     }
 
     function renderTable() {
