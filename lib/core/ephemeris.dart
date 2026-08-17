@@ -101,12 +101,13 @@ class Ephemeris {
   }
 
   /// Find sunrise and sunset JDs for a given date using binary search on solar altitude.
-  /// tzOffset provided: -0.5667° horizon (mid-limb with refraction)
+  /// tzOffset provided: -0.2667° horizon (mid-limb, NO atmospheric refraction)
   /// tzOffset null: 0.0° horizon (true geocentric — for Mandi calc)
   static List<double> findSunriseSetForDate(
     int y, int m, int d, double lat, double lon, {double? tzOffset}
   ) {
-    final horizonAlt = (tzOffset != null) ? -0.5667 : 0.0;
+    // Mid-limb: Sun semi-diameter ~16 arcmin = 0.2667°, no refraction
+    final horizonAlt = (tzOffset != null) ? -0.2667 : 0.0;
     double jdStart;
     if (tzOffset != null) {
       jdStart = Sweph.swe_julday(y, m, d, 0, CalendarType.SE_GREG_CAL) - (tzOffset / 24.0) - (2.0 / 24.0);
