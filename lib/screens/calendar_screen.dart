@@ -712,6 +712,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
+                    Expanded(child: _infoTile('🌙 ಚಂದ್ರೋದಯ', d.chandraUdaya)),
+                    Expanded(child: _infoTile('🌑 ಚಂದ್ರಾಸ್ತ', d.chandraAsta)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
                     Expanded(child: _infoTile(AppLocale.t('divamana'), d.divamana)),
                     Expanded(child: _infoTile(AppLocale.t('ratrimana'), d.ratrimana)),
                   ],
