@@ -6,7 +6,7 @@ import 'ephemeris.dart';
 class KalaCalculator {
   // Muhurta number (1-indexed) for each weekday (Sun=0 .. Sat=6)
   static const List<int> _rahuKala = [8, 2, 7, 5, 6, 4, 3];
-  static const List<int> _yamaganda = [5, 4, 3, 6, 5, 1, 2];
+  static const List<int> _yamaganda = [5, 4, 3, 2, 1, 7, 6];
   static const List<int> _gulikaKala = [7, 6, 5, 4, 3, 2, 1];
 
   /// Calculate all three Kala timings
