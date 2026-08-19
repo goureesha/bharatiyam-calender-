@@ -22,14 +22,15 @@ class SankalpaGenerator {
   ];
 
   // ── Vara Names (Sanskrit in Kannada) ──
+  // Dart DateTime.weekday: 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat, 7=Sun
   static const varaNames = {
-    1: 'ಭಾನು ವಾಸರ ಯುಕ್ತಾಯಾಂ',    // Monday -> index 1 in DateTime
-    2: 'ಇಂದು ವಾಸರ ಯುಕ್ತಾಯಾಂ',
-    3: 'ಭೌಮ ವಾಸರ ಯುಕ್ತಾಯಾಂ',
-    4: 'ಸೌಮ್ಯ ವಾಸರ ಯುಕ್ತಾಯಾಂ',
-    5: 'ಗುರು ವಾಸರ ಯುಕ್ತಾಯಾಂ',
-    6: 'ಭೃಗು ವಾಸರ ಯುಕ್ತಾಯಾಂ',
-    7: 'ಸ್ಥಿರ ವಾಸರ ಯುಕ್ತಾಯಾಂ',
+    1: 'ಇಂದು ವಾಸರ ಯುಕ್ತಾಯಾಂ',    // Monday (Soma/Indu)
+    2: 'ಭೌಮ ವಾಸರ ಯುಕ್ತಾಯಾಂ',    // Tuesday (Mangala/Bhauma)
+    3: 'ಸೌಮ್ಯ ವಾಸರ ಯುಕ್ತಾಯಾಂ',   // Wednesday (Budha/Saumya)
+    4: 'ಗುರು ವಾಸರ ಯುಕ್ತಾಯಾಂ',    // Thursday (Guru/Brihaspati)
+    5: 'ಭೃಗು ವಾಸರ ಯುಕ್ತಾಯಾಂ',    // Friday (Shukra/Bhrigu)
+    6: 'ಸ್ಥಿರ ವಾಸರ ಯುಕ್ತಾಯಾಂ',    // Saturday (Shani/Sthira)
+    7: 'ಭಾನು ವಾಸರ ಯುಕ್ತಾಯಾಂ',    // Sunday (Ravi/Bhanu)
   };
 
   // ── Tithi Names (Sanskrit in Kannada) ──
