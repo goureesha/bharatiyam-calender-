@@ -193,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
         moonriseTithiIdx: moonriseTithi,
         noonTithiIdx: noonTithi,
         midnightTithiIdx: midnightTithi,
+        varaIndex: d.varaIndex,
         isAdhika: isAdhika,
       );
     } catch (_) {}

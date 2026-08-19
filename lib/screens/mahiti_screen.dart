@@ -144,6 +144,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
               moonriseTithiIdx: moonriseTithi,
               noonTithiIdx: noonTithi,
               midnightTithiIdx: midnightTithi,
+              varaIndex: data.varaIndex,
               isAdhika: isAdhika,
             );
           }

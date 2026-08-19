@@ -113,6 +113,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   moonriseTithiIdx: moonriseTithi,
                   noonTithiIdx: noonTithi,
                   midnightTithiIdx: midnightTithi,
+                  varaIndex: p.varaIndex,
                   isAdhika: isAdhika,
                 );
                 if (ev.isNotEmpty) events[d] = ev;
@@ -205,13 +206,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
               moonriseTithiIdx: moonriseTithi,
               noonTithiIdx: noonTithi,
               midnightTithiIdx: midnightTithi,
+              varaIndex: p.varaIndex,
               isAdhika: isAdhika,
             );
             if (ev.isNotEmpty) events[d] = ev;
           } catch (_) {}
         }
 
-        // ═══ Varalakshmi Vrata (Shravana, nearest Friday to Pournima) ═══
+        // ═══ Varalakshmi Vrata (Shravana, Friday BEFORE Pournima) ═══
         if (masaName == 'ಶ್ರಾವಣ' && !isAdhika) {
           // Step 1: Find the day when Shravana Pournima (tithi 14) falls
           int? pournimaDay;
@@ -222,36 +224,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
               break;
             }
           }
-          // Step 2: Find nearest Friday to Pournima
+          // Step 2: Find the Friday BEFORE Pournima (always the preceding Friday)
           if (pournimaDay != null) {
             final pournimaDate = DateTime(savedMonth.year, savedMonth.month, pournimaDay);
             final pournimaWeekday = pournimaDate.weekday; // 1=Mon...5=Fri...7=Sun
-            if (pournimaWeekday == 5) {
-              // Pournima IS Friday — Varalakshmi on Pournima day
-              events.putIfAbsent(pournimaDay, () => []);
-              events[pournimaDay]!.add(AstroEvent(
-                name: 'ವರಮಹಾಲಕ್ಷ್ಮಿ ವ್ರತ', description: 'ಶ್ರಾವಣ ಪೌರ್ಣಿಮೆಯ ಶುಕ್ರವಾರ. ಮಹಾಲಕ್ಷ್ಮಿ ಪೂಜೆ.',
-                shloka: '', source: '',
+            // Always go to the previous Friday — even if Pournima is Friday
+            var daysToPrevFri = (pournimaWeekday - 5 + 7) % 7;
+            if (daysToPrevFri == 0) daysToPrevFri = 7; // Pournima is Friday → go back 7
+            final varalakshmiDay = pournimaDay - daysToPrevFri;
+            if (varalakshmiDay >= 1 && varalakshmiDay <= daysInMonth) {
+              events.putIfAbsent(varalakshmiDay, () => []);
+              events[varalakshmiDay]!.add(AstroEvent(
+                name: 'ವರಮಹಾಲಕ್ಷ್ಮಿ ವ್ರತ', description: 'ಶ್ರಾವಣ ಪೌರ್ಣಿಮೆಯ ಹಿಂದಿನ ಶುಕ್ರವಾರ. ಮಹಾಲಕ್ಷ್ಮಿ ಪೂಜೆ.',
               ));
-            } else {
-              // Find nearest Friday (before or after)
-              // Days to previous Friday
-              int daysToPrevFri = (pournimaWeekday - 5 + 7) % 7;
-              if (daysToPrevFri == 0) daysToPrevFri = 7;
-              // Days to next Friday
-              int daysToNextFri = (5 - pournimaWeekday + 7) % 7;
-              if (daysToNextFri == 0) daysToNextFri = 7;
-              // Pick nearest
-              final nearestOffset = (daysToPrevFri <= daysToNextFri)
-                  ? -daysToPrevFri : daysToNextFri;
-              final varalakshmiDay = pournimaDay + nearestOffset;
-              if (varalakshmiDay >= 1 && varalakshmiDay <= daysInMonth) {
-                events.putIfAbsent(varalakshmiDay, () => []);
-                events[varalakshmiDay]!.add(AstroEvent(
-                  name: 'ವರಮಹಾಲಕ್ಷ್ಮಿ ವ್ರತ', description: 'ಶ್ರಾವಣ ಪೌರ್ಣಿಮೆಗೆ ಸಮೀಪದ ಶುಕ್ರವಾರ. ಮಹಾಲಕ್ಷ್ಮಿ ಪೂಜೆ.',
-                  shloka: '', source: '',
-                ));
-              }
             }
           }
         }

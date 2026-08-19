@@ -25,6 +25,7 @@ class EventCalculator {
   /// noonTithiIdx: tithi at NOON/MADHYAHNA
   /// midnightTithiIdx: tithi at MIDNIGHT/NISHITHA
   /// prevDayTithiIdx/nextDayTithiIdx: for vriddhi/kshaya detection
+  /// varaIndex: day of week (0=Sun, 1=Mon, 2=Tue, ..., 6=Sat)
   static List<AstroEvent> getEvents({
     required String masa,
     required int tIdx,
@@ -34,6 +35,7 @@ class EventCalculator {
     int? moonriseTithiIdx,
     int? noonTithiIdx,
     int? midnightTithiIdx,
+    int? varaIndex,
     bool isAdhika = false,
   }) {
     final List<AstroEvent> events = [];
@@ -86,6 +88,8 @@ class EventCalculator {
       if (t(2)) events.add(AstroEvent(name: 'ಅಕ್ಷಯ ತೃತೀಯಾ / ಪರಶುರಾಮ ಜಯಂತಿ', description: 'ಅತ್ಯಂತ ಶುಭದಿನ. ದಾನ, ಜಪಗಳು ಅಕ್ಷಯ ಫಲ ನೀಡುತ್ತವೆ.'));
       if (t(4)) events.add(AstroEvent(name: 'ಶಂಕರಾಚಾರ್ಯ ಜಯಂತಿ', description: 'ಆದಿ ಶಂಕರಾಚಾರ್ಯರ ಅವತಾರ ದಿನ.'));
       if (t(6)) events.add(AstroEvent(name: 'ಗಂಗೋತ್ಪತ್ತಿ / ಜಹ್ನು ಸಪ್ತಮಿ', description: 'ಗಂಗಾದೇವಿಯ ಅವತರಣ ದಿನ.'));
+      // Sita Navami: Navami at MADHYAHNA (noon)
+      if (noonTithiIdx == 8) events.add(AstroEvent(name: 'ಸೀತಾ ನವಮಿ (ಜಾನಕೀ ನವಮಿ)', description: 'ಸೀತಾ ದೇವಿಯ ಅವತಾರ ದಿನ. ಮಧ್ಯಾಹ್ನ ವ್ಯಾಪ್ತಿ.'));
       if (tPara(10)) events.add(AstroEvent(name: 'ಮೋಹಿನೀ ಏಕಾದಶಿ', description: 'ಮೋಹಿನೀ ಅವತಾರದ ಸ್ಮರಣೆ.'));
       // Narasimha Jayanti: Chaturdashi at SANDHYA (sunset)
       if (sunsetTithiIdx == 13) events.add(AstroEvent(name: 'ಶ್ರೀ ನರಸಿಂಹ ಜಯಂತಿ', description: 'ನರಸಿಂಹನ ಅವತಾರ ದಿನ. ಸಂಧ್ಯಾ ಕಾಲದಲ್ಲಿ ಪ್ರಾದುರ್ಭಾವ.'));
@@ -111,7 +115,9 @@ class EventCalculator {
 
     // 5. ಶ್ರಾವಣ ಮಾಸ
     if (masa == 'ಶ್ರಾವಣ') {
-      if (t(2)) events.add(AstroEvent(name: 'ಮಂಗಳ ಗೌರಿ ವ್ರತ ಆರಂಭ', description: 'ಶ್ರಾವಣ ಮಾಸದ ಪ್ರಾರಂಭದಲ್ಲಿ ಗೌರಿ ವ್ರತ.'));
+      // Mangala Gauri Vrata — observed on all Tuesdays of Shravana
+      if (varaIndex == 2) events.add(AstroEvent(name: 'ಮಂಗಳ ಗೌರಿ ವ್ರತ', description: 'ಶ್ರಾವಣ ಮಾಸದ ಪ್ರತಿ ಮಂಗಳವಾರ. ಗೌರಿ ದೇವಿಯ ಆರಾಧನೆ.'));
+      if (t(2)) events.add(AstroEvent(name: 'ಹರಿಯಾಳೀ ತೀಜ್ (ಶ್ರಾವಣ ತದಿಗೆ)', description: 'ಪಾರ್ವತೀ ವ್ರತ. ಶೃಂಗಾರ ಮತ್ತು ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ.'));
       if (t(4)) events.add(AstroEvent(name: 'ನಾಗ ಪಂಚಮಿ', description: 'ನಾಗ ದೇವತೆಗಳ ಆರಾಧನೆ. ಹಾಲು ಅರ್ಪಣೆ.'));
       if (t(14)) events.add(AstroEvent(name: 'ಉಪಾಕರ್ಮ / ರಕ್ಷಾ ಬಂಧನ', description: 'ನೂತನ ಯಜ್ಞೋಪವೀತ ಧಾರಣೆ. ಸಹೋದರ ಪ್ರೇಮ.'));
       if (t(17)) events.add(AstroEvent(name: 'ಕಜ್ಜಾಯ ತದಿಗೆ', description: 'ಕಜ್ಜಾಯ ತಯಾರಿಸಿ ದೇವತೆಗಳಿಗೆ ಅರ್ಪಿಸುವ ಆಚರಣೆ.'));
@@ -123,11 +129,17 @@ class EventCalculator {
     // 6. ಭಾದ್ರಪದ ಮಾಸ
     if (masa == 'ಭಾದ್ರಪದ') {
       if (t(2)) events.add(AstroEvent(name: 'ಸ್ವರ್ಣಗೌರಿ ವ್ರತ / ಹರ್ತಾಲಿಕಾ ತೃತೀಯಾ', description: 'ಸೌಭಾಗ್ಯಕ್ಕಾಗಿ ಪಾರ್ವತಿ ವ್ರತ. ಹರ್ತಾಲಿಕಾ ಪೂಜೆ.'));
+      // Varaha Jayanti: Bhadrapada Shukla Tritiya — Madhyahna Vyapti
+      if (noonTithiIdx == 2) events.add(AstroEvent(name: 'ವರಾಹ ಜಯಂತಿ', description: 'ವರಾಹಾವತಾರದ ಅವತಾರ ದಿನ. ಮಧ್ಯಾಹ್ನ ವ್ಯಾಪ್ತಿ.'));
       // Ganesha Chaturthi: Madhyahna Vyapti — Chaturthi must be at NOON (Dharma Sindhu)
       if (noonTithiIdx == 3 && prevDayTithiIdx != 3) events.add(AstroEvent(name: 'ಗಣೇಶ ಚತುರ್ಥಿ', description: 'ಮಹಾಗಣಪತಿಯ ಅವತಾರ ದಿನ. ಮಣ್ಣಿನ ಗಣೇಶ ಸ್ಥಾಪನೆ. ಮಧ್ಯಾಹ್ನ ವ್ಯಾಪ್ತಿ.'));
       if (t(4)) events.add(AstroEvent(name: 'ಋಷಿ ಪಂಚಮಿ', description: 'ಸಪ್ತ ಋಷಿಗಳ ಆರಾಧನೆ.'));
       if (t(6)) events.add(AstroEvent(name: 'ಲಲಿತಾ ಸಪ್ತಮಿ', description: 'ಲಲಿತಾ ದೇವಿ ಆರಾಧನೆ.'));
+      // Radha Ashtami: Bhadrapada Shukla Ashtami — Madhyahna Vyapti
+      if (noonTithiIdx == 7) events.add(AstroEvent(name: 'ರಾಧಾ ಅಷ್ಟಮಿ', description: 'ಶ್ರೀ ರಾಧಾ ದೇವಿಯ ಅವತಾರ ದಿನ. ಮಧ್ಯಾಹ್ನ ವ್ಯಾಪ್ತಿ.'));
       if (tPara(10)) events.add(AstroEvent(name: 'ಪರಿವರ್ತಿನೀ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುವಿನ ಶಯನ ಪರಿವರ್ತನ.'));
+      // Vamana Jayanti: Bhadrapada Shukla Dvadashi — Madhyahna Vyapti
+      if (noonTithiIdx == 11) events.add(AstroEvent(name: 'ವಾಮನ ಜಯಂತಿ', description: 'ವಾಮನಾವತಾರದ ಅವತಾರ ದಿನ. ಮಧ್ಯಾಹ್ನ ವ್ಯಾಪ್ತಿ.'));
       if (t(13)) events.add(AstroEvent(name: 'ಅನಂತ ಚತುರ್ದಶಿ (ಗಣೇಶ ವಿಸರ್ಜನ)', description: 'ಗಣೇಶ ವಿಸರ್ಜನೆ. ಅನಂತ ಪದ್ಮನಾಭ ವ್ರತ.'));
       if (t(14)) events.add(AstroEvent(name: 'ಮಹಾಲಯಾರಂಭ', description: 'ಪಿತೃಪಕ್ಷದ ಆರಂಭ. ೧೫ ದಿನ ಪಿತೃ ಶ್ರಾದ್ಧ.'));
       if (t(29)) events.add(AstroEvent(name: 'ಮಹಾಲಯ ಅಮಾವಾಸ್ಯೆ', description: 'ಸರ್ವ ಪಿತೃಗಳಿಗೂ ತರ್ಪಣ. ಪಿತೃಪಕ್ಷ ಸಮಾಪ್ತಿ.'));
@@ -147,6 +159,10 @@ class EventCalculator {
       if (t(9)) events.add(AstroEvent(name: 'ವಿಜಯದಶಮಿ (ದಸರಾ)', description: 'ಬನ್ನಿ ಮಿಡಿ ಪೂಜೆ. ಸೀಮೋಲ್ಲಂಘನ. ಶಮಿ ಪೂಜೆ.'));
       // Karva Chauth: chandrodaya — Kr. Chaturthi at MOONRISE
       if (moonriseTithiIdx == 18) events.add(AstroEvent(name: 'ಕರ್ವಾ ಚೌತ್', description: 'ಪತಿಯ ದೀರ್ಘಾಯುಷ್ಯಕ್ಕಾಗಿ ಚಂದ್ರೋದಯ ವ್ರತ.'));
+      // Govatsa Dvadashi (Vasu Baras) — Ashvina Krishna Dvadashi in Amanta
+      if (t(26)) events.add(AstroEvent(name: 'ಗೋವತ್ಸ ದ್ವಾದಶಿ (ವಸು ಬಾರಸ್)', description: 'ಗೋವು ಮತ್ತು ಕರುವಿನ ಪೂಜೆ.'));
+      // Dhana Trayodashi (Dhanteras) — Ashvina Krishna Trayodashi in Amanta
+      if (t(27)) events.add(AstroEvent(name: 'ಧನ ತ್ರಯೋದಶಿ (ಧನ್ತೇರಸ್)', description: 'ಧನ್ವಂತರಿ ಜಯಂತಿ. ಹೊಸ ಪಾತ್ರೆ/ಬಂಗಾರ ಖರೀದಿ.'));
       if (t(28)) events.add(AstroEvent(name: 'ನರಕ ಚತುರ್ದಶಿ', description: 'ನರಕಾಸುರ ಸಂಹಾರ. ಅಭ್ಯಂಜನ ಸ್ನಾನ.'));
       if (t(29)) events.add(AstroEvent(name: 'ದೀಪಾವಳಿ / ಲಕ್ಷ್ಮಿ ಪೂಜೆ', description: 'ಮಹಾಲಕ್ಷ್ಮಿಯ ಆರಾಧನೆ. ದೀಪ ಬೆಳಗಿಸುವ ಹಬ್ಬ.'));
     }
@@ -155,12 +171,13 @@ class EventCalculator {
     if (masa == 'ಕಾರ್ತಿಕ') {
       if (t(0)) events.add(AstroEvent(name: 'ಬಲಿ ಪಾಡ್ಯಮಿ / ಗೋವರ್ಧನ ಪೂಜೆ', description: 'ಬಲೀಂದ್ರ ಪೂಜೆ, ಗೋಪೂಜೆ, ಗೋವರ್ಧನ ಪೂಜೆ.'));
       if (t(1)) events.add(AstroEvent(name: 'ಯಮ ದ್ವಿತೀಯಾ (ಭಾತೃ ದ್ವಿತೀಯಾ)', description: 'ಸಹೋದರ ಬಾಂಧವ್ಯದ ಹಬ್ಬ.'));
-      if (t(8)) events.add(AstroEvent(name: 'ಗೋಪಾಷ್ಟಮೀ', description: 'ಗೋವುಗಳ ಪೂಜೆ. ಕೃಷ್ಣನ ಗೋ ಸೇವೆ ಸ್ಮರಣೆ.'));
+      // Skanda Shashthi (Soorasamharam) — Kartika Shukla Shashthi
+      if (t(5)) events.add(AstroEvent(name: 'ಸ್ಕಂದ ಷಷ್ಠಿ (ಸೂರಸಂಹಾರ)', description: 'ಕಾರ್ತಿಕೇಯ ಸ್ವಾಮಿಯ ಷಷ್ಠಿ. ಸೂರಪದ್ಮ ಸಂಹಾರ.'));
+      // Gopashtami — Kartika Shukla ASHTAMI (idx 7, NOT 8)
+      if (t(7)) events.add(AstroEvent(name: 'ಗೋಪಾಷ್ಟಮೀ', description: 'ಗೋವುಗಳ ಪೂಜೆ. ಕೃಷ್ಣನ ಗೋ ಸೇವೆ ಸ್ಮರಣೆ.'));
       if (tPara(10)) events.add(AstroEvent(name: 'ಪ್ರಬೋಧಿನೀ ಏಕಾದಶಿ', description: 'ವಿಷ್ಣುವಿನ ನಿದ್ರೆಯಿಂದ ಎಚ್ಚರ.'));
       if (t(11)) events.add(AstroEvent(name: 'ಉತ್ಥಾನ ದ್ವಾದಶಿ / ತುಳಸಿ ವಿವಾಹ', description: 'ಚಾತುರ್ಮಾಸ್ಯ ಸಮಾಪ್ತಿ. ತುಳಸೀ ವಿವಾಹ.'));
       if (t(14)) events.add(AstroEvent(name: 'ಕಾರ್ತಿಕ ಪೌರ್ಣಿಮೆ / ಗುರು ನಾನಕ್ ಜಯಂತಿ', description: 'ಶಿವನಿಗೆ ದೀಪೋತ್ಸವ.'));
-      if (t(26)) events.add(AstroEvent(name: 'ಗೋವತ್ಸ ದ್ವಾದಶಿ (ವಸು ಬಾರಸ್)', description: 'ಗೋವು ಮತ್ತು ಕರುವಿನ ಪೂಜೆ.'));
-      if (t(27)) events.add(AstroEvent(name: 'ಧನ ತ್ರಯೋದಶಿ (ಧನ್ತೇರಸ್)', description: 'ಧನ್ವಂತರಿ ಜಯಂತಿ. ಹೊಸ ಪಾತ್ರೆ/ಬಂಗಾರ ಖರೀದಿ.'));
     }
 
     // 9. ಮಾರ್ಗಶಿರ ಮಾಸ

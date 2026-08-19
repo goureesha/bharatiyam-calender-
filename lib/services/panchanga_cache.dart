@@ -131,6 +131,7 @@ class PanchangaCache {
                   try { return PanchangaCalculator.tithiAtJd(data.sunsetJd + 0.25); } catch (_) {}
                   return null;
                 })(),
+                varaIndex: data.varaIndex,
                 isAdhika: isAdhika,
               );
               if (events.isNotEmpty) _eventCache[key] = events;
@@ -147,7 +148,7 @@ class PanchangaCache {
           }
         }
 
-        // ═══ Varalakshmi Vrata (Shravana, nearest Friday to Pournima) ═══
+        // ═══ Varalakshmi Vrata (Shravana, Friday BEFORE Pournima) ═══
         // After processing all days of this month, check for Shravana Pournima
         for (int d = 1; d <= daysInMonth; d++) {
           final key = _key(y, m, d);
@@ -165,23 +166,16 @@ class PanchangaCache {
               // Found Shravana Pournima on day d
               final pournimaDate = DateTime(y, m, d);
               final wd = pournimaDate.weekday; // 1=Mon...5=Fri...7=Sun
-              int varalakshmiDay;
-              if (wd == 5) {
-                varalakshmiDay = d;
-              } else {
-                int daysToPrevFri = (wd - 5 + 7) % 7;
-                if (daysToPrevFri == 0) daysToPrevFri = 7;
-                int daysToNextFri = (5 - wd + 7) % 7;
-                if (daysToNextFri == 0) daysToNextFri = 7;
-                varalakshmiDay = d + ((daysToPrevFri <= daysToNextFri) ? -daysToPrevFri : daysToNextFri);
-              }
+              // Always go to the previous Friday — even if Pournima is Friday
+              var daysToPrevFri = (wd - 5 + 7) % 7;
+              if (daysToPrevFri == 0) daysToPrevFri = 7; // Pournima is Friday → go back 7
+              final varalakshmiDay = d - daysToPrevFri;
               if (varalakshmiDay >= 1 && varalakshmiDay <= daysInMonth) {
                 final vKey = _key(y, m, varalakshmiDay);
                 _eventCache.putIfAbsent(vKey, () => []);
                 _eventCache[vKey]!.add(AstroEvent(
                   name: 'ವರಮಹಾಲಕ್ಷ್ಮಿ ವ್ರತ',
-                  description: 'ಶ್ರಾವಣ ಪೌರ್ಣಿಮೆಗೆ ಸಮೀಪದ ಶುಕ್ರವಾರ. ಮಹಾಲಕ್ಷ್ಮಿ ಪೂಜೆ.',
-                  shloka: '', source: '',
+                  description: 'ಶ್ರಾವಣ ಪೌರ್ಣಿಮೆಯ ಹಿಂದಿನ ಶುಕ್ರವಾರ. ಮಹಾಲಕ್ಷ್ಮಿ ಪೂಜೆ.',
                 ));
               }
               break; // Only one Pournima per Shravana
