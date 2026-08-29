@@ -13,6 +13,7 @@ import '../i18n/app_locale.dart';
 import '../services/location_service.dart';
 import '../services/precomputed_data.dart';
 import '../widgets/common.dart';
+import '../widgets/cross_promotion.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -42,6 +43,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _currentMonth = DateTime(now.year, now.month, 1);
     _selectedDay = now.day;
     _loadMonth();
+
+    // Show cross-promotion popup (once/day, after 3s delay)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      CrossPromotion.maybeShow(context);
+    });
   }
 
   @override
