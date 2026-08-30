@@ -14,6 +14,7 @@ import '../services/location_service.dart';
 import '../services/precomputed_data.dart';
 import '../widgets/common.dart';
 import '../widgets/cross_promotion.dart';
+import '../services/ad_service.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -363,6 +364,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
         children: [
           _buildMonthBar(),
           _buildTransposedGrid(),
+          const SizedBox(height: 4),
+          const BannerAdWidget(),
           if (_selectedDay != null && _monthData.containsKey(_selectedDay)) ...[
             const SizedBox(height: 8),
             Container(

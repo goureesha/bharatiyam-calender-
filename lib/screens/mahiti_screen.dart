@@ -351,7 +351,9 @@ class _MahitiScreenState extends State<MahitiScreen> {
                   child: ElevatedButton.icon(
                     onPressed: () {
                       final text = _getSankalpaText();
-                      Share.share(text, subject: 'ಮಹಾ ಸಂಕಲ್ಪ');
+                      AdService.showInterstitial(onAdDismissed: () {
+                        Share.share(text, subject: 'ಮಹಾ ಸಂಕಲ್ಪ');
+                      });
                     },
                     icon: Icon(Icons.share_rounded, size: 16, color: Colors.white),
                     label: Text('Share', style: TextStyle(color: Colors.white, fontSize: 12)),
