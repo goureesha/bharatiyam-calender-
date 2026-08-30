@@ -55272,7 +55272,7 @@ A.a_e.prototype={
 ao(){this.aH()
 if($.aPO)this.apk()},
 apk(){var s=null,r=new A.aaR(new A.ayQ(this),new A.ayR(),s,s,s,s,s,s)
-r=new A.jK(B.tC,B.OR,r,r,"ca-app-pub-9748660125901669/BANNER_ID")
+r=new A.jK(B.tC,B.OR,r,r,"ca-app-pub-9748660125901669/3248306368")
 r.n6()
 this.d=r},
 l(){var s=this.d
