@@ -15,7 +15,7 @@ class AdService {
 
   static const String _interstitialAdUnitId = kDebugMode
       ? 'ca-app-pub-3940256099942544/1033173712' // Google test interstitial
-      : 'ca-app-pub-9748660125901669/INTERSTITIAL_ID'; // Replace INTERSTITIAL_ID
+      : 'ca-app-pub-9748660125901669/9430571330';
 
   static InterstitialAd? _interstitialAd;
   static int _interstitialLoadAttempts = 0;
