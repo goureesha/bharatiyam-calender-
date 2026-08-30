@@ -11,7 +11,7 @@ class AdService {
   // TODO: Replace test IDs with your real Ad Unit IDs from AdMob console
   static const String _bannerAdUnitId = kDebugMode
       ? 'ca-app-pub-3940256099942544/6300978111' // Google test banner
-      : 'ca-app-pub-9748660125901669/BANNER_ID';  // Replace BANNER_ID
+      : 'ca-app-pub-9748660125901669/3248306368';  // Replace BANNER_ID
 
   static const String _interstitialAdUnitId = kDebugMode
       ? 'ca-app-pub-3940256099942544/1033173712' // Google test interstitial
@@ -107,7 +107,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     _bannerAd = BannerAd(
       adUnitId: kDebugMode
           ? 'ca-app-pub-3940256099942544/6300978111'
-          : 'ca-app-pub-9748660125901669/BANNER_ID', // Replace BANNER_ID
+          : 'ca-app-pub-9748660125901669/3248306368',
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
