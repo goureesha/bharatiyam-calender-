@@ -25,11 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <!-- AdMob App ID — Uncomment and add your real App ID to enable ads
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="YOUR_ADMOB_APP_ID_HERE"/>
-        -->
+            android:value="ca-app-pub-9748660125901669~3232717270"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
