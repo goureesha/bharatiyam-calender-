@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../i18n/app_locale.dart';
 
 /// Cross-promotion popup for Bharatiyam Vedic Astrology app.
 /// Shows once per day after a delay, with a "Don't show again" option.
@@ -154,7 +155,7 @@ class _CrossPromoDialogState extends State<_CrossPromoDialog> {
                   child: OutlinedButton.icon(
                     onPressed: () => _openUrl(CrossPromotion.videoLink),
                     icon: const Icon(Icons.play_circle_outline, size: 20),
-                    label: const Text('ವೀಡಿಯೋ', style: TextStyle(fontSize: 13)),
+                    label: Text(AppLocale.t('video'), style: TextStyle(fontSize: 13)),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color(0xFFE65100),
                       side: const BorderSide(color: Color(0xFFE65100)),
@@ -170,7 +171,7 @@ class _CrossPromoDialogState extends State<_CrossPromoDialog> {
                   child: ElevatedButton.icon(
                     onPressed: () => _openUrl(CrossPromotion.appLink),
                     icon: const Icon(Icons.download, size: 20),
-                    label: const Text('ಡೌನ್‌ಲೋಡ್', style: TextStyle(fontSize: 13)),
+                    label: Text(AppLocale.t('download'), style: TextStyle(fontSize: 13)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFF6F00),
                       foregroundColor: Colors.white,
