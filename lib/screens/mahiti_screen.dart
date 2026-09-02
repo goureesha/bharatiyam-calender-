@@ -1099,8 +1099,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
   }
 
   String _fmtDate(DateTime dt) {
-    const m = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const wd = ['', 'ಸೋಮ', 'ಮಂಗಳ', 'ಬುಧ', 'ಗುರು', 'ಶುಕ್ರ', 'ಶನಿ', 'ಭಾನು'];
+    final m = ['', AppLocale.t('monJan'), AppLocale.t('monFeb'), AppLocale.t('monMar'), AppLocale.t('monApr'), AppLocale.t('monMay'), AppLocale.t('monJun'), AppLocale.t('monJul'), AppLocale.t('monAug'), AppLocale.t('monSep'), AppLocale.t('monOct'), AppLocale.t('monNov'), AppLocale.t('monDec')];
+    final wd = ['', AppLocale.t('wdMon'), AppLocale.t('wdTue'), AppLocale.t('wdWed'), AppLocale.t('wdThu'), AppLocale.t('wdFri'), AppLocale.t('wdSat'), AppLocale.t('wdSun')];
     return '${m[dt.month]} ${dt.day} (${wd[dt.weekday]})';
   }
 
@@ -1170,7 +1170,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
           leading: Icon(Icons.celebration_rounded, color: color, size: 20),
           title: Row(
             children: [
-              Expanded(child: Text('ಹಬ್ಬ / ವ್ರತ  $_year', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: color))),
+              Expanded(child: Text('${AppLocale.t('habbaVishesha')}  $_year', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: color))),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
