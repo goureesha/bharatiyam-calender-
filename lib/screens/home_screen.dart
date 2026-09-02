@@ -671,7 +671,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(child: Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kText))),
               Text(endTime, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
               if (endsNextDay)
-                Text(' (ಮರುದಿನ)', style: TextStyle(fontSize: 9, color: kAshubha)),
+                Text(' ${AppLocale.t('nextDaySuffix')}', style: TextStyle(fontSize: 9, color: kAshubha)),
               if (endGhati.isNotEmpty) ...[
                 Text(' (', style: TextStyle(fontSize: 9, color: kMuted)),
                 Text(endGhati, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kMuted)),
@@ -683,12 +683,12 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 3),
           Row(
             children: [
-              Text(hasTransitioned ? '(ಉದಯ ಕಾಲ)  ' : '☀  ', style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
-              _ghatiTag('ಗತ', gata, kGold),
+              Text(hasTransitioned ? '(${AppLocale.t('udayaKala')})  ' : '☀  ', style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic)),
+              _ghatiTag(AppLocale.t('gata'), gata, kGold),
               const SizedBox(width: 4),
-              _ghatiTag('ಶೇಷ', shesha, kTeal),
+              _ghatiTag(AppLocale.t('shesha'), shesha, kTeal),
               const SizedBox(width: 4),
-              _ghatiTag('ಪರಮ', parama, kMuted),
+              _ghatiTag(AppLocale.t('parama'), parama, kMuted),
             ],
           ),
 
@@ -711,13 +711,13 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 3),
             Row(
               children: [
-                Text('(ಈಗ)  ', style: TextStyle(fontSize: 9, color: kTeal, fontStyle: FontStyle.italic)),
-                _ghatiTag('ಗತ', gataNow, const Color(0xFFFF9800)),
+                Text('(${AppLocale.t('now')})  ', style: TextStyle(fontSize: 9, color: kTeal, fontStyle: FontStyle.italic)),
+                _ghatiTag(AppLocale.t('gata'), gataNow, const Color(0xFFFF9800)),
                 const SizedBox(width: 4),
-                _ghatiTag('ಶೇಷ', sheshaNow, const Color(0xFF4CAF50)),
+                _ghatiTag(AppLocale.t('shesha'), sheshaNow, const Color(0xFF4CAF50)),
                 if (currentParama.isNotEmpty) ...[
                   const SizedBox(width: 4),
-                  _ghatiTag('ಪರಮ', currentParama, kMuted),
+                  _ghatiTag(AppLocale.t('parama'), currentParama, kMuted),
                 ],
               ],
             ),
