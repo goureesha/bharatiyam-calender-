@@ -169,47 +169,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
 
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SectionHeader(icon: Icons.language_rounded, title: AppLocale.t('language')),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: AppLocale.languageNames.entries.map((e) {
-                  final isSelected = AppLocale.current == e.key;
-                  return GestureDetector(
-                    onTap: () {
-                      AppLocale.setLang(e.key);
-                      setState(() {});
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isSelected ? kGold.withAlpha(30) : Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: isSelected ? kGold : kBorder,
-                          width: isSelected ? 2 : 1,
-                        ),
-                      ),
-                      child: Text(e.value,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          color: isSelected ? kGold : kText,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-        ),
+        // Language selection — hidden until full screen localization is done
+        // AppCard(
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       SectionHeader(icon: Icons.language_rounded, title: AppLocale.t('language')),
+        //       const SizedBox(height: 12),
+        //       Wrap(
+        //         spacing: 8,
+        //         runSpacing: 8,
+        //         children: AppLocale.languageNames.entries.map((e) {
+        //           final isSelected = AppLocale.current == e.key;
+        //           return GestureDetector(
+        //             onTap: () {
+        //               AppLocale.setLang(e.key);
+        //               setState(() {});
+        //             },
+        //             child: AnimatedContainer(
+        //               duration: const Duration(milliseconds: 200),
+        //               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        //               decoration: BoxDecoration(
+        //                 color: isSelected ? kGold.withAlpha(30) : Colors.transparent,
+        //                 borderRadius: BorderRadius.circular(10),
+        //                 border: Border.all(
+        //                   color: isSelected ? kGold : kBorder,
+        //                   width: isSelected ? 2 : 1,
+        //                 ),
+        //               ),
+        //               child: Text(e.value,
+        //                 style: TextStyle(
+        //                   fontSize: 13,
+        //                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        //                   color: isSelected ? kGold : kText,
+        //                 ),
+        //               ),
+        //             ),
+        //           );
+        //         }).toList(),
+        //       ),
+        //     ],
+        //   ),
+        // ),
 
         // ── Theme ──
         AppCard(
