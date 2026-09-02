@@ -55583,10 +55583,10 @@ return A.u($async$w0,r)},
 I(a){var s=this,r=null,q=A.aY(16),p=A.aY(16),o=t.p
 return A.adm(r,A.aW(r,A.aL(A.b([A.aW(r,B.a_H,B.K,r,r,new A.aP(B.o7,r,r,A.aY(14),A.b([new A.bZ(0,B.az,B.b_a.Gu(0.3),B.qP,8)],t.E),r,B.W),r,64,r,r,r,r,r,64),B.MY,B.baO,B.cg,B.baK,B.d8,A.aW(r,B.Xh,B.K,r,r,new A.aP(B.P.Gu(0.7),r,r,A.aY(10),r,r,B.W),r,r,r,r,B.YS,r,r,r),B.MY,A.aN(A.b([A.b4(A.aRm(B.a_K,B.baJ,new A.aAI(s),A.aRn(r,r,r,r,r,r,r,r,r,B.c1,r,r,B.k5,r,new A.cD(A.aY(10),B.U),B.Pv,r,r,r,r)),1),B.mV,A.b4(A.Su(B.a_N,B.baQ,new A.aAJ(s),A.xL(r,r,B.o7,r,r,r,r,r,r,B.P,r,r,B.k5,r,new A.cD(A.aY(10),B.U),r,r,r,r,r)),1)],o),B.H,B.D,B.F,0),B.d8,A.aN(A.b([A.c9(new A.Df(s.d,new A.aAK(s),B.c1,B.HM,r),24,24),B.jb,B.baN,B.mY,A.YE(B.baP,s.gai6(),r)],o),B.H,B.D,B.F,0)],o),B.H,B.D,B.b5),B.K,r,r,new A.aP(r,r,r,p,r,B.a0U,B.W),r,r,r,r,B.fx,r,r,r),r,r,r,r,new A.cD(q,B.U),r)}}
 A.aAI.prototype={
-$0(){return this.a.t0("https://www.youtube.com/watch?v=PLACEHOLDER")},
+$0(){return this.a.t0("https://youtu.be/j4-4O-t7VYw")},
 $S:0}
 A.aAJ.prototype={
-$0(){return this.a.t0("https://play.google.com/store/apps/details?id=com.bharatiyam.astrology")},
+$0(){return this.a.t0("https://play.google.com/store/apps/details?id=com.bharatheeyam.app")},
 $S:0}
 A.aAK.prototype={
 $1(a){var s=this.a
