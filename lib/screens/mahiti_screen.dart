@@ -295,7 +295,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
               } catch (_) {}
 
               if (data == null) {
-                return Text('ಪಂಚಾಂಗ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ', style: TextStyle(color: kMuted));
+                return Text(AppLocale.t('panchaangaDataUnavailable'), style: TextStyle(color: kMuted));
               }
 
               final sankalpaText = SankalpaGenerator.generate(
@@ -334,11 +334,11 @@ class _MahitiScreenState extends State<MahitiScreen> {
                       final text = _getSankalpaText();
                       Clipboard.setData(ClipboardData(text: text));
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('ಸಂಕಲ್ಪ ಕಾಪಿ ಆಯಿತು ✓'), duration: Duration(seconds: 2)),
+                        SnackBar(content: Text(AppLocale.t('sankalpaCopied')), duration: Duration(seconds: 2)),
                       );
                     },
                     icon: Icon(Icons.copy_rounded, size: 16, color: Colors.white),
-                    label: Text('Copy', style: TextStyle(color: Colors.white, fontSize: 12)),
+                    label: Text(AppLocale.t('copy'), style: TextStyle(color: Colors.white, fontSize: 12)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kGold.withAlpha(180),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -354,7 +354,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                       Share.share(text, subject: 'ಮಹಾ ಸಂಕಲ್ಪ');
                     },
                     icon: Icon(Icons.share_rounded, size: 16, color: Colors.white),
-                    label: Text('Share', style: TextStyle(color: Colors.white, fontSize: 12)),
+                    label: Text(AppLocale.t('share'), style: TextStyle(color: Colors.white, fontSize: 12)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kGold.withAlpha(180),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -412,7 +412,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
               children: [
                 Icon(Icons.info_outline_rounded, color: kGold, size: 22),
                 const SizedBox(width: 8),
-                Text('ಮಾಹಿತಿ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold)),
+                Text(AppLocale.t('mahiti'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold)),
                 const Spacer(),
                 // Year selector
                 IconButton(
