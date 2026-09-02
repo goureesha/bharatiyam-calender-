@@ -358,7 +358,7 @@ class _PanchangaScreenState extends State<PanchangaScreen> with SingleTickerProv
           AppCard(
             child: Column(
               children: [
-                SectionHeader(icon: Icons.wb_sunny_rounded, title: '${AppLocale.t("chougadiya")} — Day'),
+                SectionHeader(icon: Icons.wb_sunny_rounded, title: AppLocale.t('chougadiyaDay')),
                 const SizedBox(height: 4),
                 for (int i = 0; i < _dayChougadiya.length; i++)
                   _chougadiyaItem(i, _dayChougadiya[i]),
@@ -368,7 +368,7 @@ class _PanchangaScreenState extends State<PanchangaScreen> with SingleTickerProv
           AppCard(
             child: Column(
               children: [
-                SectionHeader(icon: Icons.nights_stay_rounded, title: '${AppLocale.t("chougadiya")} — Night'),
+                SectionHeader(icon: Icons.nights_stay_rounded, title: AppLocale.t('chougadiyaNight')),
                 const SizedBox(height: 4),
                 for (int i = 0; i < _nightChougadiya.length; i++)
                   _chougadiyaItem(i, _nightChougadiya[i]),

@@ -1286,7 +1286,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
   }
 
   String _shortDate(DateTime dt) {
-    const m = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final m = ['', AppLocale.t('monJan'), AppLocale.t('monFeb'), AppLocale.t('monMar'), AppLocale.t('monApr'), AppLocale.t('monMay'), AppLocale.t('monJun'), AppLocale.t('monJul'), AppLocale.t('monAug'), AppLocale.t('monSep'), AppLocale.t('monOct'), AppLocale.t('monNov'), AppLocale.t('monDec')];
     return '${m[dt.month]} ${dt.day}';
   }
 }
