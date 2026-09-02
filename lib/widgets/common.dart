@@ -1,6 +1,7 @@
 /// Design system and common widgets for Bharatiyam Panchanga.
 /// Multi-theme support with 5 color presets.
 import 'package:flutter/material.dart';
+import '../i18n/app_locale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ─── THEME PRESET ───
@@ -335,9 +336,9 @@ class NaturePill extends StatelessWidget {
 
   String get _label {
     switch (nature) {
-      case 'shubha': return 'ಶುಭ';
-      case 'ashubha': return 'ಅಶುಭ';
-      case 'madhyama': return 'ಮಧ್ಯಮ';
+      case 'shubha': return AppLocale.t('shubha');
+      case 'ashubha': return AppLocale.t('ashubha');
+      case 'madhyama': return AppLocale.t('madhyama');
       default: return nature;
     }
   }
