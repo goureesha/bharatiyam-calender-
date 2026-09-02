@@ -56,7 +56,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SectionHeader(icon: Icons.person_rounded, title: 'ಪ್ರೊಫೈಲ್ / Profile'),
+              SectionHeader(icon: Icons.person_rounded, title: AppLocale.t('profileHeader')),
               const SizedBox(height: 8),
               // Profile Photo Upload
               Center(
@@ -98,15 +98,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       if (mounted) setState(() {});
                     },
                     icon: Icon(Icons.delete_outline, size: 16, color: Colors.red),
-                    label: Text('Remove Photo', style: TextStyle(fontSize: 12, color: Colors.red)),
+                    label: Text(AppLocale.t('removePhoto'), style: TextStyle(fontSize: 12, color: Colors.red)),
                   ),
                 ),
               const SizedBox(height: 12),
-              _profileField(_nameCtrl, 'ಹೆಸರು / Name', Icons.person_outline_rounded),
+              _profileField(_nameCtrl, AppLocale.t('profileName'), Icons.person_outline_rounded),
               const SizedBox(height: 10),
-              _profileField(_addressCtrl, 'ವಿಳಾಸ / Address', Icons.location_on_outlined, maxLines: 2),
+              _profileField(_addressCtrl, AppLocale.t('profileAddress'), Icons.location_on_outlined, maxLines: 2),
               const SizedBox(height: 10),
-              _profileField(_mobileCtrl, 'ಮೊಬೈಲ್ / Mobile', Icons.phone_outlined,
+              _profileField(_mobileCtrl, AppLocale.t('profileMobile'), Icons.phone_outlined,
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)]),
               const SizedBox(height: 12),
@@ -116,7 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _saveProfile,
                       icon: Icon(_profileSaved ? Icons.check : Icons.save_rounded, color: Colors.white, size: 18),
-                      label: Text(_profileSaved ? 'Saved ✓' : 'Save Profile',
+                      label: Text(_profileSaved ? AppLocale.t('savedSuccess') : AppLocale.t('saveProfile'),
                         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _profileSaved ? Colors.green : kGold,
@@ -419,10 +419,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         AppCard(
           child: Column(
             children: [
-              const SectionHeader(icon: Icons.info_outline_rounded, title: 'About'),
+              SectionHeader(icon: Icons.info_outline_rounded, title: AppLocale.t('about')),
               const SizedBox(height: 8),
               Text(
-                'ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ',
+                AppLocale.t('appName'),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold),
               ),
               const SizedBox(height: 4),
