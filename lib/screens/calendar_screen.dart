@@ -1,5 +1,6 @@
 /// Calendar Screen — Full-screen monthly grid + full panchanga detail on scroll.
 import 'package:flutter/material.dart';
+import '../i18n/app_locale.dart';
 import '../core/panchanga_calculator.dart';
 import '../core/masa_calculator.dart';
 import '../core/samvatsara.dart';
@@ -381,7 +382,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   // ─── MONTH BAR ─────────────────────────────────────────
 
   Widget _buildMonthBar() {
-    final months = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = ['', AppLocale.t('monJan'), AppLocale.t('monFeb'), AppLocale.t('monMar'), AppLocale.t('monApr'), AppLocale.t('monMay'), AppLocale.t('monJun'), AppLocale.t('monJul'), AppLocale.t('monAug'), AppLocale.t('monSep'), AppLocale.t('monOct'), AppLocale.t('monNov'), AppLocale.t('monDec')];
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
@@ -464,7 +465,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       dayMap[weekday][week] = d;
     }
 
-    final weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    final weekdayLabels = [AppLocale.t('wdSun'), AppLocale.t('wdMon'), AppLocale.t('wdTue'), AppLocale.t('wdWed'), AppLocale.t('wdThu'), AppLocale.t('wdFri'), AppLocale.t('wdSat')];
     final weekdayColors = [
       const Color(0xFFFF6B6B), kMuted, kMuted, kMuted, kMuted, kMuted,
       const Color(0xFF64B5F6),

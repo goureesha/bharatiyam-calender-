@@ -40,14 +40,14 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Vaidika Rutu from Pournimanta Masa
   static String _vaidikaRutu(String pMasa) {
     const map = {
-      'cm0': 'ವಸಂತ', 'cm1': 'ವಸಂತ',       // Chaitra, Vaishakha
-      'cm2': 'ಗ್ರೀಷ್ಮ', 'cm3': 'ಗ್ರೀಷ್ಮ',     // Jyeshtha, Ashadha
-      'cm4': 'ವರ್ಷಾ', 'cm5': 'ವರ್ಷಾ',       // Shravana, Bhadrapada
-      'cm6': 'ಶರದ್', 'cm7': 'ಶರದ್',         // Ashwina, Kartika
-      'cm8': 'ಹೇಮಂತ', 'cm9': 'ಹೇಮಂತ',     // Margashira, Pushya
-      'cm10': 'ಶಿಶಿರ', 'cm11': 'ಶಿಶಿರ',     // Magha, Phalguna
+      'cm0': 'rutu0', 'cm1': 'rutu0',       // Chaitra, Vaishakha
+      'cm2': 'rutu1', 'cm3': 'rutu1',     // Jyeshtha, Ashadha
+      'cm4': 'rutu2', 'cm5': 'rutu2',       // Shravana, Bhadrapada
+      'cm6': 'rutu3', 'cm7': 'rutu3',         // Ashwina, Kartika
+      'cm8': 'rutu4', 'cm9': 'rutu4',     // Margashira, Pushya
+      'cm10': 'rutu5', 'cm11': 'rutu5',     // Magha, Phalguna
     };
-    return map[pMasa] ?? '';
+    return AppLocale.t(map[pMasa] ?? '');
   }
 
   @override
@@ -271,8 +271,8 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: (i) => setState(() => _navIndex = i),
           items: [
             BottomNavigationBarItem(icon: const Icon(Icons.home_rounded), label: AppLocale.t('home')),
-            BottomNavigationBarItem(icon: const Icon(Icons.calendar_month_rounded), label: 'Calendar'),
-            BottomNavigationBarItem(icon: const Icon(Icons.info_outline_rounded), label: 'ಮಾಹಿತಿ'),
+            BottomNavigationBarItem(icon: const Icon(Icons.calendar_month_rounded), label: AppLocale.t('calendar')),
+            BottomNavigationBarItem(icon: const Icon(Icons.info_outline_rounded), label: AppLocale.t('mahiti')),
             BottomNavigationBarItem(icon: const Icon(Icons.settings_rounded), label: AppLocale.t('settings')),
           ],
         ),
@@ -442,17 +442,17 @@ class _HomeScreenState extends State<HomeScreen> {
           AppCard(
             child: Column(
               children: [
-                const SectionHeader(icon: Icons.calendar_today_rounded, title: 'ಸಂವತ್ಸರ / ಪಂಚಾಂಗ ವಿವರ'),
+                SectionHeader(icon: Icons.calendar_today_rounded, title: AppLocale.t('samvatsaraPanchanga')),
                 const SizedBox(height: 8),
-                InfoRow(label: 'ಶಕ ವರ್ಷ (Shaka)', value: '${d.shakaVarsha}'),
+                InfoRow(label: AppLocale.t('shakaVarsha'), value: '${d.shakaVarsha}'),
                 InfoRow(label: AppLocale.t('samvatsara'), value: AppLocale.t(d.samvatsara)),
-                InfoRow(label: 'ಪಕ್ಷ (Paksha)', value: d.paksha == 'shukla' ? 'ಶುಕ್ಲ ಪಕ್ಷ' : 'ಕೃಷ್ಣ ಪಕ್ಷ'),
-                InfoRow(label: 'ಚಂದ್ರ ಮಾಸ (Amanta)', value: AppLocale.t(d.amantaMasa)),
-                InfoRow(label: 'ಚಂದ್ರ ಮಾಸ (Pournimanta)', value: AppLocale.t(d.pournimantaMasa)),
+                InfoRow(label: AppLocale.t('pakshaLabel'), value: d.paksha == 'shukla' ? AppLocale.t('shuklaPaksha') : AppLocale.t('krishnaPaksha')),
+                InfoRow(label: AppLocale.t('chandraMasaAmanta'), value: AppLocale.t(d.amantaMasa)),
+                InfoRow(label: AppLocale.t('chandraMasaPournimanta'), value: AppLocale.t(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('souraMasa'), value: AppLocale.t(d.souraMasa)),
-                InfoRow(label: 'ಸೌರ ಮಾಸ ಗತ ದಿನ', value: '${d.souraMasaGataDina} ದಿನ'),
-                InfoRow(label: 'ಸೌರ ಋತು', value: AppLocale.t(d.rutu)),
-                InfoRow(label: 'ವೈದಿಕ ಋತು', value: _vaidikaRutu(d.pournimantaMasa)),
+                InfoRow(label: AppLocale.t('souraMasaGataDina'), value: '${d.souraMasaGataDina} ${AppLocale.t('dina')}'),
+                InfoRow(label: AppLocale.t('souraRutu'), value: AppLocale.t(d.rutu)),
+                InfoRow(label: AppLocale.t('vaidikaRutu'), value: _vaidikaRutu(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('ayana'), value: AppLocale.t(d.ayana)),
               ],
             ),
@@ -515,7 +515,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('ಉದಯಾದಿ ಘಟಿ: ', style: TextStyle(fontSize: 11, color: kMuted)),
+                      Text('${AppLocale.t('udayadiGhati')}: ', style: TextStyle(fontSize: 11, color: kMuted)),
                       Text(d.udayadiGhati, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
                     ],
                   ),
@@ -557,16 +557,16 @@ class _HomeScreenState extends State<HomeScreen> {
               return AppCard(
                 child: Column(
                   children: [
-                    SectionHeader(icon: Icons.auto_awesome, title: 'ಶುಭ ಮುಹೂರ್ತ'),
+                    SectionHeader(icon: Icons.auto_awesome, title: AppLocale.t('shubhaMuhurta')),
                     const SizedBox(height: 8),
                     KalaTimeBar(
-                      name: 'ಅಭಿಜಿತ್ ಮುಹೂರ್ತ',
+                      name: AppLocale.t('abhijitMuhurta'),
                       startTime: abhijitM.startTime,
                       endTime: abhijitM.endTime,
                       color: const Color(0xFF2E7D32),
                     ),
                     KalaTimeBar(
-                      name: 'ಗೋಧೂಳಿ ಮುಹೂರ್ತ',
+                      name: AppLocale.t('godhuliMuhurta'),
                       startTime: godhuliStart,
                       endTime: godhuliEnd,
                       color: const Color(0xFF1565C0),
@@ -774,7 +774,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           SectionHeader(
             icon: Icons.self_improvement_rounded,
-            title: 'ಶ್ರಾದ್ಧ ನಿರ್ಣಯ',
+            title: AppLocale.t('shraddhaNirnaya'),
           ),
           const SizedBox(height: 8),
 
@@ -796,7 +796,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(children: [
                     Icon(Icons.warning_amber_rounded, color: const Color(0xFFE65100), size: 16),
                     const SizedBox(width: 6),
-                    Expanded(child: Text('ಕ್ಷಯ ತಿಥಿ — ಎರಡು ಶ್ರಾದ್ಧ ಇಂದು',
+                    Expanded(child: Text(AppLocale.t('kshayaTithiTwo'),
                       style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFE65100)))),
                   ]),
                   const SizedBox(height: 6),
@@ -862,7 +862,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Row(
                   children: [
-                    Text('ಕುತುಪ ಕಾಲ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${AppLocale.t('kutupaKala')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                     Text('${info.aparahnaStart} — ${info.aparahnaEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                     Text('  (${info.aparahnaStartGhati} ಘಟಿ)', style: TextStyle(fontSize: 8, color: kMuted)),
                   ],
@@ -870,7 +870,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 3),
                 Row(
                   children: [
-                    Text('ಅಪರಾಹ್ನ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${AppLocale.t('aparahna')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                     Text('${info.aparahnaTimeStart} — ${info.aparahnaTimeEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                   ],
                 ),
@@ -896,7 +896,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     children: [
                       Text('🙏 ', style: TextStyle(fontSize: 10)),
-                      Text('ಅಮಾಂತ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Text('${AppLocale.t('amantaLabel')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                       Expanded(child: Text(info.varshikaChandraAmanta, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
                     ],
                   ),
@@ -914,7 +914,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     children: [
                       Text('🙏 ', style: TextStyle(fontSize: 10)),
-                      Text('ಪೌರ್ಣಿಮಾಂತ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Text('${AppLocale.t('pournimantaLabel')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                       Expanded(child: Text(info.varshikaChandraPournimanta, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
                     ],
                   ),
@@ -932,7 +932,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     children: [
                       Text('🙏 ', style: TextStyle(fontSize: 10)),
-                      Text('ಸೌರಮಾನ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Text('${AppLocale.t('souraLabel')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                       Expanded(child: Text(info.varshikaSoura, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
                     ],
                   ),

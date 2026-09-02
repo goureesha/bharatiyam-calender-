@@ -238,7 +238,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                 Text('🙏', style: TextStyle(fontSize: 20)),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text('ಮಹಾ ಸಂಕಲ್ಪ', style: TextStyle(
+                  child: Text(AppLocale.t('mahaSankalpa'), style: TextStyle(
                     fontSize: 16, fontWeight: FontWeight.bold, color: kGold)),
                 ),
                 Icon(
@@ -262,7 +262,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: _selectedKarya,
-                  hint: Text('ವಿಶೇಷ ಸಂಕಲ್ಪ ಆಯ್ಕೆಮಾಡಿ', style: TextStyle(color: kMuted, fontSize: 13)),
+                  hint: Text(AppLocale.t('selectVisheshaSankalpa'), style: TextStyle(color: kMuted, fontSize: 13)),
                   isExpanded: true,
                   dropdownColor: kCard,
                   style: TextStyle(color: kText, fontSize: 13),
