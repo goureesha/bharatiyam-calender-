@@ -9,8 +9,8 @@ class CrossPromotion {
   static const _prefDismissed = 'cross_promo_dismissed';
 
   // ── Links (update these later) ──
-  static const appLink = 'https://play.google.com/store/apps/details?id=com.bharatiyam.astrology';
-  static const videoLink = 'https://www.youtube.com/watch?v=PLACEHOLDER';
+  static const appLink = 'https://play.google.com/store/apps/details?id=com.bharatheeyam.app';
+  static const videoLink = 'https://youtu.be/j4-4O-t7VYw';
 
   /// Call this from your main screen's initState (after build).
   /// Shows the popup once per day after [delay], unless user chose "Don't show again".
