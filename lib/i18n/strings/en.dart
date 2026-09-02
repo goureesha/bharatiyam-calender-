@@ -107,4 +107,18 @@ const Map<String, String> enStrings = {
   // Chougadiya
   'Udveg': 'Udveg', 'Chal': 'Chal', 'Laabh': 'Laabh', 'Amrut': 'Amrut',
   'Kaal': 'Kaal', 'Shubh': 'Shubh', 'Rog': 'Rog',
+  // Calendar Section Labels
+  'calendarSystems': 'Calendar Systems',
+  'ghatiDetails': 'Ghati Details',
+  'kalaTimings': 'Kala Timings',
+  'festivalsEvents': 'Festivals & Events',
+  'sunMoonDetails': 'Sunrise / Sunset',
+  'chandraPada': 'Moon Pada',
+  'paksha': 'Paksha',
+  'shukla': 'Shukla',
+  'krishna': 'Krishna',
+  'shraddha': 'Shraddha',
+  'shraddhaDetails': 'Shraddha Details',
+  'calendar': 'Panchanga',
+  'suryaNakshatra': 'Sun Nakshatra',
 };

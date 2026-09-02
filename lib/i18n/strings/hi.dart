@@ -106,4 +106,18 @@ const Map<String, String> hiStrings = {
   // Chougadiya
   'Udveg': 'उद्वेग', 'Chal': 'चल', 'Laabh': 'लाभ', 'Amrut': 'अमृत',
   'Kaal': 'काल', 'Shubh': 'शुभ', 'Rog': 'रोग',
+  // Calendar Section Labels
+  'calendarSystems': 'पंचांग पद्धति',
+  'ghatiDetails': 'घटी विवरण',
+  'kalaTimings': 'काल समय',
+  'festivalsEvents': 'त्योहार और विशेष',
+  'sunMoonDetails': 'सूर्योदय / सूर्यास्त',
+  'chandraPada': 'चन्द्र पाद',
+  'paksha': 'पक्ष',
+  'shukla': 'शुक्ल',
+  'krishna': 'कृष्ण',
+  'shraddha': 'श्राद्ध',
+  'shraddhaDetails': 'श्राद्ध विवरण',
+  'calendar': 'पंचांग',
+  'suryaNakshatra': 'सूर्य नक्षत्र',
 };

@@ -317,20 +317,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          // Language chip — hidden for now
-          // GestureDetector(
-          //   onTap: () => setState(() => _navIndex = 1),
-          //   child: Container(
-          //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          //     decoration: BoxDecoration(
-          //       color: kGold.withAlpha(20),
-          //       borderRadius: BorderRadius.circular(8),
-          //       border: Border.all(color: kGold.withAlpha(76)),
-          //     ),
-          //     child: Text(AppLocale.languageNames[AppLocale.current] ?? 'ಕನ್ನಡ',
-          //       style: TextStyle(fontSize: 11, color: kGold, fontWeight: FontWeight.bold)),
-          //   ),
-          // ),
+          // Language chip
+          GestureDetector(
+            onTap: () => setState(() => _navIndex = 1),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: kGold.withAlpha(20),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: kGold.withAlpha(76)),
+              ),
+              child: Text(AppLocale.languageNames[AppLocale.current] ?? 'ಕನ್ನಡ',
+                style: TextStyle(fontSize: 11, color: kGold, fontWeight: FontWeight.bold)),
+            ),
+          ),
         ],
       ),
     );
