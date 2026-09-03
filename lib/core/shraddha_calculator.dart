@@ -216,16 +216,9 @@ class ShraddhaCalculator {
     final isPitruPaksha = isPitruPakshaMasa && isKrishna;
 
     // ── Varshika Shraddha ──
-    final pakshaName = isKrishna ? AppLocale.t('krishnaPaksha') : AppLocale.t('shuklaPaksha');
-    String tithiName;
-    if (isAmavasya) {
-      tithiName = AppLocale.t('t29');
-    } else if (isPurnima) {
-      tithiName = AppLocale.t('t14');
-    } else {
-      final tithiKey = 't$tithiIndex';
-      tithiName = AppLocale.t(tithiKey);
-    }
+    // t0-t29 keys already include paksha name (e.g. 'ಕೃಷ್ಣ ಸಪ್ತಮಿ')
+    final pakshaName = '';
+    final tithiName = AppLocale.t('t$tithiIndex');
 
     final amantaName = _resolveChandraMasa(amantaMasa);
     final pournimantaName = _resolveChandraMasa(pournimantaMasa);
@@ -307,16 +300,8 @@ class ShraddhaCalculator {
     final kpIsKrishna = kutupaTithiIdx >= 15;
     final kpIsAmavasya = kutupaTithiIdx == 29;
     final kpIsPurnima = kutupaTithiIdx == 14;
-    final kpPakshaName = kpIsKrishna ? AppLocale.t('krishnaPaksha') : AppLocale.t('shuklaPaksha');
-    String kpTithiName;
-    if (kutupaTithiIdx == 29) {
-      kpTithiName = AppLocale.t('t29');
-    } else if (kutupaTithiIdx == 14) {
-      kpTithiName = AppLocale.t('t14');
-    } else {
-      final kpTithiKey = 't$kutupaTithiIdx';
-      kpTithiName = AppLocale.t(kpTithiKey);
-    }
+    final kpPakshaName = '';
+    final kpTithiName = AppLocale.t('t$kutupaTithiIdx');
 
     // Build varshika and aparahna shraddha using Kutupa-determined tithi
     // (tithi and paksha are same across all 3 calendar systems, only masa changes)
@@ -373,16 +358,8 @@ class ShraddhaCalculator {
       final ntIsKrishna = nextTithiIdx >= 15;
       final ntIsAmavasya = nextTithiIdx == 29;
       final ntIsPurnima = nextTithiIdx == 14;
-      final ntPakshaName = ntIsKrishna ? AppLocale.t('krishnaPaksha') : AppLocale.t('shuklaPaksha');
-      String ntTithiName;
-      if (ntIsAmavasya) {
-        ntTithiName = AppLocale.t('t29');
-      } else if (ntIsPurnima) {
-        ntTithiName = AppLocale.t('t14');
-      } else {
-        final ntKey = 't$nextTithiIdx';
-        ntTithiName = AppLocale.t(ntKey);
-      }
+      final ntPakshaName = '';
+      final ntTithiName = AppLocale.t('t$nextTithiIdx');
 
       // Find next tithi's END JD using binary search
       final nextTithiBoundaryDeg = ((nextTithiIdx + 1) % 30) * 12.0;
