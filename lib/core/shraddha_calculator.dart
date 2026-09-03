@@ -131,23 +131,17 @@ class ShraddhaCalculator {
 
   static String _resolveChandraMasa(String masaKey) {
     if (masaKey.startsWith('cm') && masaKey.length <= 4) {
-      final idx = int.tryParse(masaKey.substring(2));
-      if (idx != null && idx >= 0 && idx < 12) return _chandraMasaNames[idx];
+      return AppLocale.t(masaKey);
     }
-    for (final name in _chandraMasaNames) {
-      if (masaKey.contains(name)) return name;
-    }
-    return masaKey;
+    // Fallback: try trAll for Kannada masa names
+    return AppLocale.trAll(masaKey);
   }
 
   static String _resolveSouraMasa(String masaKey) {
     if (masaKey.startsWith('sm') && masaKey.length <= 4) {
-      final idx = int.tryParse(masaKey.substring(2));
-      if (idx != null && idx >= 0 && idx < 12) return _souraMasaNames[idx];
+      return AppLocale.t(masaKey);
     }
-    for (final name in _souraMasaNames) {
-      if (masaKey.contains(name)) return name;
-    }
+    return AppLocale.trAll(masaKey);
     return masaKey;
   }
 
@@ -222,15 +216,15 @@ class ShraddhaCalculator {
     final isPitruPaksha = isPitruPakshaMasa && isKrishna;
 
     // ── Varshika Shraddha ──
-    final pakshaName = isKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+    final pakshaName = isKrishna ? AppLocale.t('krishnaPaksha') : AppLocale.t('shuklaPaksha');
     String tithiName;
     if (isAmavasya) {
-      tithiName = 'ಅಮಾವಾಸ್ಯೆ';
+      tithiName = AppLocale.t('t29');
     } else if (isPurnima) {
-      tithiName = 'ಹುಣ್ಣಿಮೆ';
+      tithiName = AppLocale.t('t14');
     } else {
-      final tithiInPaksha = isKrishna ? tithiIndex - 15 : tithiIndex;
-      tithiName = (tithiInPaksha >= 0 && tithiInPaksha < 14) ? _tithiNames[tithiInPaksha] : '';
+      final tithiKey = 't$tithiIndex';
+      tithiName = AppLocale.t(tithiKey);
     }
 
     final amantaName = _resolveChandraMasa(amantaMasa);
@@ -313,15 +307,15 @@ class ShraddhaCalculator {
     final kpIsKrishna = kutupaTithiIdx >= 15;
     final kpIsAmavasya = kutupaTithiIdx == 29;
     final kpIsPurnima = kutupaTithiIdx == 14;
-    final kpPakshaName = kpIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+    final kpPakshaName = kpIsKrishna ? AppLocale.t('krishnaPaksha') : AppLocale.t('shuklaPaksha');
     String kpTithiName;
-    if (kpIsAmavasya) {
-      kpTithiName = 'ಅಮಾವಾಸ್ಯೆ';
-    } else if (kpIsPurnima) {
-      kpTithiName = 'ಹುಣ್ಣಿಮೆ';
+    if (kutupaTithiIdx == 29) {
+      kpTithiName = AppLocale.t('t29');
+    } else if (kutupaTithiIdx == 14) {
+      kpTithiName = AppLocale.t('t14');
     } else {
-      final kpTithiInPaksha = kpIsKrishna ? kutupaTithiIdx - 15 : kutupaTithiIdx;
-      kpTithiName = (kpTithiInPaksha >= 0 && kpTithiInPaksha < 14) ? _tithiNames[kpTithiInPaksha] : '';
+      final kpTithiKey = 't$kutupaTithiIdx';
+      kpTithiName = AppLocale.t(kpTithiKey);
     }
 
     // Build varshika and aparahna shraddha using Kutupa-determined tithi
@@ -379,15 +373,15 @@ class ShraddhaCalculator {
       final ntIsKrishna = nextTithiIdx >= 15;
       final ntIsAmavasya = nextTithiIdx == 29;
       final ntIsPurnima = nextTithiIdx == 14;
-      final ntPakshaName = ntIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+      final ntPakshaName = ntIsKrishna ? AppLocale.t('krishnaPaksha') : AppLocale.t('shuklaPaksha');
       String ntTithiName;
       if (ntIsAmavasya) {
-        ntTithiName = 'ಅಮಾವಾಸ್ಯೆ';
+        ntTithiName = AppLocale.t('t29');
       } else if (ntIsPurnima) {
-        ntTithiName = 'ಹುಣ್ಣಿಮೆ';
+        ntTithiName = AppLocale.t('t14');
       } else {
-        final ntTithiInPaksha = ntIsKrishna ? nextTithiIdx - 15 : nextTithiIdx;
-        ntTithiName = (ntTithiInPaksha >= 0 && ntTithiInPaksha < 14) ? _tithiNames[ntTithiInPaksha] : '';
+        final ntKey = 't$nextTithiIdx';
+        ntTithiName = AppLocale.t(ntKey);
       }
 
       // Find next tithi's END JD using binary search
