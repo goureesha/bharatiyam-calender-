@@ -1,4 +1,4 @@
-/// Hindi strings
+﻿/// Hindi strings
 const Map<String, String> hiStrings = {
   'appName': 'भारतीयम् पंचांग', 'panchanga': 'पंचांग', 'tithi': 'तिथि',
   'vara': 'वार', 'nakshatra': 'नक्षत्र', 'yoga': 'योग', 'karana': 'करण',
@@ -205,4 +205,8 @@ const Map<String, String> hiStrings = {
   'adhikaMasa': 'अधिक / क्षय मास',
   'grahana': '?????',
   'masaVivara': '??? ?????',
+  'ghati': 'घटी',
+  'tithiEnd': 'तिथि अंत',
+  'moonrise': 'चंद्रोदय',
+  'moonset': 'चंद्रास्त',
 };

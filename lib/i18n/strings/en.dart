@@ -1,4 +1,4 @@
-/// English strings
+﻿/// English strings
 const Map<String, String> enStrings = {
   'appName': 'Bharatiyam Panchanga', 'panchanga': 'Panchanga', 'tithi': 'Tithi',
   'vara': 'Vara', 'nakshatra': 'Nakshatra', 'yoga': 'Yoga', 'karana': 'Karana',
@@ -206,4 +206,8 @@ const Map<String, String> enStrings = {
   'adhikaMasa': 'Adhika / Kshaya Masa',
   'grahana': 'Eclipse',
   'masaVivara': 'Month Details',
+  'ghati': 'Ghati',
+  'tithiEnd': 'Tithi End',
+  'moonrise': 'Moonrise',
+  'moonset': 'Moonset',
 };

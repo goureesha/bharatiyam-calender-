@@ -1,4 +1,4 @@
-/// Telugu strings — complete localization
+﻿/// Telugu strings — complete localization
 const Map<String, String> teStrings = {
   // ─── App ───
   'appName': 'భారతీయమ్ పంచాంగం', 'panchanga': 'పంచాంగం', 'tithi': 'తిథి',
@@ -221,4 +221,8 @@ const Map<String, String> teStrings = {
   'adhikaMasa': 'అధిక / క్షయ మాసం',
   'grahana': '??????',
   'masaVivara': '??? ???????',
+  'ghati': 'ఘటి',
+  'tithiEnd': 'తిథి అంతం',
+  'moonrise': 'చంద్రోదయం',
+  'moonset': 'చంద్రాస్తం',
 };

@@ -428,9 +428,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _sunTimeWidget('🌙', 'ಚಂದ್ರೋದಯ', d.chandraUdaya),
+                    _sunTimeWidget('🌙', AppLocale.t('moonrise'), d.chandraUdaya),
                     Container(width: 1, height: 36, color: kBorder),
-                    _sunTimeWidget('🌑', 'ಚಂದ್ರಾಸ್ತ', d.chandraAsta),
+                    _sunTimeWidget('🌑', AppLocale.t('moonset'), d.chandraAsta),
                   ],
                 ),
               ],
@@ -835,7 +835,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // Shraddha Rule & Timing
           const SizedBox(height: 10),
-          Text('📋 ಶ್ರಾದ್ಧ ನಿಯಮ', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
+          Text('📋 ${AppLocale.t('shraddhaNiyama')}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
           const SizedBox(height: 4),
           Container(
             width: double.infinity,
@@ -863,7 +863,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text('${AppLocale.t('kutupaKala')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                     Text('${info.aparahnaStart} — ${info.aparahnaEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
-                    Text('  (${info.aparahnaStartGhati} ಘಟಿ)', style: TextStyle(fontSize: 8, color: kMuted)),
+                    Text('  (${info.aparahnaStartGhati} ${AppLocale.t('ghati')})', style: TextStyle(fontSize: 8, color: kMuted)),
                   ],
                 ),
                 const SizedBox(height: 3),
@@ -876,7 +876,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 3),
                 Row(
                   children: [
-                    Text('${info.sunriseTithiName} ತಿಥಿ ಅಂತ್ಯ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${info.sunriseTithiName} ${AppLocale.t('tithiEnd')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                     Text(info.tithiEndTimeForRule, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                   ],
                 ),

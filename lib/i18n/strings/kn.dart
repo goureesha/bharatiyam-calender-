@@ -243,4 +243,8 @@ const Map<String, String> knStrings = {
   'adhikaMasa': 'ಅಧಿಕ / ಕ್ಷಯ ಮಾಸ',
   'grahana': 'ಗ್ರಹಣ',
   'masaVivara': 'ಮಾಸ ವಿವರ',
+  'ghati': 'ಘಟಿ',
+  'tithiEnd': 'ತಿಥಿ ಅಂತ್ಯ',
+  'moonrise': 'ಚಂದ್ರೋದಯ',
+  'moonset': 'ಚಂದ್ರಾಸ್ತ',
 };

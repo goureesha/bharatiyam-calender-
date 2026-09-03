@@ -1,4 +1,4 @@
-/// Tamil strings — complete localization
+﻿/// Tamil strings — complete localization
 const Map<String, String> taStrings = {
   // ─── App ───
   'appName': 'பாரதீயம் பஞ்சாங்கம்', 'panchanga': 'பஞ்சாங்கம்', 'tithi': 'திதி',
@@ -221,4 +221,8 @@ const Map<String, String> taStrings = {
   'adhikaMasa': 'அதிக / க்ஷய மாதம்',
   'grahana': '???????',
   'masaVivara': '??? ?????????',
+  'ghati': 'கடி',
+  'tithiEnd': 'திதி முடிவு',
+  'moonrise': 'சந்திரோதயம்',
+  'moonset': 'சந்திராஸ்தம்',
 };
