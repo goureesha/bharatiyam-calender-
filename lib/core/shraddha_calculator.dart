@@ -142,7 +142,6 @@ class ShraddhaCalculator {
       return AppLocale.t(masaKey);
     }
     return AppLocale.trAll(masaKey);
-    return masaKey;
   }
 
   static bool _isPitruPakshaMasa(String amantaMasa) {
@@ -307,15 +306,15 @@ class ShraddhaCalculator {
     // (tithi and paksha are same across all 3 calendar systems, only masa changes)
     String aparahnaShraddha;
     if (kpIsAmavasya || kpIsPurnima) {
-      aparahnaShraddha = '$amantaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
-      varshikaChandraAmanta = '$amantaName $kpTithiName ಶ್ರಾದ್ಧ';
-      varshikaChandraPournimanta = '$pournimantaName $kpTithiName ಶ್ರಾದ್ಧ';
-      varshikaSoura = '$souraName $kpTithiName ಶ್ರಾದ್ಧ';
+      aparahnaShraddha = '$amantaName $kpTithiName ${AppLocale.t('shraddha')} ${AppLocale.t('shrCanDo')}';
+      varshikaChandraAmanta = '$amantaName $kpTithiName ${AppLocale.t('shraddha')}';
+      varshikaChandraPournimanta = '$pournimantaName $kpTithiName ${AppLocale.t('shraddha')}';
+      varshikaSoura = '$souraName $kpTithiName ${AppLocale.t('shraddha')}';
     } else {
-      aparahnaShraddha = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
-      varshikaChandraAmanta = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
-      varshikaChandraPournimanta = '$pournimantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
-      varshikaSoura = '$souraName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
+      aparahnaShraddha = '$amantaName $kpTithiName ${AppLocale.t('shraddha')} ${AppLocale.t('shrCanDo')}';
+      varshikaChandraAmanta = '$amantaName $kpTithiName ${AppLocale.t('shraddha')}';
+      varshikaChandraPournimanta = '$pournimantaName $kpTithiName ${AppLocale.t('shraddha')}';
+      varshikaSoura = '$souraName $kpTithiName ${AppLocale.t('shraddha')}';
     }
 
     // ── Kshaya Tithi detection (for sunrise tithi) ──

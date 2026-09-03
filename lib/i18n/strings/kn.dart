@@ -360,4 +360,6 @@ const Map<String, String> knStrings = {
   'shrMultiDay4': 'ಪ್ರಥಮ ದಿನ (ನಿನ್ನೆ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ. ಆದರೆ ಇಂದೂ ಮಾಡಬಹುದು.',
   'shrNextDay': 'ಮರುದಿನ',
   'shrEndsNextDay': 'ಮರುದಿನ ಮುಗಿಯುತ್ತದೆ',
+  'shraddha': 'ಶ್ರಾದ್ಧ',
+  'shrCanDo': 'ಮಾಡಬಹುದು',
 };
