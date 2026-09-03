@@ -118,8 +118,8 @@ class _CrossPromoDialogState extends State<_CrossPromoDialog> {
             const SizedBox(height: 12),
 
             // ── Description ──
-            const Text(
-              'ನಮ್ಮ ಕುಂಡಲಿ ಆ್ಯಪ್ ಸಹ ಬಳಸಿ ನೋಡಿ!',
+            Text(
+              AppLocale.t('crossPromoDesc'),
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
@@ -136,13 +136,13 @@ class _CrossPromoDialogState extends State<_CrossPromoDialog> {
                 color: Colors.white.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Column(
+              child: Column(
                 children: [
-                  _FeatureRow(icon: Icons.donut_large, text: 'ಕುಂಡಲಿ (Kundali)'),
-                  _FeatureRow(icon: Icons.star, text: 'ತಾರಾನುಕೂಲ (Tara Bala)'),
-                  _FeatureRow(icon: Icons.access_time, text: 'ಮುಹೂರ್ತ (Muhoorta)'),
-                  _FeatureRow(icon: Icons.home, text: 'ವಾಸ್ತು (Vastu)'),
-                  _FeatureRow(icon: Icons.favorite, text: 'ಜಾತಕ ಹೊಂದಾಣಿಕೆ (Matchmaking)'),
+                  _FeatureRow(icon: Icons.donut_large, text: AppLocale.t('featureKundali')),
+                  _FeatureRow(icon: Icons.star, text: AppLocale.t('featureTaraBala')),
+                  _FeatureRow(icon: Icons.access_time, text: AppLocale.t('featureMuhurta')),
+                  _FeatureRow(icon: Icons.home, text: AppLocale.t('featureVastu')),
+                  _FeatureRow(icon: Icons.favorite, text: AppLocale.t('featureMatch')),
                 ],
               ),
             ),

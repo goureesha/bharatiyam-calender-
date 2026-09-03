@@ -451,34 +451,34 @@ class _MahitiScreenState extends State<MahitiScreen> {
             // ── Guru Asta (Jupiter Combustion) ──
             _buildAstaSection(
               icon: Icons.brightness_7_rounded,
-              title: 'ಗುರು ಅಸ್ತ (Jupiter Combustion)',
+              title: '${AppLocale.t('guruAsta')} (Jupiter Combustion)',
               color: const Color(0xFFFF9800),
               planetEmoji: '🪐',
-              planetName: 'ಗುರು',
+              planetName: AppLocale.t('guru'),
               limitDeg: '9°',
               periods: _guruAsta,
-              warnings: const [
-                '⚠️ ಗುರು ಅಸ್ತ ಸಮಯದಲ್ಲಿ:',
-                '   • ಶುಭ ಕಾರ್ಯಗಳನ್ನು ಮಾಡಬಾರದು',
-                '   • ವಿವಾಹ, ಉಪನಯನ ನಿಷೇಧ',
-                '   • ಗೃಹ ಪ್ರವೇಶ ಮಾಡಬಾರದು',
+              warnings: [
+                AppLocale.t('guruAstaWarnTitle'),
+                AppLocale.t('guruAstaWarn1'),
+                AppLocale.t('guruAstaWarn2'),
+                AppLocale.t('guruAstaWarn3'),
               ],
             ),
 
             // ── Shukra Asta (Venus Combustion) ──
             _buildAstaSection(
               icon: Icons.brightness_5_rounded,
-              title: 'ಶುಕ್ರ ಅಸ್ತ (Venus Combustion)',
+              title: '${AppLocale.t('shukraAsta')} (Venus Combustion)',
               color: const Color(0xFFAB47BC),
               planetEmoji: '💎',
-              planetName: 'ಶುಕ್ರ',
+              planetName: AppLocale.t('shukra'),
               limitDeg: '6.6°',
               periods: _shukraAsta,
-              warnings: const [
-                '⚠️ ಶುಕ್ರ ಅಸ್ತ ಸಮಯದಲ್ಲಿ:',
-                '   • ವಿವಾಹ ನಿಷೇಧ',
-                '   • ಶುಭ ಕಾರ್ಯಗಳಿಗೆ ಅಶುಭ',
-                '   • ಹೊಸ ವಸ್ತು ಖರೀದಿ ಮಾಡಬಾರದು',
+              warnings: [
+                AppLocale.t('shukraAstaWarnTitle'),
+                AppLocale.t('shukraAstaWarn1'),
+                AppLocale.t('shukraAstaWarn2'),
+                AppLocale.t('shukraAstaWarn3'),
               ],
             ),
 
@@ -498,17 +498,17 @@ class _MahitiScreenState extends State<MahitiScreen> {
             // ── Uttarayana / Dakshinayana ──
             _InfoSection(
               icon: Icons.swap_vert_rounded,
-              title: 'ಅಯನ (Solstice)',
+              title: '${AppLocale.t('ayanaTitle')} (Solstice)',
               color: const Color(0xFF42A5F5),
-              items: const [
+              items: [
                 _InfoItem(
-                  title: 'ಅಯನ ವಿವರ',
+                  title: AppLocale.t('ayanaDetails'),
                   details: [
-                    'ℹ️ ಉತ್ತರಾಯಣ = ಶುಭ ಕಾಲ (ದೇವರ ಹಗಲು)',
-                    '   • ಮಕರ ಸಂಕ್ರಾಂತಿಯಿಂದ ಕರ್ಕ ಸಂಕ್ರಾಂತಿಯವರೆಗೆ',
+                    AppLocale.t('uttarayanaDesc'),
+                    AppLocale.t('uttarayanaPeriod'),
                     '',
-                    'ℹ️ ದಕ್ಷಿಣಾಯನ = ಪಿತೃ ಕಾಲ (ದೇವರ ರಾತ್ರಿ)',
-                    '   • ಕರ್ಕ ಸಂಕ್ರಾಂತಿಯಿಂದ ಮಕರ ಸಂಕ್ರಾಂತಿಯವರೆಗೆ',
+                    AppLocale.t('dakshinayanaDesc'),
+                    AppLocale.t('dakshinayanaPeriod'),
                   ],
                 ),
               ],
@@ -517,26 +517,26 @@ class _MahitiScreenState extends State<MahitiScreen> {
             // ── Shraddha Niyama ──
             _InfoSection(
               icon: Icons.self_improvement_rounded,
-              title: 'ಶ್ರಾದ್ಧ ನಿಯಮ',
+              title: AppLocale.t('shraddhaNiyama'),
               color: const Color(0xFFFFD54F),
-              items: const [
+              items: [
                 _InfoItem(
-                  title: 'ಶ್ರಾದ್ಧ ನಿಯಮಗಳು',
+                  title: AppLocale.t('shraddhaNiyamagalu'),
                   details: [
-                    '📜 ಕುತುಪ ಕಾಲ:',
-                    '   • 15 ಮುಹೂರ್ತಗಳಲ್ಲಿ 8ನೇ ಮುಹೂರ್ತ',
-                    '   • ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು',
+                    AppLocale.t('kutupaKalaTitle'),
+                    AppLocale.t('kutupaDesc1'),
+                    AppLocale.t('kutupaDesc2'),
                     '',
-                    '📜 ದ್ವಿತೀಯಾ ಶ್ರಾದ್ಧ ನಿಯಮ:',
-                    '   • ತಿಥಿ ಎರಡು ದಿನ ಕುತುಪದಲ್ಲಿ ಇದ್ದರೆ → ಪ್ರಥಮ ದಿನ',
+                    AppLocale.t('dvitiyaShraddha'),
+                    AppLocale.t('dvitiyaDesc'),
                     '',
-                    '📜 ಕ್ಷಯೇ ಪೂರ್ವ:',
-                    '   • ಕ್ಷಯ ತಿಥಿ (ಕುತುಪ ಕಾಲ ಎರಡು ದಿನವೂ ಇಲ್ಲ)',
-                    '   • ಪ್ರಥಮ ದಿನ (ಹಿಂದಿನ ದಿನ) ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು',
+                    AppLocale.t('kshayePurva'),
+                    AppLocale.t('kshayeDesc1'),
+                    AppLocale.t('kshayeDesc2'),
                     '',
-                    '📜 ಅಪರಾಹ್ನ ಕಾಲ:',
-                    '   • ಹಗಲಿನ 5 ಭಾಗಗಳಲ್ಲಿ 4ನೇ ಭಾಗ',
-                    '   • ಶ್ರಾದ್ಧ ಅಪರಾಹ್ನ ಕಾಲದಲ್ಲಿ ಮಾಡಬೇಕು',
+                    AppLocale.t('aparahnaKalaTitle'),
+                    AppLocale.t('aparahnaDesc1'),
+                    AppLocale.t('aparahnaDesc2'),
                   ],
                 ),
               ],
@@ -612,7 +612,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                     borderRadius: BorderRadius.circular(4),
                     border: Border.all(color: color.withAlpha(80)),
                   ),
-                  child: Text('ಈಗ ಅಸ್ತ', style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: color)),
+                  child: Text(AppLocale.t('nowAsta'), style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: color)),
                 ),
             ],
           ),
@@ -631,7 +631,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('$planetName ಅಸ್ತ $_year', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kText)),
+                  Text('$planetName ${AppLocale.t('astaYear')} $_year', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kText)),
                   const SizedBox(height: 6),
                   ...details.map((line) => Padding(
                     padding: const EdgeInsets.only(bottom: 2),
@@ -673,7 +673,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
           tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
           childrenPadding: const EdgeInsets.only(left: 14, right: 14, bottom: 12),
           leading: Icon(Icons.dark_mode_rounded, color: color, size: 20),
-          title: Text('ಗ್ರಹಣ (Eclipses) $_year', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: color)),
+          title: Text('${AppLocale.t('grahana')} (Eclipses) $_year', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: color)),
           iconColor: color,
           collapsedIconColor: color.withAlpha(150),
           children: [
@@ -790,7 +790,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
           childrenPadding: const EdgeInsets.only(left: 14, right: 14, bottom: 12),
           leading: Icon(Icons.date_range_rounded, color: kGold, size: 20),
           title: Text(
-            'ಮಾಸ ವಿವರ $_year',
+            '${AppLocale.t('masaVivara')} $_year',
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kGold),
           ),
           iconColor: kGold,

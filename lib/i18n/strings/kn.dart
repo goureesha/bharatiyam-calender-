@@ -192,4 +192,55 @@ const Map<String, String> knStrings = {
   'kutupaKala': 'ಕುತುಪ ಕಾಲ', 'aparahna': 'ಅಪರಾಹ್ನ',
   'amantaLabel': 'ಅಮಾಂತ', 'pournimantaLabel': 'ಪೌರ್ಣಿಮಾಂತ',
   'souraLabel': 'ಸೌರಮಾನ',
+
+  // ─── Guru/Shukra Asta ───
+  'guruAsta': 'ಗುರು ಅಸ್ತ', 'shukraAsta': 'ಶುಕ್ರ ಅಸ್ತ',
+  'guru': 'ಗುರು', 'shukra': 'ಶುಕ್ರ',
+  'nowAsta': 'ಈಗ ಅಸ್ತ', 'astaYear': 'ಅಸ್ತ',
+  'guruAstaWarnTitle': '⚠️ ಗುರು ಅಸ್ತ ಸಮಯದಲ್ಲಿ:',
+  'guruAstaWarn1': '   • ಶುಭ ಕಾರ್ಯಗಳನ್ನು ಮಾಡಬಾರದು',
+  'guruAstaWarn2': '   • ವಿವಾಹ, ಉಪನಯನ ನಿಷೇಧ',
+  'guruAstaWarn3': '   • ಗೃಹ ಪ್ರವೇಶ ಮಾಡಬಾರದು',
+  'shukraAstaWarnTitle': '⚠️ ಶುಕ್ರ ಅಸ್ತ ಸಮಯದಲ್ಲಿ:',
+  'shukraAstaWarn1': '   • ವಿವಾಹ ನಿಷೇಧ',
+  'shukraAstaWarn2': '   • ಶುಭ ಕಾರ್ಯಗಳಿಗೆ ಅಶುಭ',
+  'shukraAstaWarn3': '   • ಹೊಸ ವಸ್ತು ಖರೀದಿ ಮಾಡಬಾರದು',
+
+  // ─── Ayana ───
+  'ayanaTitle': 'ಅಯನ',
+  'ayanaDetails': 'ಅಯನ ವಿವರ',
+  'uttarayanaDesc': 'ℹ️ ಉತ್ತರಾಯಣ = ಶುಭ ಕಾಲ (ದೇವರ ಹಗಲು)',
+  'uttarayanaPeriod': '   • ಮಕರ ಸಂಕ್ರಾಂತಿಯಿಂದ ಕರ್ಕ ಸಂಕ್ರಾಂತಿಯವರೆಗೆ',
+  'dakshinayanaDesc': 'ℹ️ ದಕ್ಷಿಣಾಯನ = ಪಿತೃ ಕಾಲ (ದೇವರ ರಾತ್ರಿ)',
+  'dakshinayanaPeriod': '   • ಕರ್ಕ ಸಂಕ್ರಾಂತಿಯಿಂದ ಮಕರ ಸಂಕ್ರಾಂತಿಯವರೆಗೆ',
+
+  // ─── Shraddha Niyama ───
+  'shraddhaNiyama': 'ಶ್ರಾದ್ಧ ನಿಯಮ',
+  'shraddhaNiyamagalu': 'ಶ್ರಾದ್ಧ ನಿಯಮಗಳು',
+  'kutupaKalaTitle': '📜 ಕುತುಪ ಕಾಲ:',
+  'kutupaDesc1': '   • 15 ಮುಹೂರ್ತಗಳಲ್ಲಿ 8ನೇ ಮುಹೂರ್ತ',
+  'kutupaDesc2': '   • ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು',
+  'dvitiyaShraddha': '📜 ದ್ವಿತೀಯಾ ಶ್ರಾದ್ಧ ನಿಯಮ:',
+  'dvitiyaDesc': '   • ತಿಥಿ ಎರಡು ದಿನ ಕುತುಪದಲ್ಲಿ ಇದ್ದರೆ → ಪ್ರಥಮ ದಿನ',
+  'kshayePurva': '📜 ಕ್ಷಯೇ ಪೂರ್ವ:',
+  'kshayeDesc1': '   • ಕ್ಷಯ ತಿಥಿ (ಕುತುಪ ಕಾಲ ಎರಡು ದಿನವೂ ಇಲ್ಲ)',
+  'kshayeDesc2': '   • ಪ್ರಥಮ ದಿನ (ಹಿಂದಿನ ದಿನ) ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು',
+  'aparahnaKalaTitle': '📜 ಅಪರಾಹ್ನ ಕಾಲ:',
+  'aparahnaDesc1': '   • ಹಗಲಿನ 5 ಭಾಗಗಳಲ್ಲಿ 4ನೇ ಭಾಗ',
+  'aparahnaDesc2': '   • ಶ್ರಾದ್ಧ ಅಪರಾಹ್ನ ಕಾಲದಲ್ಲಿ ಮಾಡಬೇಕು',
+
+  // ─── Cross Promo ───
+  'crossPromoDesc': 'ನಮ್ಮ ಕುಂಡಲಿ ಆ್ಯಪ್ ಸಹ ಬಳಸಿ ನೋಡಿ!',
+  'featureKundali': 'ಕುಂಡಲಿ (Kundali)',
+  'featureTaraBala': 'ತಾರಾನುಕೂಲ (Tara Bala)',
+  'featureMuhurta': 'ಮುಹೂರ್ತ (Muhoorta)',
+  'featureVastu': 'ವಾಸ್ತು (Vastu)',
+  'featureMatch': 'ಜಾತಕ ಹೊಂದಾಣಿಕೆ (Matchmaking)',
+
+  // ─── Misc ───
+  'computingEvents': 'ಈವೆಂಟ್ ಲೆಕ್ಕಾಚಾರ...',
+  'eventsFound': 'ಈವೆಂಟ್‌ಗಳು ಕಂಡುಬಂದಿವೆ',
+  'adhikaMasa': 'ಅಧಿಕ / ಕ್ಷಯ ಮಾಸ',
+  'grahana': 'ಗ್ರಹಣ',
+  'masaVivara': 'ಮಾಸ ವಿವರ',
 };
