@@ -8,7 +8,6 @@
 
 import 'ephemeris.dart';
 import 'package:sweph/sweph.dart';
-import '../i18n/app_locale.dart';
 
 class ShraddhaInfo {
   // Varshika Shraddha (annual)
@@ -131,17 +130,24 @@ class ShraddhaCalculator {
 
   static String _resolveChandraMasa(String masaKey) {
     if (masaKey.startsWith('cm') && masaKey.length <= 4) {
-      return AppLocale.t(masaKey);
+      final idx = int.tryParse(masaKey.substring(2));
+      if (idx != null && idx >= 0 && idx < 12) return _chandraMasaNames[idx];
     }
-    // Fallback: try trAll for Kannada masa names
-    return AppLocale.trAll(masaKey);
+    for (final name in _chandraMasaNames) {
+      if (masaKey.contains(name)) return name;
+    }
+    return masaKey;
   }
 
   static String _resolveSouraMasa(String masaKey) {
     if (masaKey.startsWith('sm') && masaKey.length <= 4) {
-      return AppLocale.t(masaKey);
+      final idx = int.tryParse(masaKey.substring(2));
+      if (idx != null && idx >= 0 && idx < 12) return _souraMasaNames[idx];
     }
-    return AppLocale.trAll(masaKey);
+    for (final name in _souraMasaNames) {
+      if (masaKey.contains(name)) return name;
+    }
+    return masaKey;
   }
 
   static bool _isPitruPakshaMasa(String amantaMasa) {
@@ -215,9 +221,16 @@ class ShraddhaCalculator {
     final isPitruPaksha = isPitruPakshaMasa && isKrishna;
 
     // ── Varshika Shraddha ──
-    // t0-t29 keys already include paksha name (e.g. 'ಕೃಷ್ಣ ಸಪ್ತಮಿ')
-    final pakshaName = '';
-    final tithiName = AppLocale.t('t$tithiIndex');
+    final pakshaName = isKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+    String tithiName;
+    if (isAmavasya) {
+      tithiName = 'ಅಮಾವಾಸ್ಯೆ';
+    } else if (isPurnima) {
+      tithiName = 'ಹುಣ್ಣಿಮೆ';
+    } else {
+      final tithiInPaksha = isKrishna ? tithiIndex - 15 : tithiIndex;
+      tithiName = (tithiInPaksha >= 0 && tithiInPaksha < 14) ? _tithiNames[tithiInPaksha] : '';
+    }
 
     final amantaName = _resolveChandraMasa(amantaMasa);
     final pournimantaName = _resolveChandraMasa(pournimantaMasa);
@@ -252,7 +265,7 @@ class ShraddhaCalculator {
     final endDt = DateTime.fromMillisecondsSinceEpoch(endMs, isUtc: true)
         .add(Duration(milliseconds: (tzOffset * 3600000).round()));
     final tithiEndDayLabel = (endDt.day != sunriseDt.day || endDt.month != sunriseDt.month)
-        ? ' (${AppLocale.t('shrNextDay')})' : '';
+        ? ' (ಮರುದಿನ)' : '';
     final tithiEndTimeForRule = '$tithiEndTimeStr$tithiEndDayLabel';
 
     // Kutupa start in ghati from sunrise
@@ -299,22 +312,30 @@ class ShraddhaCalculator {
     final kpIsKrishna = kutupaTithiIdx >= 15;
     final kpIsAmavasya = kutupaTithiIdx == 29;
     final kpIsPurnima = kutupaTithiIdx == 14;
-    final kpPakshaName = '';
-    final kpTithiName = AppLocale.t('t$kutupaTithiIdx');
+    final kpPakshaName = kpIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+    String kpTithiName;
+    if (kpIsAmavasya) {
+      kpTithiName = 'ಅಮಾವಾಸ್ಯೆ';
+    } else if (kpIsPurnima) {
+      kpTithiName = 'ಹುಣ್ಣಿಮೆ';
+    } else {
+      final kpTithiInPaksha = kpIsKrishna ? kutupaTithiIdx - 15 : kutupaTithiIdx;
+      kpTithiName = (kpTithiInPaksha >= 0 && kpTithiInPaksha < 14) ? _tithiNames[kpTithiInPaksha] : '';
+    }
 
     // Build varshika and aparahna shraddha using Kutupa-determined tithi
     // (tithi and paksha are same across all 3 calendar systems, only masa changes)
     String aparahnaShraddha;
     if (kpIsAmavasya || kpIsPurnima) {
-      aparahnaShraddha = '$amantaName $kpTithiName ${AppLocale.t('shraddha')} ${AppLocale.t('shrCanDo')}';
-      varshikaChandraAmanta = '$amantaName $kpTithiName ${AppLocale.t('shraddha')}';
-      varshikaChandraPournimanta = '$pournimantaName $kpTithiName ${AppLocale.t('shraddha')}';
-      varshikaSoura = '$souraName $kpTithiName ${AppLocale.t('shraddha')}';
+      aparahnaShraddha = '$amantaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
+      varshikaChandraAmanta = '$amantaName $kpTithiName ಶ್ರಾದ್ಧ';
+      varshikaChandraPournimanta = '$pournimantaName $kpTithiName ಶ್ರಾದ್ಧ';
+      varshikaSoura = '$souraName $kpTithiName ಶ್ರಾದ್ಧ';
     } else {
-      aparahnaShraddha = '$amantaName $kpTithiName ${AppLocale.t('shraddha')} ${AppLocale.t('shrCanDo')}';
-      varshikaChandraAmanta = '$amantaName $kpTithiName ${AppLocale.t('shraddha')}';
-      varshikaChandraPournimanta = '$pournimantaName $kpTithiName ${AppLocale.t('shraddha')}';
-      varshikaSoura = '$souraName $kpTithiName ${AppLocale.t('shraddha')}';
+      aparahnaShraddha = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು';
+      varshikaChandraAmanta = '$amantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
+      varshikaChandraPournimanta = '$pournimantaName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
+      varshikaSoura = '$souraName $kpPakshaName $kpTithiName ಶ್ರಾದ್ಧ';
     }
 
     // ── Kshaya Tithi detection (for sunrise tithi) ──
@@ -327,15 +348,15 @@ class ShraddhaCalculator {
     if (kutupaTithiIdx == tithiIndex) {
       // Sunrise tithi IS at Kutupa
       if (isFirstDay) {
-        tithiStatus = '✅ $kpPakshaName $kpTithiName — ${AppLocale.t('shrKutupaPresent')} (${AppLocale.t('shrFirstDay')})';
+        tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ (ಪ್ರಥಮ ದಿನ)';
       } else if (isSecondDay) {
-        tithiStatus = '⚠️ $kpPakshaName $kpTithiName — ${AppLocale.t('shrKutupaPresent')} (${AppLocale.t('shrSecondDay')})\n📌 ${AppLocale.t('shrPrevDayShraddha')}';
+        tithiStatus = '⚠️ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ (ದ್ವಿತೀಯ ದಿನ)\n📌 ಹಿಂದಿನ ದಿನ (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
       } else {
-        tithiStatus = '✅ $kpPakshaName $kpTithiName — ${AppLocale.t('shrKutupaPresent')}';
+        tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
       }
     } else {
       // Sunrise tithi ended before Kutupa, next tithi is at Kutupa
-      tithiStatus = '✅ $kpPakshaName $kpTithiName — ${AppLocale.t('shrKutupaPresent')}';
+      tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
     }
 
     // ── Next Tithi Shraddha ──
@@ -357,8 +378,16 @@ class ShraddhaCalculator {
       final ntIsKrishna = nextTithiIdx >= 15;
       final ntIsAmavasya = nextTithiIdx == 29;
       final ntIsPurnima = nextTithiIdx == 14;
-      final ntPakshaName = '';
-      final ntTithiName = AppLocale.t('t$nextTithiIdx');
+      final ntPakshaName = ntIsKrishna ? 'ಕೃಷ್ಣ' : 'ಶುಕ್ಲ';
+      String ntTithiName;
+      if (ntIsAmavasya) {
+        ntTithiName = 'ಅಮಾವಾಸ್ಯೆ';
+      } else if (ntIsPurnima) {
+        ntTithiName = 'ಹುಣ್ಣಿಮೆ';
+      } else {
+        final ntTithiInPaksha = ntIsKrishna ? nextTithiIdx - 15 : nextTithiIdx;
+        ntTithiName = (ntTithiInPaksha >= 0 && ntTithiInPaksha < 14) ? _tithiNames[ntTithiInPaksha] : '';
+      }
 
       // Find next tithi's END JD using binary search
       final nextTithiBoundaryDeg = ((nextTithiIdx + 1) % 30) * 12.0;
@@ -400,9 +429,9 @@ class ShraddhaCalculator {
       if (showNextTithiToday) {
         // Build next tithi shraddha name
         if (ntIsAmavasya || ntIsPurnima) {
-          nextTithiShraddha = '$amantaName $ntTithiName ${AppLocale.t('shraddha')}';
+          nextTithiShraddha = '$amantaName $ntTithiName ಶ್ರಾದ್ಧ';
         } else {
-          nextTithiShraddha = '$amantaName $ntTithiName ${AppLocale.t('shraddha')}';
+          nextTithiShraddha = '$amantaName $ntPakshaName $ntTithiName ಶ್ರಾದ್ಧ';
         }
 
         final ntStartTimeStr = Ephemeris.formatTimeFromJd(tithiEndJd, tzOffset: tzOffset);
@@ -413,34 +442,38 @@ class ShraddhaCalculator {
         final ntEndDt = DateTime.fromMillisecondsSinceEpoch(ntEndMs, isUtc: true)
             .add(Duration(milliseconds: (tzOffset * 3600000).round()));
         final ntEndDayLabel = (ntEndDt.day != sunriseDt.day || ntEndDt.month != sunriseDt.month)
-            ? ' (${AppLocale.t('shrNextDay')})' : '';
+            ? ' (ಮರುದಿನ)' : '';
 
         if (isNextTithiKshaya) {
-          nextTithiStatus = '⚠️ $ntPakshaName $ntTithiName — ${AppLocale.t('shrKshayaTithi')}\n${AppLocale.t('shrPrarambha')}: $ntStartTimeStr | ${AppLocale.t('shrAntya')}: $nextTithiEndTime$ntEndDayLabel\n${AppLocale.t('shrTodayTmrwNoKutupa')}\n📜 ${AppLocale.t('shrKshayePurvaToday')}';
+          nextTithiStatus = '⚠️ $ntPakshaName $ntTithiName — ಕ್ಷಯ ತಿಥಿ\nಪ್ರಾರಂಭ: $ntStartTimeStr | ಅಂತ್ಯ: $nextTithiEndTime$ntEndDayLabel\nಇಂದು ಮತ್ತು ನಾಳೆ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ\n📜 ಕ್ಷಯೇ ಪೂರ್ವ — ಇಂದು ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
         } else {
-          nextTithiStatus = '✅ $ntPakshaName $ntTithiName — ${AppLocale.t('shrKutupaPresent')}\n${AppLocale.t('shrPrarambha')}: $ntStartTimeStr | ${AppLocale.t('shrAntya')}: $nextTithiEndTime$ntEndDayLabel';
+          nextTithiStatus = '✅ $ntPakshaName $ntTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ\nಪ್ರಾರಂಭ: $ntStartTimeStr | ಅಂತ್ಯ: $nextTithiEndTime$ntEndDayLabel';
         }
       }
     }
 
     String ruleText;
     if (isKshayaTithi) {
-      ruleText = '${AppLocale.t('shrRuleBase')}\n${AppLocale.t('shrRuleKshaya')}';
+      ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು\nಕ್ಷಯೇ ಪೂರ್ವ: ಕ್ಷಯ ತಿಥಿಯಲ್ಲಿ ಪ್ರಥಮ ದಿನ ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
     } else {
-      ruleText = AppLocale.t('shrRuleBase');
+      ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು';
     }
 
     // Build Kshaya / Multi-day explanations
     String kshayaTithiExplanation = '';
     if (isKshayaTithi) {
-      kshayaTithiExplanation = '$pakshaName $tithiName ${AppLocale.t('shrKshayaExpl1')}\n${AppLocale.t('shrKshayaExpl2')}\n${AppLocale.t('shrKshayaExpl3')}';
+      kshayaTithiExplanation = '$pakshaName $tithiName ತಿಥಿ ಇಂದು ಮತ್ತು ನಾಳೆ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ.\n'
+          'ಇದು ಕ್ಷಯ ತಿಥಿ. ಕ್ಷಯೇ ಪೂರ್ವ ನಿಯಮದಂತೆ ಇಂದು ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು.\n'
+          'ಈ ತಿಥಿಯ ಮತ್ತು ಮುಂದಿನ ತಿಥಿಯ ಎರಡೂ ಶ್ರಾದ್ಧ ಇಂದು ಬರುತ್ತದೆ.';
     }
 
     String multiDayExplanation = '';
     if (isFirstDay) {
-      multiDayExplanation = '$pakshaName $tithiName ${AppLocale.t('shrMultiDay1')}\n${AppLocale.t('shrMultiDay2')}';
+      multiDayExplanation = '$pakshaName $tithiName ತಿಥಿ ಇಂದು ಮತ್ತು ನಾಳೆ ಎರಡೂ ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ.\n'
+          'ಪ್ರಥಮ ದಿನ (ಇಂದು) ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು. ನಾಳೆಯೂ ಮಾಡಬಹುದು.';
     } else if (isSecondDay) {
-      multiDayExplanation = '$pakshaName $tithiName ${AppLocale.t('shrMultiDay3')}\n${AppLocale.t('shrMultiDay4')}';
+      multiDayExplanation = '$pakshaName $tithiName ತಿಥಿ ನಿನ್ನೆ ಮತ್ತು ಇಂದು ಎರಡೂ ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ.\n'
+          'ಪ್ರಥಮ ದಿನ (ನಿನ್ನೆ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ. ಆದರೆ ಇಂದೂ ಮಾಡಬಹುದು.';
     }
 
     // ── Pitru Paksha / Mahalaya ──
@@ -455,8 +488,8 @@ class ShraddhaCalculator {
         varshikaChandraPournimanta: varshikaChandraPournimanta,
         varshikaSoura: varshikaSoura,
         isPitruPaksha: true,
-        pitruPakshaDay: AppLocale.t('t${krishnaIdx + 15}'),
-        significance: AppLocale.trAll(_pitruPakshaSignificanceKn[krishnaIdx]),
+        pitruPakshaDay: _krishnaTithiKn[krishnaIdx],
+        significance: _pitruPakshaSignificanceKn[krishnaIdx],
         isSarvaPitru: krishnaIdx == 14,
         isBharaniShraddha: (krishnaIdx == 1 || krishnaIdx == 2) && nakshatraIndex == 1,
         isAvidhavaNavami: krishnaIdx == 8,
