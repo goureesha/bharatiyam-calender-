@@ -362,4 +362,6 @@ const Map<String, String> knStrings = {
   'shrEndsNextDay': 'ಮರುದಿನ ಮುಗಿಯುತ್ತದೆ',
   'shraddha': 'ಶ್ರಾದ್ಧ',
   'shrCanDo': 'ಮಾಡಬಹುದು',
+  'gata': 'ಗತ',
+  'shesha': 'ಶೇಷ',
 };

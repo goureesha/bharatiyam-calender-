@@ -726,9 +726,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               children: [
                 Text('⏱  ', style: TextStyle(fontSize: 9, color: kMuted)),
-                _ghatiTag('ಗತ', gataNow, const Color(0xFFFF9800)),
-                const SizedBox(width: 4),
-                _ghatiTag('ಶೇಷ', sheshaNow, const Color(0xFF4CAF50)),
+                _ghatiTag(AppLocale.t('gata'), gataNow, const Color(0xFFFF9800)),
+                if (sheshaNow.isNotEmpty)
+                  _ghatiTag(AppLocale.t('shesha'), sheshaNow, const Color(0xFF4CAF50)),
               ],
             ),
           ],
@@ -822,8 +822,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 6),
                     Expanded(child: Text(
                       info.isFirstDay
-                        ? 'ತಿಥಿ ಎರಡೂ ದಿನ ಇದೆ (ಪ್ರಥಮ ದಿನ)'
-                        : 'ತಿಥಿ ಎರಡೂ ದಿನ ಇದೆ (ದ್ವಿತೀಯ ದಿನ)',
+                        ? AppLocale.t('shrMultiDay1')
+                        : AppLocale.t('shrMultiDay3'),
                       style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFF1565C0)),
                     )),
                   ]),
