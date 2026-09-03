@@ -400,9 +400,9 @@ class ShraddhaCalculator {
       if (showNextTithiToday) {
         // Build next tithi shraddha name
         if (ntIsAmavasya || ntIsPurnima) {
-          nextTithiShraddha = '$amantaName $ntTithiName ಶ್ರಾದ್ಧ';
+          nextTithiShraddha = '$amantaName $ntTithiName ${AppLocale.t('shraddha')}';
         } else {
-          nextTithiShraddha = '$amantaName $ntPakshaName $ntTithiName ಶ್ರಾದ್ಧ';
+          nextTithiShraddha = '$amantaName $ntTithiName ${AppLocale.t('shraddha')}';
         }
 
         final ntStartTimeStr = Ephemeris.formatTimeFromJd(tithiEndJd, tzOffset: tzOffset);
@@ -455,8 +455,8 @@ class ShraddhaCalculator {
         varshikaChandraPournimanta: varshikaChandraPournimanta,
         varshikaSoura: varshikaSoura,
         isPitruPaksha: true,
-        pitruPakshaDay: _krishnaTithiKn[krishnaIdx],
-        significance: _pitruPakshaSignificanceKn[krishnaIdx],
+        pitruPakshaDay: AppLocale.t('t${krishnaIdx + 15}'),
+        significance: AppLocale.trAll(_pitruPakshaSignificanceKn[krishnaIdx]),
         isSarvaPitru: krishnaIdx == 14,
         isBharaniShraddha: (krishnaIdx == 1 || krishnaIdx == 2) && nakshatraIndex == 1,
         isAvidhavaNavami: krishnaIdx == 8,
