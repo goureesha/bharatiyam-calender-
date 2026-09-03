@@ -1036,7 +1036,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(endTime, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
-                      if (endsNextDay) Text(' (ಮರುದಿನ)', style: TextStyle(fontSize: 8, color: kAshubha)),
+                      if (endsNextDay) Text(' (${AppLocale.t('shrNextDay')})', style: TextStyle(fontSize: 8, color: kAshubha)),
                     ],
                   ),
                 ],

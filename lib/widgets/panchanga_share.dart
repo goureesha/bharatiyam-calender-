@@ -370,7 +370,7 @@ class _ShareCard extends StatelessWidget {
             ],
 
             const SizedBox(height: 5),
-            Text('(+) = ಮರುದಿನ ಮುಗಿಯುತ್ತದೆ',
+            Text('(+) = ${AppLocale.t('shrEndsNextDay')}',
               style: TextStyle(fontSize: 6, color: Colors.grey[500], fontStyle: FontStyle.italic)),
           ],
         ),

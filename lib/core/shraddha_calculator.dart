@@ -8,6 +8,7 @@
 
 import 'ephemeris.dart';
 import 'package:sweph/sweph.dart';
+import '../i18n/app_locale.dart';
 
 class ShraddhaInfo {
   // Varshika Shraddha (annual)
@@ -265,7 +266,7 @@ class ShraddhaCalculator {
     final endDt = DateTime.fromMillisecondsSinceEpoch(endMs, isUtc: true)
         .add(Duration(milliseconds: (tzOffset * 3600000).round()));
     final tithiEndDayLabel = (endDt.day != sunriseDt.day || endDt.month != sunriseDt.month)
-        ? ' (ಮರುದಿನ)' : '';
+        ? ' (${AppLocale.t('shrNextDay')})' : '';
     final tithiEndTimeForRule = '$tithiEndTimeStr$tithiEndDayLabel';
 
     // Kutupa start in ghati from sunrise
@@ -348,15 +349,15 @@ class ShraddhaCalculator {
     if (kutupaTithiIdx == tithiIndex) {
       // Sunrise tithi IS at Kutupa
       if (isFirstDay) {
-        tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ (ಪ್ರಥಮ ದಿನ)';
+        tithiStatus = '✅ $kpPakshaName $kpTithiName — ${AppLocale.t('shrKutupaPresent')} (${AppLocale.t('shrFirstDay')})';
       } else if (isSecondDay) {
-        tithiStatus = '⚠️ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ (ದ್ವಿತೀಯ ದಿನ)\n📌 ಹಿಂದಿನ ದಿನ (ಪ್ರಥಮ ದಿನ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ';
+        tithiStatus = '⚠️ $kpPakshaName $kpTithiName — ${AppLocale.t('shrKutupaPresent')} (${AppLocale.t('shrSecondDay')})\n📌 ${AppLocale.t('shrPrevDayShraddha')}';
       } else {
-        tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
+        tithiStatus = '✅ $kpPakshaName $kpTithiName — ${AppLocale.t('shrKutupaPresent')}';
       }
     } else {
       // Sunrise tithi ended before Kutupa, next tithi is at Kutupa
-      tithiStatus = '✅ $kpPakshaName $kpTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ';
+      tithiStatus = '✅ $kpPakshaName $kpTithiName — ${AppLocale.t('shrKutupaPresent')}';
     }
 
     // ── Next Tithi Shraddha ──
@@ -442,38 +443,34 @@ class ShraddhaCalculator {
         final ntEndDt = DateTime.fromMillisecondsSinceEpoch(ntEndMs, isUtc: true)
             .add(Duration(milliseconds: (tzOffset * 3600000).round()));
         final ntEndDayLabel = (ntEndDt.day != sunriseDt.day || ntEndDt.month != sunriseDt.month)
-            ? ' (ಮರುದಿನ)' : '';
+            ? ' (${AppLocale.t('shrNextDay')})' : '';
 
         if (isNextTithiKshaya) {
-          nextTithiStatus = '⚠️ $ntPakshaName $ntTithiName — ಕ್ಷಯ ತಿಥಿ\nಪ್ರಾರಂಭ: $ntStartTimeStr | ಅಂತ್ಯ: $nextTithiEndTime$ntEndDayLabel\nಇಂದು ಮತ್ತು ನಾಳೆ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ\n📜 ಕ್ಷಯೇ ಪೂರ್ವ — ಇಂದು ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+          nextTithiStatus = '⚠️ $ntPakshaName $ntTithiName — ${AppLocale.t('shrKshayaTithi')}\n${AppLocale.t('shrPrarambha')}: $ntStartTimeStr | ${AppLocale.t('shrAntya')}: $nextTithiEndTime$ntEndDayLabel\n${AppLocale.t('shrTodayTmrwNoKutupa')}\n📜 ${AppLocale.t('shrKshayePurvaToday')}';
         } else {
-          nextTithiStatus = '✅ $ntPakshaName $ntTithiName — ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ\nಪ್ರಾರಂಭ: $ntStartTimeStr | ಅಂತ್ಯ: $nextTithiEndTime$ntEndDayLabel';
+          nextTithiStatus = '✅ $ntPakshaName $ntTithiName — ${AppLocale.t('shrKutupaPresent')}\n${AppLocale.t('shrPrarambha')}: $ntStartTimeStr | ${AppLocale.t('shrAntya')}: $nextTithiEndTime$ntEndDayLabel';
         }
       }
     }
 
     String ruleText;
     if (isKshayaTithi) {
-      ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು\nಕ್ಷಯೇ ಪೂರ್ವ: ಕ್ಷಯ ತಿಥಿಯಲ್ಲಿ ಪ್ರಥಮ ದಿನ ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು';
+      ruleText = '${AppLocale.t('shrRuleBase')}\n${AppLocale.t('shrRuleKshaya')}';
     } else {
-      ruleText = 'ನಿಯಮ: ಶ್ರಾದ್ಧ ತಿಥಿ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇರಬೇಕು';
+      ruleText = AppLocale.t('shrRuleBase');
     }
 
     // Build Kshaya / Multi-day explanations
     String kshayaTithiExplanation = '';
     if (isKshayaTithi) {
-      kshayaTithiExplanation = '$pakshaName $tithiName ತಿಥಿ ಇಂದು ಮತ್ತು ನಾಳೆ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇಲ್ಲ.\n'
-          'ಇದು ಕ್ಷಯ ತಿಥಿ. ಕ್ಷಯೇ ಪೂರ್ವ ನಿಯಮದಂತೆ ಇಂದು ಶ್ರಾದ್ಧ ಮಾಡಬೇಕು.\n'
-          'ಈ ತಿಥಿಯ ಮತ್ತು ಮುಂದಿನ ತಿಥಿಯ ಎರಡೂ ಶ್ರಾದ್ಧ ಇಂದು ಬರುತ್ತದೆ.';
+      kshayaTithiExplanation = '$pakshaName $tithiName ${AppLocale.t('shrKshayaExpl1')}\n${AppLocale.t('shrKshayaExpl2')}\n${AppLocale.t('shrKshayaExpl3')}';
     }
 
     String multiDayExplanation = '';
     if (isFirstDay) {
-      multiDayExplanation = '$pakshaName $tithiName ತಿಥಿ ಇಂದು ಮತ್ತು ನಾಳೆ ಎರಡೂ ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ.\n'
-          'ಪ್ರಥಮ ದಿನ (ಇಂದು) ಶ್ರಾದ್ಧ ಮಾಡಬಹುದು. ನಾಳೆಯೂ ಮಾಡಬಹುದು.';
+      multiDayExplanation = '$pakshaName $tithiName ${AppLocale.t('shrMultiDay1')}\n${AppLocale.t('shrMultiDay2')}';
     } else if (isSecondDay) {
-      multiDayExplanation = '$pakshaName $tithiName ತಿಥಿ ನಿನ್ನೆ ಮತ್ತು ಇಂದು ಎರಡೂ ದಿನ ಕುತುಪ ಕಾಲದಲ್ಲಿ ಇದೆ.\n'
-          'ಪ್ರಥಮ ದಿನ (ನಿನ್ನೆ) ಶ್ರಾದ್ಧ ಯೋಗ್ಯ. ಆದರೆ ಇಂದೂ ಮಾಡಬಹುದು.';
+      multiDayExplanation = '$pakshaName $tithiName ${AppLocale.t('shrMultiDay3')}\n${AppLocale.t('shrMultiDay4')}';
     }
 
     // ── Pitru Paksha / Mahalaya ──
