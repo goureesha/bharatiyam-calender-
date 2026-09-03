@@ -920,7 +920,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
             ...entries.map((e) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 2),
               child: Row(children: [
-                SizedBox(width: 90, child: Text(e.name, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: kText))),
+                SizedBox(width: 90, child: Text(AppLocale.trAll(e.name), style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: kText))),
                 Expanded(child: Text(_fmtMasaDate(e.start), style: TextStyle(fontSize: 10, color: kMuted))),
                 SizedBox(width: 80, child: Text(_fmtMasaDate(e.end), style: TextStyle(fontSize: 10, color: kMuted), textAlign: TextAlign.right)),
               ]),

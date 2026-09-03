@@ -594,7 +594,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: _monthEvents[day]!.map((e) => Text(
-                                          e.name,
+                                          AppLocale.trAll(e.name),
                                           style: TextStyle(
                                             fontSize: 7,
                                             color: const Color(0xFFFF9800),
@@ -800,7 +800,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       children: [
                         Row(children: [
                           const Text('🪔 ', style: TextStyle(fontSize: 14)),
-                          Expanded(child: Text(e.name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFFF9800)))),
+                          Expanded(child: Text(AppLocale.trAll(e.name), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFFF9800)))),
                         ]),
                         if (e.description.isNotEmpty) ...[
                           const SizedBox(height: 4),

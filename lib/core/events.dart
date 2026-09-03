@@ -1,5 +1,6 @@
 /// Event Calculator — Hindu festivals and observances based on Chandra Masa and Tithi.
 /// Each event uses its correct timing rule (sunrise, sunset, moonrise, midnight, noon).
+import '../i18n/app_locale.dart';
 
 class AstroEvent {
   final String name;
@@ -257,7 +258,6 @@ class EventCalculator {
     return events;
   }
 
-  /// Map i18n masa key (cm0-cm11) to Kannada masa name
   static String masaKeyToKannada(String key) {
     const map = {
       'cm0': 'ಚೈತ್ರ', 'cm1': 'ವೈಶಾಖ', 'cm2': 'ಜ್ಯೇಷ್ಠ',
@@ -266,5 +266,10 @@ class EventCalculator {
       'cm9': 'ಪುಷ್ಯ', 'cm10': 'ಮಾಘ', 'cm11': 'ಫಾಲ್ಗುಣ',
     };
     return map[key] ?? '';
+  }
+
+  /// Localized version of masa name
+  static String masaKeyLocalized(String key) {
+    return AppLocale.t(key);
   }
 }
