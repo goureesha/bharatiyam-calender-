@@ -383,4 +383,5 @@ const Map<String, String> knStrings = {
   'twoSankranti': 'ಎರಡು ಸಂಕ್ರಾಂತಿ',
   'masaPatti': 'ಮಾಸ ಪಟ್ಟಿ',
   'sankrantiAbbr': 'ಸಂ',
+  'visheshaHabbagalu': 'ವಿಶೇಷ ಹಬ್ಬಗಳು',
 };

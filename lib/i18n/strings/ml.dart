@@ -359,4 +359,5 @@ const Map<String, String> mlStrings = {
   'twoSankranti': 'രണ്ട് സംക്രാന്തി',
   'masaPatti': 'മാസ പട്ടിക',
   'sankrantiAbbr': 'സം',
+  'visheshaHabbagalu': 'പ്രത്യേക ഉത്സവങ്ങൾ',
 };

@@ -1110,7 +1110,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
     if (_eventsLoading) {
       return AppCard(
         child: Column(children: [
-          SectionHeader(icon: Icons.celebration_rounded, title: 'ಹಬ್ಬ / ವಿಶೇಷ ದಿನಗಳು'),
+          SectionHeader(icon: Icons.celebration_rounded, title: AppLocale.t('habbaVishesha')),
           const SizedBox(height: 12),
           LinearProgressIndicator(value: _eventsProgress / 12, color: kGold, backgroundColor: kBorder),
           const SizedBox(height: 8),
@@ -1199,7 +1199,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('🎉 ವಿಶೇಷ ಹಬ್ಬಗಳು', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
+                    Text('🎉 ${AppLocale.t('visheshaHabbagalu')}', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
                     const SizedBox(height: 8),
                     ...specialEvents.map((e) => Padding(
                       padding: const EdgeInsets.only(bottom: 4),
@@ -1213,7 +1213,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                             ),
                           ),
                           Expanded(
-                            child: Text(e.key, style: TextStyle(fontSize: 10, color: kText)),
+                            child: Text(AppLocale.transliterate(e.key), style: TextStyle(fontSize: 10, color: kText)),
                           ),
                         ],
                       ),
@@ -1247,7 +1247,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                     childrenPadding: const EdgeInsets.only(left: 10, right: 10, bottom: 8),
                     title: Row(
                       children: [
-                        Text('${categoryIcons[categoryName] ?? '🔁'} $categoryName', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kText)),
+                        Text('${categoryIcons[categoryName] ?? '🔁'} ${AppLocale.transliterate(categoryName)}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kText)),
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
@@ -1271,7 +1271,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                             ),
                           ),
                           Expanded(
-                            child: Text(item.key, style: TextStyle(fontSize: 10, color: kMuted)),
+                            child: Text(AppLocale.transliterate(item.key), style: TextStyle(fontSize: 10, color: kMuted)),
                           ),
                         ],
                       ),

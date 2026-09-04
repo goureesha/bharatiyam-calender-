@@ -359,4 +359,5 @@ const Map<String, String> teStrings = {
   'twoSankranti': 'రెండు సంక్రాంతులు',
   'masaPatti': 'మాస జాబితా',
   'sankrantiAbbr': 'సం',
+  'visheshaHabbagalu': 'విశేష పండుగలు',
 };

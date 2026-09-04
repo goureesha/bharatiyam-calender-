@@ -343,4 +343,5 @@ const Map<String, String> hiStrings = {
   'twoSankranti': 'दो संक्रांति',
   'masaPatti': 'मास सूची',
   'sankrantiAbbr': 'सं',
+  'visheshaHabbagalu': 'विशेष त्योहार',
 };

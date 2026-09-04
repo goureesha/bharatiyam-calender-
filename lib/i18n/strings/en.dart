@@ -344,4 +344,5 @@ const Map<String, String> enStrings = {
   'twoSankranti': 'Two Sankrantis',
   'masaPatti': 'Month List',
   'sankrantiAbbr': 'Sn',
+  'visheshaHabbagalu': 'Special Festivals',
 };

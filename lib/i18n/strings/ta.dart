@@ -359,4 +359,5 @@ const Map<String, String> taStrings = {
   'twoSankranti': 'இரண்டு சங்கராந்தி',
   'masaPatti': 'மாத பட்டியல்',
   'sankrantiAbbr': 'சங்',
+  'visheshaHabbagalu': 'சிறப்பு திருவிழாக்கள்',
 };

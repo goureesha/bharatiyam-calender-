@@ -359,4 +359,5 @@ const Map<String, String> saStrings = {
   'twoSankranti': 'द्वे सङ्क्रान्ती',
   'masaPatti': 'मास सूची',
   'sankrantiAbbr': 'सं',
+  'visheshaHabbagalu': 'विशेष उत्सवाः',
 };
