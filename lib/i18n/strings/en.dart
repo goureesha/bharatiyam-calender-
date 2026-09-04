@@ -333,7 +333,6 @@ const Map<String, String> enStrings = {
   'amantaSubtitle': 'Amavasya to Amavasya',
   'souraMasaTitle': 'Solar Month',
   'souraSubtitle': 'Sankranti to Sankranti',
-  'adhika': 'Adhika',
   'kshaya': 'Kshaya',
   'masaHeader': 'Month',
   'arambha': 'Start',
