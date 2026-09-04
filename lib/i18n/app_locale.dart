@@ -83,7 +83,23 @@ class AppLocale {
           _reverseCache![kn[key]!] = target[key]!;
         }
       }
+      // Sort by length descending for longest-match-first replacement
+      _reverseCacheSorted = _reverseCache!.entries.toList()
+        ..sort((a, b) => b.key.length.compareTo(a.key.length));
     }
-    return _reverseCache![knText] ?? knText;
+
+    // Try exact match first
+    if (_reverseCache!.containsKey(knText)) return _reverseCache![knText]!;
+
+    // Substring replacement: replace longest Kannada fragments first
+    String result = knText;
+    for (final entry in _reverseCacheSorted!) {
+      if (result.contains(entry.key)) {
+        result = result.replaceAll(entry.key, entry.value);
+      }
+    }
+    return result;
   }
+
+  static List<MapEntry<String, String>>? _reverseCacheSorted;
 }
