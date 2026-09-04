@@ -800,8 +800,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
 
             // ── Pournimanta (Purnima to Purnima) ──
             _masaSubTable(
-              title: 'ಪೌರ್ಣಿಮಾಂತ ಮಾಸ',
-              subtitle: 'ಪೂರ್ಣಿಮೆಯಿಂದ ಪೂರ್ಣಿಮೆ',
+              title: AppLocale.t('pournimantaMasaTitle'),
+              subtitle: AppLocale.t('pournimantaSubtitle'),
               icon: '🌕',
               color: const Color(0xFFFFB300),
               entries: _buildPournimantaEntries(),
@@ -810,8 +810,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
 
             // ── Amanta (Amavasya to Amavasya) ──
             _masaSubTable(
-              title: 'ಅಮಾಂತ ಮಾಸ',
-              subtitle: 'ಅಮಾವಾಸ್ಯೆಯಿಂದ ಅಮಾವಾಸ್ಯೆ',
+              title: AppLocale.t('amantaMasaTitle'),
+              subtitle: AppLocale.t('amantaSubtitle'),
               icon: '🌑',
               color: const Color(0xFF7E57C2),
               entries: _buildAmantaEntries(),
@@ -820,8 +820,8 @@ class _MahitiScreenState extends State<MahitiScreen> {
 
             // ── Souramana (Sankranti to Sankranti) ──
             _masaSubTable(
-              title: 'ಸೌರಮಾನ ಮಾಸ',
-              subtitle: 'ಸಂಕ್ರಾಂತಿಯಿಂದ ಸಂಕ್ರಾಂತಿ',
+              title: AppLocale.t('souraMasaTitle'),
+              subtitle: AppLocale.t('souraSubtitle'),
               icon: '☀️',
               color: const Color(0xFFFF7043),
               entries: _buildSouramanaEntries(),
@@ -862,7 +862,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
   List<_MasaEntry> _buildAmantaEntries() {
     return _masaPeriods.map((p) {
       final startDate = p.amavasya1.add(const Duration(days: 1));
-      final prefix = p.masaType == 'adhika' ? 'ಅಧಿಕ ' : p.masaType == 'kshaya' ? 'ಕ್ಷಯ ' : '';
+      final prefix = p.masaType == 'adhika' ? '${AppLocale.t('adhika')} ' : p.masaType == 'kshaya' ? '${AppLocale.t('kshaya')} ' : '';
       return _MasaEntry(name: '$prefix${p.masaName}', start: startDate, end: p.amavasya2);
     }).toList();
   }
@@ -909,18 +909,18 @@ class _MahitiScreenState extends State<MahitiScreen> {
           const SizedBox(height: 8),
           // Header
           Row(children: [
-            SizedBox(width: 90, child: Text('ಮಾಸ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color))),
-            Expanded(child: Text('ಆರಂಭ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color))),
-            SizedBox(width: 80, child: Text('ಅಂತ್ಯ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color), textAlign: TextAlign.right)),
+            SizedBox(width: 90, child: Text(AppLocale.t('masaHeader'), style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color))),
+            Expanded(child: Text(AppLocale.t('arambha'), style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color))),
+            SizedBox(width: 80, child: Text(AppLocale.t('antya'), style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color), textAlign: TextAlign.right)),
           ]),
           Container(height: 1, margin: const EdgeInsets.symmetric(vertical: 4), color: color.withAlpha(30)),
           if (entries.isEmpty)
-            Text('ಲೆಕ್ಕಾಚಾರ ಮಾಡಲಾಗುತ್ತಿದೆ...', style: TextStyle(fontSize: 10, color: kMuted))
+            Text(AppLocale.t('calculating'), style: TextStyle(fontSize: 10, color: kMuted))
           else
             ...entries.map((e) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 2),
               child: Row(children: [
-                SizedBox(width: 90, child: Text(AppLocale.trAll(e.name), style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: kText))),
+                SizedBox(width: 90, child: Text(AppLocale.transliterate(e.name), style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: kText))),
                 Expanded(child: Text(_fmtMasaDate(e.start), style: TextStyle(fontSize: 10, color: kMuted))),
                 SizedBox(width: 80, child: Text(_fmtMasaDate(e.end), style: TextStyle(fontSize: 10, color: kMuted), textAlign: TextAlign.right)),
               ]),
@@ -932,7 +932,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
 
   String _fmtMasaDate(DateTime dt) {
     const months = ['', 'ಜನ', 'ಫೆಬ್ರ', 'ಮಾರ್ಚ್', 'ಏಪ್ರಿ', 'ಮೇ', 'ಜೂನ್', 'ಜುಲೈ', 'ಆಗ', 'ಸೆಪ್ಟೆ', 'ಅಕ್ಟೋ', 'ನವೆ', 'ಡಿಸೆ'];
-    return '${dt.day} ${months[dt.month]} ${dt.year}';
+    return '${dt.day} ${AppLocale.transliterate(months[dt.month])} ${dt.year}';
   }
 
   Widget _buildMasaSection() {
