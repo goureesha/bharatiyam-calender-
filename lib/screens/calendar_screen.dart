@@ -860,7 +860,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               borderRadius: BorderRadius.circular(6),
               border: Border.all(color: const Color(0xFF455A64).withAlpha(30)),
             ),
-            child: Text(AppLocale.trAll(info.ruleText), style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic, height: 1.4)),
+            child: Text(AppLocale.transliterate(info.ruleText), style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic, height: 1.4)),
           ),
           const SizedBox(height: 6),
           // Timing details
@@ -892,12 +892,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 const SizedBox(height: 3),
                 Row(
                   children: [
-                    Text('${AppLocale.trAll(info.sunriseTithiName)} ${AppLocale.t('tithiEnd')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${AppLocale.transliterate(info.sunriseTithiName)} ${AppLocale.t('tithiEnd')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                     Text(info.tithiEndTimeForRule, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(AppLocale.trAll(info.tithiStatusAtAparahna), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: info.isTithiPresentAtAparahna ? const Color(0xFF388E3C) : kAshubha)),
+                Text(AppLocale.transliterate(info.tithiStatusAtAparahna), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: info.isTithiPresentAtAparahna ? const Color(0xFF388E3C) : kAshubha)),
                 const SizedBox(height: 6),
                 Container(
                   width: double.infinity,
@@ -911,7 +911,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     children: [
                       Text('🙏 ', style: TextStyle(fontSize: 10)),
                       Text('${AppLocale.t('amantaLabel')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                      Expanded(child: Text(AppLocale.trAll(info.varshikaChandraAmanta), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                      Expanded(child: Text(AppLocale.transliterate(info.varshikaChandraAmanta), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
                     ],
                   ),
                 ),
@@ -928,7 +928,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     children: [
                       Text('🙏 ', style: TextStyle(fontSize: 10)),
                       Text('${AppLocale.t('pournimantaLabel')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                      Expanded(child: Text(AppLocale.trAll(info.varshikaChandraPournimanta), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                      Expanded(child: Text(AppLocale.transliterate(info.varshikaChandraPournimanta), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
                     ],
                   ),
                 ),
@@ -945,7 +945,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     children: [
                       Text('🙏 ', style: TextStyle(fontSize: 10)),
                       Text('${AppLocale.t('souraLabel')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                      Expanded(child: Text(AppLocale.trAll(info.varshikaSoura), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                      Expanded(child: Text(AppLocale.transliterate(info.varshikaSoura), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
                     ],
                   ),
                 ),
@@ -962,9 +962,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('🙏 ${AppLocale.trAll(info.nextTithiShraddha)} ${AppLocale.trAll('ಮಾಡಬಹುದು')}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
+                        Text('🙏 ${AppLocale.transliterate(info.nextTithiShraddha)} ${AppLocale.trAll('ಮಾಡಬಹುದು')}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
                         const SizedBox(height: 3),
-                        Text(AppLocale.trAll(info.nextTithiStatus), style: TextStyle(fontSize: 9, color: kMuted)),
+                        Text(AppLocale.transliterate(info.nextTithiStatus), style: TextStyle(fontSize: 9, color: kMuted)),
                       ],
                     ),
                   ),

@@ -88,20 +88,9 @@ class AppLocale {
         ..sort((a, b) => b.key.length.compareTo(a.key.length));
     }
 
-    // Try exact match first
-    if (_reverseCache!.containsKey(knText)) return _reverseCache![knText]!;
-
-    // Substring replacement: replace longest Kannada fragments first
-    String result = knText;
-    for (final entry in _reverseCacheSorted!) {
-      if (result.contains(entry.key)) {
-        result = result.replaceAll(entry.key, entry.value);
-      }
-    }
-    return result;
+    // Try exact match
+    return _reverseCache![knText] ?? knText;
   }
-
-  static List<MapEntry<String, String>>? _reverseCacheSorted;
 
   /// Transliterate Kannada-script text to the current language's script.
   /// Uses Unicode block offset mapping (all Indic scripts share same layout).

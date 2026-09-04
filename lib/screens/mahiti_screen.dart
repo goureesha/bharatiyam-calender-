@@ -570,7 +570,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
         final days = AstaCalculator.durationDays(p);
         details.add('$planetEmoji $planetName ${AppLocale.t('astaInfo')} ($limitDeg):');
         details.add('   📅 ${AstaCalculator.formatDate(p.start)} — ${AstaCalculator.formatDate(p.end)}');
-        details.add('   📍 ${AppLocale.trAll(p.rashi)} ${AppLocale.t('rashi')}');
+        details.add('   📍 ${AppLocale.transliterate(p.rashi)} ${AppLocale.t('rashi')}');
         details.add('   ⏱️ $days ${AppLocale.t('dinagalu')}');
         if (i < periods.length - 1) details.add('');
       }
@@ -636,7 +636,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                   ...details.map((line) => Padding(
                     padding: const EdgeInsets.only(bottom: 2),
                     child: Text(
-                      AppLocale.trAll(line),
+                      AppLocale.transliterate(line),
                       style: TextStyle(
                         fontSize: 10,
                         color: line.startsWith('⚠') ? kAshubha : kMuted,
