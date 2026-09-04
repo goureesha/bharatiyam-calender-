@@ -843,14 +843,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
         children: [
           SectionHeader(
             icon: Icons.self_improvement_rounded,
-            title: 'ಶ್ರಾದ್ಧ ನಿರ್ಣಯ',
+            title: AppLocale.t('shraddhaNirnaya'),
           ),
           const SizedBox(height: 8),
 
 
           // ── Shraddha Rule & Timing ──
           const SizedBox(height: 10),
-          Text('📋 ಶ್ರಾದ್ಧ ನಿಯಮ', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
+          Text('📋 ${AppLocale.t('shraddhaNiyama')}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
           const SizedBox(height: 4),
           Container(
             width: double.infinity,
@@ -860,7 +860,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               borderRadius: BorderRadius.circular(6),
               border: Border.all(color: const Color(0xFF455A64).withAlpha(30)),
             ),
-            child: Text(info.ruleText, style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic, height: 1.4)),
+            child: Text(AppLocale.trAll(info.ruleText), style: TextStyle(fontSize: 9, color: kMuted, fontStyle: FontStyle.italic, height: 1.4)),
           ),
           const SizedBox(height: 6),
           // Timing details
@@ -877,27 +877,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
               children: [
                 Row(
                   children: [
-                    Text('ಕುತುಪ ಕಾಲ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${AppLocale.t('kutupaKala')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                     Text('${info.aparahnaStart} — ${info.aparahnaEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
-                    Text('  (${info.aparahnaStartGhati} ಘಟಿ)', style: TextStyle(fontSize: 8, color: kMuted)),
+                    Text('  (${info.aparahnaStartGhati} ${AppLocale.t('ghati')})', style: TextStyle(fontSize: 8, color: kMuted)),
                   ],
                 ),
                 const SizedBox(height: 3),
                 Row(
                   children: [
-                    Text('ಅಪರಾಹ್ನ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${AppLocale.t('aparahna')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                     Text('${info.aparahnaTimeStart} — ${info.aparahnaTimeEnd}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                   ],
                 ),
                 const SizedBox(height: 3),
                 Row(
                   children: [
-                    Text('${info.sunriseTithiName} ತಿಥಿ ಅಂತ್ಯ: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                    Text('${AppLocale.trAll(info.sunriseTithiName)} ${AppLocale.t('tithiEnd')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
                     Text(info.tithiEndTimeForRule, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kText)),
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(info.tithiStatusAtAparahna, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: info.isTithiPresentAtAparahna ? const Color(0xFF388E3C) : kAshubha)),
+                Text(AppLocale.trAll(info.tithiStatusAtAparahna), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: info.isTithiPresentAtAparahna ? const Color(0xFF388E3C) : kAshubha)),
                 const SizedBox(height: 6),
                 Container(
                   width: double.infinity,
@@ -910,8 +910,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   child: Row(
                     children: [
                       Text('🙏 ', style: TextStyle(fontSize: 10)),
-                      Text('ಅಮಾಂತ: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                      Expanded(child: Text(info.varshikaChandraAmanta, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                      Text('${AppLocale.t('amantaLabel')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Expanded(child: Text(AppLocale.trAll(info.varshikaChandraAmanta), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
                     ],
                   ),
                 ),
@@ -927,8 +927,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   child: Row(
                     children: [
                       Text('🙏 ', style: TextStyle(fontSize: 10)),
-                      Text('ಪೌರ್ಣಿಮಾಂತ: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                      Expanded(child: Text(info.varshikaChandraPournimanta, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                      Text('${AppLocale.t('pournimantaLabel')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Expanded(child: Text(AppLocale.trAll(info.varshikaChandraPournimanta), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
                     ],
                   ),
                 ),
@@ -944,8 +944,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   child: Row(
                     children: [
                       Text('🙏 ', style: TextStyle(fontSize: 10)),
-                      Text('ಸೌರಮಾನ: ', style: TextStyle(fontSize: 9, color: kMuted)),
-                      Expanded(child: Text(info.varshikaSoura, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
+                      Text('${AppLocale.t('souraLabel')}: ', style: TextStyle(fontSize: 9, color: kMuted)),
+                      Expanded(child: Text(AppLocale.trAll(info.varshikaSoura), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold))),
                     ],
                   ),
                 ),
@@ -962,9 +962,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('🙏 ${info.nextTithiShraddha} ಮಾಡಬಹುದು', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
+                        Text('🙏 ${AppLocale.trAll(info.nextTithiShraddha)} ${AppLocale.trAll('ಮಾಡಬಹುದು')}', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kGold)),
                         const SizedBox(height: 3),
-                        Text(info.nextTithiStatus, style: TextStyle(fontSize: 9, color: kMuted)),
+                        Text(AppLocale.trAll(info.nextTithiStatus), style: TextStyle(fontSize: 9, color: kMuted)),
                       ],
                     ),
                   ),
