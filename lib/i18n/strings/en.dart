@@ -326,4 +326,5 @@ const Map<String, String> enStrings = {
   'rashi': 'Rashi',
   'dinagalu': 'days',
   'grahanaNoPresent': 'No eclipse in',
+  'shrCanDo': 'can be performed',
 };

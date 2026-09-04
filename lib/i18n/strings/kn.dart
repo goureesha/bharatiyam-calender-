@@ -365,4 +365,5 @@ const Map<String, String> knStrings = {
   'rashi': 'ರಾಶಿ',
   'dinagalu': 'ದಿನಗಳು',
   'grahanaNoPresent': 'ರಲ್ಲಿ ಗ್ರಹಣ ಇಲ್ಲ',
+  'shrCanDo': 'ಮಾಡಬಹುದು',
 };
