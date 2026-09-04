@@ -563,15 +563,15 @@ class _MahitiScreenState extends State<MahitiScreen> {
     final details = <String>[];
 
     if (periods.isEmpty) {
-      details.add('✅ $_year ರಲ್ಲಿ $planetName ಅಸ್ತ ಇಲ್ಲ');
+      details.add('✅ $_year ${AppLocale.t('astaNoPresent')}');
     } else {
       for (int i = 0; i < periods.length; i++) {
         final p = periods[i];
         final days = AstaCalculator.durationDays(p);
-        details.add('$planetEmoji $planetName ಅಸ್ತ (ಸೂರ್ಯನಿಂದ $limitDeg ಒಳಗೆ):');
+        details.add('$planetEmoji $planetName ${AppLocale.t('astaInfo')} ($limitDeg):');
         details.add('   📅 ${AstaCalculator.formatDate(p.start)} — ${AstaCalculator.formatDate(p.end)}');
-        details.add('   📍 ${ p.rashi} ರಾಶಿ');
-        details.add('   ⏱️ $days ದಿನಗಳು');
+        details.add('   📍 ${AppLocale.trAll(p.rashi)} ${AppLocale.t('rashi')}');
+        details.add('   ⏱️ $days ${AppLocale.t('dinagalu')}');
         if (i < periods.length - 1) details.add('');
       }
       details.add('');
@@ -636,7 +636,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                   ...details.map((line) => Padding(
                     padding: const EdgeInsets.only(bottom: 2),
                     child: Text(
-                      line,
+                      AppLocale.trAll(line),
                       style: TextStyle(
                         fontSize: 10,
                         color: line.startsWith('⚠') ? kAshubha : kMuted,
@@ -687,7 +687,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: color.withAlpha(30)),
                 ),
-                child: Text('✅ $_year ರಲ್ಲಿ ಗ್ರಹಣ ಇಲ್ಲ', style: TextStyle(fontSize: 11, color: kMuted)),
+                child: Text('✅ $_year ${AppLocale.t('grahanaNoPresent')}', style: TextStyle(fontSize: 11, color: kMuted)),
               )
             else ...[
               // Solar eclipses

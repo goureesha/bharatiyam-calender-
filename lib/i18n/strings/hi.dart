@@ -320,4 +320,9 @@ const Map<String, String> hiStrings = {
   'shrMultiDay4': 'प्रथम दिन (कल) श्राद्ध योग्य। लेकिन आज भी कर सकते हैं।',
   'shrNextDay': 'अगला दिन',
   'shrEndsNextDay': 'अगले दिन समाप्त',
+  'astaNoPresent': '??? ???? ????',
+  'astaInfo': '????',
+  'rashi': '????',
+  'dinagalu': '???',
+  'grahanaNoPresent': '??? ????? ????',
 };

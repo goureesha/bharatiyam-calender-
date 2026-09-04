@@ -321,4 +321,9 @@ const Map<String, String> enStrings = {
   'shrMultiDay4': 'First day (yesterday) eligible for Shraddha. But today also possible.',
   'shrNextDay': 'Next Day',
   'shrEndsNextDay': 'Ends next day',
+  'astaNoPresent': 'No combustion in',
+  'astaInfo': 'Combustion',
+  'rashi': 'Rashi',
+  'dinagalu': 'days',
+  'grahanaNoPresent': 'No eclipse in',
 };
