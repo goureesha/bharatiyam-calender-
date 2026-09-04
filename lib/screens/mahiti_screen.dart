@@ -315,7 +315,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                   border: Border.all(color: kGold.withAlpha(76)),
                 ),
                 child: SelectableText(
-                  sankalpaText,
+                  AppLocale.trAll(sankalpaText),
                   style: TextStyle(
                     fontSize: 14, color: const Color(0xFFFFE0B2),
                     height: 1.6,
