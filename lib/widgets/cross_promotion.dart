@@ -200,15 +200,15 @@ class _CrossPromoDialogState extends State<_CrossPromoDialog> {
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Text(
-                  'ಮತ್ತೆ ತೋರಿಸಬೇಡಿ',
+                Text(
+                  AppLocale.t('dontShowAgain'),
                   style: TextStyle(fontSize: 12, color: Color(0xFF757575)),
                 ),
                 const Spacer(),
                 TextButton(
                   onPressed: _dismiss,
-                  child: const Text(
-                    'ಮುಚ್ಚಿ',
+                  child: Text(
+                    AppLocale.t('close'),
                     style: TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.w600),
                   ),
                 ),
