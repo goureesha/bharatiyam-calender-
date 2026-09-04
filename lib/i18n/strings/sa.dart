@@ -353,4 +353,10 @@ const Map<String, String> saStrings = {
   'arambha': 'आरम्भः',
   'antya': 'अन्त्यम्',
   'calculating': 'गणना प्रचलति...',
+  'noSankrantiInPeriod': 'सङ्क्रान्तिः: अस्मिन् काले सङ्क्रान्तिः नास्ति',
+  'noAdhikaMasa': 'वर्षे अधिकमासो नास्ति',
+  'noKshayaMasa': 'वर्षे क्षयमासो नास्ति',
+  'twoSankranti': 'द्वे सङ्क्रान्ती',
+  'masaPatti': 'मास सूची',
+  'sankrantiAbbr': 'सं',
 };

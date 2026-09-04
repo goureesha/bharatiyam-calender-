@@ -353,4 +353,10 @@ const Map<String, String> taStrings = {
   'arambha': 'தொடக்கம்',
   'antya': 'முடிவு',
   'calculating': 'கணக்கிடுகிறது...',
+  'noSankrantiInPeriod': 'சங்கராந்தி: இக்காலத்தில் சங்கராந்தி இல்லை',
+  'noAdhikaMasa': 'இல் அதிக மாதம் இல்லை',
+  'noKshayaMasa': 'இல் க்ஷய மாதம் இல்லை',
+  'twoSankranti': 'இரண்டு சங்கராந்தி',
+  'masaPatti': 'மாத பட்டியல்',
+  'sankrantiAbbr': 'சங்',
 };

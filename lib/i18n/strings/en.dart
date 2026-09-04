@@ -338,4 +338,10 @@ const Map<String, String> enStrings = {
   'arambha': 'Start',
   'antya': 'End',
   'calculating': 'Calculating...',
+  'noSankrantiInPeriod': 'Sankranti: No sankranti in this period',
+  'noAdhikaMasa': 'No Adhika Masa',
+  'noKshayaMasa': 'No Kshaya Masa',
+  'twoSankranti': 'Two Sankrantis',
+  'masaPatti': 'Month List',
+  'sankrantiAbbr': 'Sn',
 };

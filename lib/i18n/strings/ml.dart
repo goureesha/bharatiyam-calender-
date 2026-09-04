@@ -353,4 +353,10 @@ const Map<String, String> mlStrings = {
   'arambha': 'ആരംഭം',
   'antya': 'അവസാനം',
   'calculating': 'കണക്കാക്കുന്നു...',
+  'noSankrantiInPeriod': 'സംക്രാന്തി: ഈ കാലയളവിൽ സംക്രാന്തി ഇല്ല',
+  'noAdhikaMasa': 'ൽ അധിക മാസം ഇല്ല',
+  'noKshayaMasa': 'ൽ ക്ഷയ മാസം ഇല്ല',
+  'twoSankranti': 'രണ്ട് സംക്രാന്തി',
+  'masaPatti': 'മാസ പട്ടിക',
+  'sankrantiAbbr': 'സം',
 };

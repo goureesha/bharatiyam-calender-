@@ -377,4 +377,10 @@ const Map<String, String> knStrings = {
   'arambha': 'ಆರಂಭ',
   'antya': 'ಅಂತ್ಯ',
   'calculating': 'ಲೆಕ್ಕಾಚಾರ ಮಾಡಲಾಗುತ್ತಿದೆ...',
+  'noSankrantiInPeriod': 'ಸಂಕ್ರಾಂತಿ: ಈ ಅವಧಿಯಲ್ಲಿ ಯಾವ ಸಂಕ್ರಾಂತಿಯೂ ಇಲ್ಲ',
+  'noAdhikaMasa': 'ರಲ್ಲಿ ಅಧಿಕ ಮಾಸ ಇಲ್ಲ',
+  'noKshayaMasa': 'ರಲ್ಲಿ ಕ್ಷಯ ಮಾಸ ಇಲ್ಲ',
+  'twoSankranti': 'ಎರಡು ಸಂಕ್ರಾಂತಿ',
+  'masaPatti': 'ಮಾಸ ಪಟ್ಟಿ',
+  'sankrantiAbbr': 'ಸಂ',
 };

@@ -955,7 +955,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
           childrenPadding: const EdgeInsets.only(left: 14, right: 14, bottom: 12),
           leading: Icon(Icons.calendar_month_outlined, color: const Color(0xFF26A69A), size: 20),
           title: Text(
-            'ಅಧಿಕ / ಕ್ಷಯ ಮಾಸ  $_year',
+            '${AppLocale.t('adhikaMasa')}  $_year',
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF26A69A)),
           ),
           iconColor: const Color(0xFF26A69A),
@@ -975,46 +975,46 @@ class _MahitiScreenState extends State<MahitiScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (hasAdhika) ...[
-                    Text('✨ ಅಧಿಕ ಮಾಸ (Leap Month)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xFF26A69A))),
+                    Text('✨ ${AppLocale.t('adhika')} ${AppLocale.t('masaHeader')} (Leap Month)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xFF26A69A))),
                     const SizedBox(height: 4),
                     ...adhikaPeriods.map((p) => Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('   📅 ಅಧಿಕ ${p.masaName}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kText)),
+                          Text('   📅 ${AppLocale.t('adhika')} ${AppLocale.transliterate(p.masaName)}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kText)),
                           Text('   📆 ${AdhikaMasaCalculator.formatDateFull(p.amavasya1)} — ${AdhikaMasaCalculator.formatDateFull(p.amavasya2)}',
                             style: TextStyle(fontSize: 10, color: kMuted)),
-                          Text('   ⚡ ಸಂಕ್ರಾಂತಿ: ಈ ಅವಧಿಯಲ್ಲಿ ಯಾವ ಸಂಕ್ರಾಂತಿಯೂ ಇಲ್ಲ',
+                          Text('   ⚡ ${AppLocale.t('noSankrantiInPeriod')}',
                             style: TextStyle(fontSize: 10, color: kMuted)),
                         ],
                       ),
                     )),
                     const SizedBox(height: 6),
                   ] else ...[
-                    Text('✅ $_year ರಲ್ಲಿ ಅಧಿಕ ಮಾಸ ಇಲ್ಲ', style: TextStyle(fontSize: 11, color: kMuted)),
+                    Text('✅ $_year ${AppLocale.t('noAdhikaMasa')}', style: TextStyle(fontSize: 11, color: kMuted)),
                     const SizedBox(height: 6),
                   ],
 
                   if (hasKshaya) ...[
-                    Text('⚠️ ಕ್ಷಯ ಮಾಸ (Lost Month)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kAshubha)),
+                    Text('⚠️ ${AppLocale.t('kshaya')} ${AppLocale.t('masaHeader')} (Lost Month)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kAshubha)),
                     const SizedBox(height: 4),
                     ...kshayaPeriods.map((p) => Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('   📅 ಕ್ಷಯ ${p.masaName}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kAshubha)),
+                          Text('   📅 ${AppLocale.t('kshaya')} ${AppLocale.transliterate(p.masaName)}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kAshubha)),
                           Text('   📆 ${AdhikaMasaCalculator.formatDateFull(p.amavasya1)} — ${AdhikaMasaCalculator.formatDateFull(p.amavasya2)}',
                             style: TextStyle(fontSize: 10, color: kMuted)),
-                          Text('   ⚡ ಎರಡು ಸಂಕ್ರಾಂತಿ: ${p.sankrantiDetails.join(", ")}',
+                          Text('   ⚡ ${AppLocale.t('twoSankranti')}: ${p.sankrantiDetails.join(", ")}',
                             style: TextStyle(fontSize: 10, color: kMuted)),
                         ],
                       ),
                     )),
                     const SizedBox(height: 6),
                   ] else ...[
-                    Text('✅ $_year ರಲ್ಲಿ ಕ್ಷಯ ಮಾಸ ಇಲ್ಲ', style: TextStyle(fontSize: 11, color: kMuted)),
+                    Text('✅ $_year ${AppLocale.t('noKshayaMasa')}', style: TextStyle(fontSize: 11, color: kMuted)),
                     const SizedBox(height: 6),
                   ],
                 ],
@@ -1034,7 +1034,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('📋 ಮಾಸ ಪಟ್ಟಿ $_year', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kText)),
+                  Text('📋 ${AppLocale.t('masaPatti')} $_year', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kText)),
                   const SizedBox(height: 8),
                   ..._masaPeriods.map((p) {
                     final isAdhika = p.masaType == 'adhika';
@@ -1042,7 +1042,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                     final color = isAdhika ? const Color(0xFF26A69A)
                         : isKshaya ? kAshubha
                         : kMuted;
-                    final prefix = isAdhika ? 'ಅಧಿಕ ' : isKshaya ? 'ಕ್ಷಯ ' : '';
+                    final prefix = isAdhika ? '${AppLocale.t('adhika')} ' : isKshaya ? '${AppLocale.t('kshaya')} ' : '';
                     final badge = isAdhika ? ' ✨' : isKshaya ? ' ⚠️' : '';
 
                     return Container(
@@ -1060,7 +1060,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                           SizedBox(
                             width: 100,
                             child: Text(
-                              '$prefix${p.masaName}$badge',
+                              '$prefix${AppLocale.transliterate(p.masaName)}$badge',
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: isAdhika || isKshaya ? FontWeight.bold : FontWeight.normal,
@@ -1075,7 +1075,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                             ),
                           ),
                           Text(
-                            '${p.sankrantiCount} ಸಂ',
+                            '${p.sankrantiCount} ${AppLocale.t('sankrantiAbbr')}',
                             style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.bold),
                           ),
                         ],

@@ -337,4 +337,10 @@ const Map<String, String> hiStrings = {
   'arambha': 'आरंभ',
   'antya': 'अंत',
   'calculating': 'गणना हो रही है...',
+  'noSankrantiInPeriod': 'संक्रांति: इस अवधि में कोई संक्रांति नहीं',
+  'noAdhikaMasa': 'में अधिक मास नहीं',
+  'noKshayaMasa': 'में क्षय मास नहीं',
+  'twoSankranti': 'दो संक्रांति',
+  'masaPatti': 'मास सूची',
+  'sankrantiAbbr': 'सं',
 };

@@ -353,4 +353,10 @@ const Map<String, String> teStrings = {
   'arambha': 'ఆరంభం',
   'antya': 'అంత్యం',
   'calculating': 'లెక్కిస్తోంది...',
+  'noSankrantiInPeriod': 'సంక్రాంతి: ఈ కాలంలో సంక్రాంతి లేదు',
+  'noAdhikaMasa': 'లో అధిక మాసం లేదు',
+  'noKshayaMasa': 'లో క్షయ మాసం లేదు',
+  'twoSankranti': 'రెండు సంక్రాంతులు',
+  'masaPatti': 'మాస జాబితా',
+  'sankrantiAbbr': 'సం',
 };
