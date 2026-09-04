@@ -83,9 +83,6 @@ class AppLocale {
           _reverseCache![kn[key]!] = target[key]!;
         }
       }
-      // Sort by length descending for longest-match-first replacement
-      _reverseCacheSorted = _reverseCache!.entries.toList()
-        ..sort((a, b) => b.key.length.compareTo(a.key.length));
     }
 
     // Try exact match
