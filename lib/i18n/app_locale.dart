@@ -102,4 +102,37 @@ class AppLocale {
   }
 
   static List<MapEntry<String, String>>? _reverseCacheSorted;
+
+  /// Transliterate Kannada-script text to the current language's script.
+  /// Uses Unicode block offset mapping (all Indic scripts share same layout).
+  static String transliterate(String knText) {
+    if (current == 'kn') return knText;
+    if (current == 'en') return knText; // English has no Indic script
+
+    // Kannada block: U+0C80..U+0CFF
+    const int knBase = 0x0C80;
+    // Target script bases
+    const Map<String, int> scriptBase = {
+      'hi': 0x0900, // Devanagari
+      'sa': 0x0900, // Sanskrit uses Devanagari
+      'te': 0x0C00, // Telugu
+      'ta': 0x0B80, // Tamil
+      'ml': 0x0D00, // Malayalam
+    };
+
+    final targetBase = scriptBase[current];
+    if (targetBase == null) return knText;
+
+    final offset = targetBase - knBase;
+    final buf = StringBuffer();
+    for (int i = 0; i < knText.length; i++) {
+      final c = knText.codeUnitAt(i);
+      if (c >= knBase && c <= 0x0CFF) {
+        buf.writeCharCode(c + offset);
+      } else {
+        buf.writeCharCode(c);
+      }
+    }
+    return buf.toString();
+  }
 }

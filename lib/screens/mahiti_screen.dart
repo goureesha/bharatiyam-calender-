@@ -268,7 +268,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                   dropdownColor: kCard,
                   style: TextStyle(color: kText, fontSize: 13),
                   items: SankalpaGenerator.karyaNames.map((k) =>
-                    DropdownMenuItem(value: k, child: Text(k)),
+                    DropdownMenuItem(value: k, child: Text(AppLocale.transliterate(k))),
                   ).toList(),
                   onChanged: (v) => setState(() => _selectedKarya = v),
                 ),
@@ -315,7 +315,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
                   border: Border.all(color: kGold.withAlpha(76)),
                 ),
                 child: SelectableText(
-                  AppLocale.trAll(sankalpaText),
+                  AppLocale.transliterate(sankalpaText),
                   style: TextStyle(
                     fontSize: 14, color: const Color(0xFFFFE0B2),
                     height: 1.6,
