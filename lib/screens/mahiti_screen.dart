@@ -226,10 +226,13 @@ class _MahitiScreenState extends State<MahitiScreen> {
           GestureDetector(
             onTap: () {
               if (!_sankalpaExpanded) {
-                // Show interstitial ad when opening Maha Sankalpa
-                AdService.showInterstitial(onAdDismissed: () {
-                  if (mounted) setState(() => _sankalpaExpanded = true);
-                });
+                // Show interstitial ad with bypass protection
+                AdService.showWithAdGate(
+                  onComplete: () {
+                    if (mounted) setState(() => _sankalpaExpanded = true);
+                  },
+                  timeoutSeconds: 8,
+                );
               } else {
                 setState(() => _sankalpaExpanded = false);
               }

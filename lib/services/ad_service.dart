@@ -1,10 +1,11 @@
-/// Ad Service — Google AdMob ad management with offline support.
+/// Ad Service — Google AdMob ad management with offline support & bypass protection.
 /// Preloads ads aggressively when online. Cached ads can show offline.
 /// AdMob SDK queues impression events and syncs when connectivity returns.
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
 class AdService {
@@ -31,6 +32,16 @@ class AdService {
   static Timer? _connectivityTimer;
   static Timer? _preloadTimer;
 
+  // ── Anti-bypass protection ──
+  static int _consecutiveAdFailures = 0;
+  static const int _maxConsecutiveFailures = 5;
+  static bool _adBlockerDetected = false;
+  static DateTime? _lastAdShownTime;
+  static int _adShowCount = 0;
+  static const String _prefKeyAdShown = '_bp_as';
+  static const String _prefKeyLastTime = '_bp_lt';
+  static const String _prefKeyFailCount = '_bp_fc';
+
   /// Initialize the Mobile Ads SDK and start aggressive preloading
   static Future<void> initialize() async {
     if (_initialized) return;
@@ -38,6 +49,9 @@ class AdService {
       await MobileAds.instance.initialize();
       _initialized = true;
       debugPrint('AdMob initialized successfully');
+
+      // Restore anti-bypass state
+      await _restoreState();
 
       // Load primary + backup interstitials
       _loadInterstitial();
@@ -57,6 +71,124 @@ class AdService {
 
   static bool get isSupported => _initialized;
   static bool get hasInterstitial => _interstitialAd != null || _backupInterstitialAd != null;
+  static bool get adBlockerDetected => _adBlockerDetected;
+
+  // ═══════════════════════════════════════════════════════
+  //  ANTI-BYPASS PROTECTION
+  // ═══════════════════════════════════════════════════════
+
+  /// Restore persisted anti-bypass state
+  static Future<void> _restoreState() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _adShowCount = prefs.getInt(_prefKeyAdShown) ?? 0;
+      _consecutiveAdFailures = prefs.getInt(_prefKeyFailCount) ?? 0;
+      final lastTime = prefs.getInt(_prefKeyLastTime);
+      if (lastTime != null) {
+        _lastAdShownTime = DateTime.fromMillisecondsSinceEpoch(lastTime);
+      }
+      // If too many failures persisted, flag blocker
+      if (_consecutiveAdFailures >= _maxConsecutiveFailures) {
+        _adBlockerDetected = true;
+      }
+    } catch (_) {}
+  }
+
+  /// Persist anti-bypass state (survives app restart)
+  static Future<void> _saveState() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_prefKeyAdShown, _adShowCount);
+      await prefs.setInt(_prefKeyFailCount, _consecutiveAdFailures);
+      if (_lastAdShownTime != null) {
+        await prefs.setInt(_prefKeyLastTime, _lastAdShownTime!.millisecondsSinceEpoch);
+      }
+    } catch (_) {}
+  }
+
+  /// Called when an ad loads successfully — reset failure counter
+  static void _onAdLoadSuccess() {
+    _consecutiveAdFailures = 0;
+    _adBlockerDetected = false;
+    _saveState();
+  }
+
+  /// Called when ad fails to load — track for blocker detection
+  static void _onAdLoadFailure() {
+    _consecutiveAdFailures++;
+    if (_consecutiveAdFailures >= _maxConsecutiveFailures) {
+      _adBlockerDetected = true;
+      debugPrint('⚠️ Ad blocker detected: $_consecutiveAdFailures consecutive failures');
+    }
+    _saveState();
+  }
+
+  /// Record that an ad was successfully shown
+  static void _recordAdShown() {
+    _lastAdShownTime = DateTime.now();
+    _adShowCount++;
+    _saveState();
+  }
+
+  /// Check if enough time has passed since last ad (anti-rapid-tap)
+  static bool _canShowAd() {
+    if (_lastAdShownTime == null) return true;
+    return DateTime.now().difference(_lastAdShownTime!).inSeconds > 5;
+  }
+
+  /// Show content with ad gate — blocks content until ad completes or times out.
+  /// Returns true if content should be shown, false if blocked.
+  /// [onComplete] is called when content should be revealed.
+  /// [onBlocked] is called if ad blocker is detected and content is restricted.
+  static void showWithAdGate({
+    required VoidCallback onComplete,
+    VoidCallback? onBlocked,
+    int timeoutSeconds = 8,
+  }) {
+    // Anti-rapid-tap protection
+    if (!_canShowAd()) {
+      onComplete();
+      return;
+    }
+
+    // If ad blocker detected, add a delay to discourage blocking
+    if (_adBlockerDetected && !hasInterstitial) {
+      debugPrint('Ad blocker active — adding delay');
+      Future.delayed(Duration(seconds: timeoutSeconds), () {
+        onComplete();
+      });
+      return;
+    }
+
+    // No ad available — proceed with timeout
+    if (!hasInterstitial) {
+      onComplete();
+      return;
+    }
+
+    // Show ad with timeout protection
+    bool completed = false;
+    Timer? timeout;
+
+    timeout = Timer(Duration(seconds: timeoutSeconds), () {
+      if (!completed) {
+        completed = true;
+        onComplete();
+      }
+    });
+
+    showInterstitial(onAdDismissed: () {
+      timeout?.cancel();
+      if (!completed) {
+        completed = true;
+        onComplete();
+      }
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  CONNECTIVITY
+  // ═══════════════════════════════════════════════════════
 
   /// Check network connectivity
   static Future<bool> _isOnline() async {
@@ -74,8 +206,8 @@ class AdService {
     _connectivityTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
       final online = await _isOnline();
       if (online && !_lastKnownOnline) {
-        // Just came back online — reload ads
         debugPrint('Network restored — reloading ads');
+        _consecutiveAdFailures = 0; // Reset on reconnect
         _refreshAdsIfNeeded();
       }
       _lastKnownOnline = online;
@@ -90,6 +222,10 @@ class AdService {
     }
   }
 
+  // ═══════════════════════════════════════════════════════
+  //  AD LOADING
+  // ═══════════════════════════════════════════════════════
+
   /// Load primary interstitial ad
   static void _loadInterstitial() {
     if (_isLoadingInterstitial || _interstitialAd != null) return;
@@ -102,15 +238,16 @@ class AdService {
           _interstitialAd = ad;
           _interstitialLoadAttempts = 0;
           _isLoadingInterstitial = false;
+          _onAdLoadSuccess();
           debugPrint('Primary interstitial loaded');
         },
         onAdFailedToLoad: (error) {
           _interstitialLoadAttempts++;
           _interstitialAd = null;
           _isLoadingInterstitial = false;
+          _onAdLoadFailure();
           debugPrint('Interstitial failed (attempt $_interstitialLoadAttempts): ${error.message}');
           if (_interstitialLoadAttempts < _maxInterstitialAttempts) {
-            // Exponential backoff: 5s, 15s, 30s, 60s
             final delay = Duration(seconds: 5 * (1 << (_interstitialLoadAttempts - 1)));
             Future.delayed(delay, _loadInterstitial);
           }
@@ -119,7 +256,7 @@ class AdService {
     );
   }
 
-  /// Load backup interstitial (second ad ready to show immediately after first)
+  /// Load backup interstitial
   static void _loadBackupInterstitial() {
     if (_backupInterstitialAd != null) return;
     InterstitialAd.load(
@@ -128,9 +265,11 @@ class AdService {
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _backupInterstitialAd = ad;
+          _onAdLoadSuccess();
           debugPrint('Backup interstitial loaded');
         },
         onAdFailedToLoad: (error) {
+          _onAdLoadFailure();
           debugPrint('Backup interstitial failed: ${error.message}');
         },
       ),
@@ -151,7 +290,6 @@ class AdService {
 
     if (adToShow == null) {
       onAdDismissed?.call();
-      // Try to reload for next time
       _interstitialLoadAttempts = 0;
       _loadInterstitial();
       return;
@@ -160,8 +298,8 @@ class AdService {
     adToShow.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
+        _recordAdShown();
         onAdDismissed?.call();
-        // Immediately start loading next ads
         _interstitialLoadAttempts = 0;
         _loadInterstitial();
         Future.delayed(const Duration(seconds: 2), _loadBackupInterstitial);
@@ -231,7 +369,6 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
           _bannerAd = null;
           if (mounted && _retryCount < 4) {
             _retryCount++;
-            // Retry with exponential backoff: 10s, 30s, 60s, 120s
             final delay = Duration(seconds: 10 * (1 << (_retryCount - 1)));
             _retryTimer = Timer(delay, () {
               if (mounted) _loadAd();
