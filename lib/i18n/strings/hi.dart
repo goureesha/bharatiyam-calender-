@@ -344,4 +344,7 @@ const Map<String, String> hiStrings = {
   'masaPatti': 'मास सूची',
   'sankrantiAbbr': 'सं',
   'visheshaHabbagalu': 'विशेष त्योहार',
+  'privacyTitle': 'आपकी गोपनीयता हमारे लिए महत्वपूर्ण है',
+  'privacyDesc': 'यह ऐप आपके स्थान और प्रोफाइल जानकारी का उपयोग केवल पंचांग गणना के लिए करता है।',
+  'adhikaMasa': 'अधिक / क्षय मास',
 };

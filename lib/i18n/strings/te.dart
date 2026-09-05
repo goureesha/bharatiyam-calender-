@@ -360,4 +360,7 @@ const Map<String, String> teStrings = {
   'masaPatti': 'మాస జాబితా',
   'sankrantiAbbr': 'సం',
   'visheshaHabbagalu': 'విశేష పండుగలు',
+  'privacyTitle': 'మీ గోప్యత మాకు ముఖ్యం',
+  'privacyDesc': 'ఈ యాప్ మీ స్థానం మరియు ప్రొఫైల్ సమాచారాన్ని పంచాంగ లెక్కింపు కోసం మాత్రమే ఉపయోగిస్తుంది.',
+  'adhikaMasa': 'అధిక / క్షయ మాసం',
 };

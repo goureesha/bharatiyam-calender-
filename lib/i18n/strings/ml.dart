@@ -360,4 +360,7 @@ const Map<String, String> mlStrings = {
   'masaPatti': 'മാസ പട്ടിക',
   'sankrantiAbbr': 'സം',
   'visheshaHabbagalu': 'പ്രത്യേക ഉത്സവങ്ങൾ',
+  'privacyTitle': 'നിങ്ങളുടെ സ്വകാര്യത ഞങ്ങൾക്ക് പ്രധാനമാണ്',
+  'privacyDesc': 'ഈ ആപ്പ് നിങ്ങളുടെ സ്ഥാനവും പ്രൊഫൈൽ വിവരവും പഞ്ചാംഗ കണക്കുകൂട്ടലിന് മാത്രമേ ഉപയോഗിക്കുന്നുള്ളൂ.',
+  'adhikaMasa': 'അധിക / ക്ഷയ മാസം',
 };

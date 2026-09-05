@@ -384,4 +384,7 @@ const Map<String, String> knStrings = {
   'masaPatti': 'ಮಾಸ ಪಟ್ಟಿ',
   'sankrantiAbbr': 'ಸಂ',
   'visheshaHabbagalu': 'ವಿಶೇಷ ಹಬ್ಬಗಳು',
+  'privacyTitle': 'ನಿಮ್ಮ ಗೌಪ್ಯತೆ ನಮಗೆ ಮುಖ್ಯ',
+  'privacyDesc': 'ಈ ಅಪ್ಲಿಕೇಶನ್ ನಿಮ್ಮ ಸ್ಥಳ ಮತ್ತು ಪ್ರೊಫೈಲ್ ಮಾಹಿತಿಯನ್ನು ಪಂಚಾಂಗ ಲೆಕ್ಕಾಚಾರಕ್ಕಾಗಿ ಮಾತ್ರ ಬಳಸುತ್ತದೆ.',
+  'adhikaMasa': 'ಅಧಿಕ / ಕ್ಷಯ ಮಾಸ',
 };
