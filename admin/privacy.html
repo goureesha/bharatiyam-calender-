@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Bharatiyam Panchanga</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0d0d0d;
+            color: #e0e0e0;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1206 0%, #2d1f0a 50%, #1a1206 100%);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 32px 20px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 4px;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            color: #b8860b;
+            letter-spacing: 1px;
+        }
+
+        .header .app-name {
+            font-size: 18px;
+            color: #f5e6c8;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 32px 20px 60px;
+        }
+
+        .updated {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 32px;
+            padding: 8px 16px;
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 20px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section {
+            margin-bottom: 28px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 24px;
+            transition: border-color 0.3s;
+        }
+
+        .section:hover {
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            color: #0d0d0d;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .section h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section p {
+            font-size: 14px;
+            color: #bbb;
+            margin-bottom: 10px;
+        }
+
+        .section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .section ul li {
+            font-size: 14px;
+            color: #bbb;
+            padding: 8px 0 8px 24px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .section ul li:last-child {
+            border-bottom: none;
+        }
+
+        .section ul li::before {
+            content: '•';
+            color: #d4af37;
+            font-weight: bold;
+            position: absolute;
+            left: 8px;
+        }
+
+        .section ul li strong {
+            color: #e0d4b8;
+            font-weight: 600;
+        }
+
+        .section ul li .desc {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .highlight-box {
+            background: rgba(212, 175, 55, 0.08);
+            border-left: 3px solid #d4af37;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 12px 0;
+            font-size: 13px;
+            color: #d4c08a;
+        }
+
+        .contact-box {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(184, 134, 11, 0.05));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .contact-box .icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .contact-box h3 {
+            color: #d4af37;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .contact-box a {
+            color: #f5e6c8;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .contact-box a:hover {
+            color: #d4af37;
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px 20px;
+            font-size: 11px;
+            color: #555;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer a {
+            color: #b8860b;
+            text-decoration: none;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+
+        .badge-safe {
+            background: rgba(76, 175, 80, 0.15);
+            color: #66bb6a;
+        }
+
+        .badge-optional {
+            background: rgba(33, 150, 243, 0.15);
+            color: #42a5f5;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 22px; }
+            .section { padding: 18px; }
+            .container { padding: 20px 14px 40px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-icon">🙏</div>
+    <h1>Privacy Policy</h1>
+    <div class="subtitle">ಗೌಪ್ಯತಾ ನೀತಿ</div>
+    <div class="app-name">ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ — Bharatiyam Panchanga</div>
+</div>
+
+<div class="container">
+    <div class="updated">📅 Last Updated: August 2024 &nbsp;|&nbsp; Effective Immediately</div>
+
+    <!-- Section 1 -->
+    <div class="section">
+        <h2><span class="section-number">1</span> Data We Collect</h2>
+        <ul>
+            <li>
+                <strong>Location</strong> <span class="badge badge-optional">Optional</span>
+                <span class="desc">GPS coordinates or manually selected city. Used solely for calculating accurate sunrise, sunset, and panchanga for your geographic position.</span>
+            </li>
+            <li>
+                <strong>Profile Information</strong> <span class="badge badge-optional">Optional</span>
+                <span class="desc">Name, address, and mobile number. Provided voluntarily. Used only to display on shared panchanga cards if you choose to share.</span>
+            </li>
+            <li>
+                <strong>Device ID</strong> <span class="badge badge-safe">Anonymous</span>
+                <span class="desc">A random UUID generated once on first launch. Cannot identify you personally. Used only for app usage statistics.</span>
+            </li>
+        </ul>
+        <div class="highlight-box">
+            🔒 We do NOT collect emails, passwords, photos, contacts, call logs, SMS, or any sensitive personal information.
+        </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section">
+        <h2><span class="section-number">2</span> How We Use Your Data</h2>
+        <ul>
+            <li><strong>Panchanga Calculations</strong>
+                <span class="desc">Computing Tithi, Nakshatra, Yoga, Karana, Muhurta, Rahu Kala, and other Hindu calendar elements based on your location.</span>
+            </li>
+            <li><strong>Shareable Panchanga Cards</strong>
+                <span class="desc">Generating daily panchanga images with your profile details (only if you provide them).</span>
+            </li>
+            <li><strong>App Analytics</strong>
+                <span class="desc">Tracking anonymous usage (last seen, share count) to improve the app experience.</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section">
+        <h2><span class="section-number">3</span> Data Storage & Security</h2>
+        <ul>
+            <li><strong>Local Storage</strong>
+                <span class="desc">Profile data and preferences are stored on your device using SharedPreferences. This data never leaves your phone unless you explicitly sync.</span>
+            </li>
+            <li><strong>Cloud Sync</strong>
+                <span class="desc">A copy of your profile is synced to Google Firebase Firestore (hosted in secure Google data centers) for backup purposes.</span>
+            </li>
+        </ul>
+        <div class="highlight-box">
+            🛡️ All astronomical calculations (Swiss Ephemeris) run entirely on your device. No calculation data is sent to any server.
+        </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="section">
+        <h2><span class="section-number">4</span> Data Sharing</h2>
+        <p>We do <strong>NOT</strong> sell, rent, or share your personal data with any third parties.</p>
+        <p>Your data is used exclusively within the Bharatiyam Panchanga app for the purposes described above.</p>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="section">
+        <h2><span class="section-number">5</span> Third-Party Services</h2>
+        <ul>
+            <li><strong>Google Firebase (Firestore)</strong>
+                <span class="desc">Used for cloud data sync. Subject to <a href="https://firebase.google.com/terms" style="color: #d4af37;">Google's Terms of Service</a>.</span>
+            </li>
+            <li><strong>Swiss Ephemeris</strong>
+                <span class="desc">Open-source astronomical calculation library (AGPL-3.0). All computations run locally on-device. No data is sent to Astrodienst.</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Section 6 -->
+    <div class="section">
+        <h2><span class="section-number">6</span> Permissions</h2>
+        <ul>
+            <li><strong>Location (ACCESS_FINE_LOCATION)</strong>
+                <span class="desc">For accurate panchanga based on your geographic position. You can deny this and select a city manually instead.</span>
+            </li>
+            <li><strong>Internet (INTERNET)</strong>
+                <span class="desc">For Firebase cloud sync and checking for updates.</span>
+            </li>
+            <li><strong>Storage</strong>
+                <span class="desc">For saving generated panchanga share images to your device.</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Section 7 -->
+    <div class="section">
+        <h2><span class="section-number">7</span> Data Retention & Deletion</h2>
+        <ul>
+            <li><strong>Uninstall</strong>
+                <span class="desc">Uninstalling the app removes all locally stored data from your device.</span>
+            </li>
+            <li><strong>Firebase Data</strong>
+                <span class="desc">To request deletion of your cloud-synced data, contact us at the email below. We will delete your data within 30 days.</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Section 8 -->
+    <div class="section">
+        <h2><span class="section-number">8</span> Children's Privacy</h2>
+        <p>This app is not directed at children under 13 years of age. We do not knowingly collect personal information from children under 13. If we become aware that we have collected data from a child under 13, we will delete it promptly.</p>
+    </div>
+
+    <!-- Section 9 -->
+    <div class="section">
+        <h2><span class="section-number">9</span> Changes to This Policy</h2>
+        <p>We may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated "Last Updated" date. Continued use of the app constitutes acceptance of the updated policy.</p>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-box">
+        <div class="icon">📧</div>
+        <h3>Questions or Concerns?</h3>
+        <p style="font-size: 13px; color: #999; margin-bottom: 8px;">Contact us anytime:</p>
+        <a href="mailto:bharatiyampanchanga@gmail.com">bharatiyampanchanga@gmail.com</a>
+    </div>
+</div>
+
+<div class="footer">
+    <p>© 2024 Bharatiyam Panchanga &nbsp;|&nbsp; <a href="index.html">Admin Dashboard</a></p>
+    <p style="margin-top: 4px;">Built with 🙏 for the Hindu community</p>
+</div>
+
+</body>
+</html>
