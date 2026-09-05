@@ -228,6 +228,7 @@ class _MahitiScreenState extends State<MahitiScreen> {
               if (!_sankalpaExpanded) {
                 // Show interstitial ad with bypass protection
                 AdService.showWithAdGate(
+                  context: context,
                   onComplete: () {
                     if (mounted) setState(() => _sankalpaExpanded = true);
                   },

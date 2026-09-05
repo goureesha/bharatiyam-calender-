@@ -137,11 +137,11 @@ class AdService {
   }
 
   /// Show content with ad gate — blocks content until ad completes or times out.
-  /// Returns true if content should be shown, false if blocked.
   /// [onComplete] is called when content should be revealed.
-  /// [onBlocked] is called if ad blocker is detected and content is restricted.
+  /// [context] is used to show notification when ad blocker delay is active.
   static void showWithAdGate({
     required VoidCallback onComplete,
+    BuildContext? context,
     VoidCallback? onBlocked,
     int timeoutSeconds = 8,
   }) {
@@ -154,13 +154,31 @@ class AdService {
     // If ad blocker detected, add a delay to discourage blocking
     if (_adBlockerDetected && !hasInterstitial) {
       debugPrint('Ad blocker active — adding delay');
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Row(
+            children: [
+              SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
+              const SizedBox(width: 12),
+              Expanded(child: Text(
+                'Ad blocked — please disable ad blocker to support this free app. Loading in ${timeoutSeconds}s...',
+                style: const TextStyle(fontSize: 11),
+              )),
+            ],
+          ),
+          duration: Duration(seconds: timeoutSeconds),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ));
+      }
       Future.delayed(Duration(seconds: timeoutSeconds), () {
         onComplete();
       });
       return;
     }
 
-    // No ad available — proceed with timeout
+    // No ad available — proceed immediately
     if (!hasInterstitial) {
       onComplete();
       return;
