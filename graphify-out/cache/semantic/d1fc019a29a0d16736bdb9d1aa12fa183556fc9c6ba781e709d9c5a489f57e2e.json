@@ -1,1 +1,0 @@
-{"nodes": [{"id": "android_gradlew", "label": "gradlew (Gradle Wrapper Script)", "file_type": "code", "source_file": "android/gradlew"}], "edges": [{"source": "android_gradlew", "target": "workflows_build_apk_job", "relation": "references", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "android/gradlew", "weight": 1.0}], "hyperedges": []}

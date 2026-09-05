@@ -17,3 +17,9 @@ Thumbs.db
 
 # Misc
 *.log
+fix_const.*
+graphify-out/
+admin/
+.firebase/
+.firebaserc
+firebase.json

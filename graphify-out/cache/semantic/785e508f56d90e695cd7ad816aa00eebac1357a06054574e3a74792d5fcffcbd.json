@@ -1,1 +1,0 @@
-{"nodes": [{"id": "firebase_json", "label": "firebase.json (Firebase Hosting Config)", "file_type": "document", "source_file": "firebase.json"}], "edges": [{"source": "firebase_json", "target": "admin_index_html", "relation": "references", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "firebase.json", "weight": 1.0}], "hyperedges": []}
