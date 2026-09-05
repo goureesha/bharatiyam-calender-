@@ -362,5 +362,4 @@ const Map<String, String> saStrings = {
   'visheshaHabbagalu': 'विशेष उत्सवाः',
   'privacyTitle': 'भवतां गोपनीयता अस्माकं कृते महत्त्वपूर्णा',
   'privacyDesc': 'इदं अनुप्रयोगं भवतां स्थानं प्रोफैल् सूचनां च पञ्चाङ्ग गणनार्थम् एव उपयुनक्ति।',
-  'adhikaMasa': 'अधिक / क्षय मासः',
 };

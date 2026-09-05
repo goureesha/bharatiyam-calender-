@@ -347,5 +347,4 @@ const Map<String, String> enStrings = {
   'visheshaHabbagalu': 'Special Festivals',
   'privacyTitle': 'Your privacy matters to us',
   'privacyDesc': 'This app uses your location and profile information only for Panchanga calculations.',
-  'adhikaMasa': 'Adhika / Kshaya Month',
 };
