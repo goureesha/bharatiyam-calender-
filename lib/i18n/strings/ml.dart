@@ -1,7 +1,7 @@
 /// Malayalam strings — complete localization
 const Map<String, String> mlStrings = {
   // ─── App ───
-  'appName': 'ഭാരതീയം പഞ്ചാംഗം', 'panchanga': 'പഞ്ചാംഗം', 'tithi': 'തിഥി',
+  'appName': 'പഞ്ചാംഗം', 'panchanga': 'പഞ്ചാംഗം', 'tithi': 'തിഥി',
   'vara': 'വാരം', 'nakshatra': 'നക്ഷത്രം', 'yoga': 'യോഗം', 'karana': 'കരണം',
   'sunrise': 'സൂര്യോദയം', 'sunset': 'സൂര്യാസ്തമയം',
   'rahuKala': 'രാഹു കാലം', 'yamaKala': 'യമകണ്ട കാലം', 'gulikaKala': 'ഗുളിക കാലം',

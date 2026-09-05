@@ -1,7 +1,7 @@
 /// Kannada strings — primary language
 const Map<String, String> knStrings = {
   // ─── App ───
-  'appName': 'ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ',
+  'appName': 'ಪಂಚಾಂಗ',
   'panchanga': 'ಪಂಚಾಂಗ', 'tithi': 'ತಿಥಿ', 'vara': 'ವಾರ',
   'nakshatra': 'ನಕ್ಷತ್ರ', 'yoga': 'ಯೋಗ', 'karana': 'ಕರಣ',
   'sunrise': 'ಸೂರ್ಯೋದಯ', 'sunset': 'ಸೂರ್ಯಾಸ್ತ',

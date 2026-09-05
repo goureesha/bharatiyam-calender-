@@ -1,7 +1,7 @@
 /// Sanskrit strings — complete localization (Devanagari script)
 const Map<String, String> saStrings = {
   // ─── App ───
-  'appName': 'भारतीयं पञ्चाङ्गम्', 'panchanga': 'पञ्चाङ्गम्', 'tithi': 'तिथिः',
+  'appName': 'पञ्चाङ्गम्', 'panchanga': 'पञ्चाङ्गम्', 'tithi': 'तिथिः',
   'vara': 'वारः', 'nakshatra': 'नक्षत्रम्', 'yoga': 'योगः', 'karana': 'करणम्',
   'sunrise': 'सूर्योदयः', 'sunset': 'सूर्यास्तः',
   'rahuKala': 'राहुकालः', 'yamaKala': 'यमघण्टकालः', 'gulikaKala': 'गुलिककालः',

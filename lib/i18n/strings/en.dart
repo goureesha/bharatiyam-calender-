@@ -1,6 +1,6 @@
 /// English strings
 const Map<String, String> enStrings = {
-  'appName': 'Bharatiyam Panchanga', 'panchanga': 'Panchanga', 'tithi': 'Tithi',
+  'appName': 'Panchangam', 'panchanga': 'Panchanga', 'tithi': 'Tithi',
   'vara': 'Vara', 'nakshatra': 'Nakshatra', 'yoga': 'Yoga', 'karana': 'Karana',
   'sunrise': 'Sunrise', 'sunset': 'Sunset',
   'rahuKala': 'Rahu Kala', 'yamaKala': 'Yamaganda', 'gulikaKala': 'Gulika Kala',
