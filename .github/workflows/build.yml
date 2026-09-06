@@ -77,7 +77,7 @@ jobs:
       - name: Setup Android & 16KB page size support
         run: |
           # Permissions
-          sed -i '/<application/i\    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.INTERNET" />' android/app/src/main/AndroidManifest.xml
+          sed -i '/<application/i\    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />' android/app/src/main/AndroidManifest.xml
           # App name + extractNativeLibs in one shot
           sed -i 's|android:label="bharatiyam_panchanga"|android:label="ಪಂಚಾಂಗ"\n        android:extractNativeLibs="false"|' android/app/src/main/AndroidManifest.xml
           # SDK versions + NDK + packaging config for 16KB
