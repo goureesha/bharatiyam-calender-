@@ -107,13 +107,16 @@ jobs:
           SWEPH_PATH=$(find ~/.pub-cache -path "*/sweph*/android" -type d | head -1)
           echo "Sweph path: $SWEPH_PATH"
 
-          # Find sweph CMakeLists.txt and add 16KB linker flag
+          # Find sweph CMakeLists.txt and add 16KB linker flag + fix fseeko/ftello
           SWEPH_CMAKE=$(find ~/.pub-cache -path "*/sweph*" -name "CMakeLists.txt" | head -1)
           if [ -n "$SWEPH_CMAKE" ]; then
             echo "Found CMakeLists.txt: $SWEPH_CMAKE"
             # Add 16KB page size linker flag
             echo 'set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384")' >> "$SWEPH_CMAKE"
-            echo "Added 16KB linker flag to sweph CMakeLists.txt"
+            # Fix fseeko/ftello not found with NDK 28 on 32-bit
+            echo 'add_definitions(-D_FILE_OFFSET_BITS=64)' >> "$SWEPH_CMAKE"
+            echo 'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-implicit-function-declaration")' >> "$SWEPH_CMAKE"
+            echo "Patched sweph CMakeLists.txt"
             cat "$SWEPH_CMAKE"
           fi
 
