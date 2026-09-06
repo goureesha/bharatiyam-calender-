@@ -102,29 +102,16 @@ jobs:
 
       - name: Fix sweph for NDK 28 + 16KB page alignment
         run: |
-          echo "=== Patching sweph source for NDK 28 compatibility ==="
-          # Fix 1: Replace fseeko/ftello with fseek/ftell in swejpl.c (safe for <2GB files)
-          SWEJPL=$(find ~/.pub-cache -path "*/sweph*/swejpl.c" | head -1)
-          if [ -n "$SWEJPL" ]; then
-            echo "Patching: $SWEJPL"
-            sed -i 's/#define FSEEK fseeko/#define FSEEK fseek/' "$SWEJPL"
-            sed -i 's/#define FTELL ftello/#define FTELL ftell/' "$SWEJPL"
-            grep -n "FSEEK\|FTELL" "$SWEJPL" | head -5
-          fi
+          echo "=== Patching sweph source for NDK 28 ==="
+          # Direct patch ALL swejpl.c files - replace fseeko/ftello with fseek/ftell
+          find ~/.pub-cache -name "swejpl.c" -exec sed -i 's/#define FSEEK fseeko/#define FSEEK fseek/g;s/#define FTELL ftello/#define FTELL ftell/g' {} \;
+          echo "Patched swejpl.c files:"
+          find ~/.pub-cache -name "swejpl.c" -exec grep -l "FSEEK" {} \;
+          echo "Verify fix:"
+          find ~/.pub-cache -name "swejpl.c" -exec grep -n "define FSEEK\|define FTELL" {} \;
 
-          # Fix 2: Add 16KB linker flag to sweph CMakeLists.txt
-          SWEPH_CMAKE=$(find ~/.pub-cache -path "*/sweph*/android/CMakeLists.txt" | head -1)
-          if [ -n "$SWEPH_CMAKE" ]; then
-            echo "Patching CMakeLists: $SWEPH_CMAKE"
-            echo 'set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384")' >> "$SWEPH_CMAKE"
-          fi
-
-          # Fix 3: Patch sweph build.gradle NDK version
-          SWEPH_GRADLE=$(find ~/.pub-cache -path "*/sweph*/android/build.gradle" | head -1)
-          if [ -n "$SWEPH_GRADLE" ]; then
-            echo "Patching build.gradle: $SWEPH_GRADLE"
-            sed -i "s/ndkVersion.*/ndkVersion '28.2.13676358'/" "$SWEPH_GRADLE"
-          fi
+          # Add 16KB linker flag to ALL sweph CMakeLists.txt
+          find ~/.pub-cache -path "*/sweph*/CMakeLists.txt" -exec sh -c 'echo "set(CMAKE_SHARED_LINKER_FLAGS \"\${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384\")" >> "$1"' _ {} \;
 
           echo "=== Sweph patching complete ==="
 
