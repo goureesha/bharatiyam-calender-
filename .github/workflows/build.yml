@@ -102,25 +102,30 @@ jobs:
 
       - name: Fix sweph for NDK 28 + 16KB page alignment
         run: |
-          echo "=== Patching sweph source for NDK 28 ==="
-          # Fix fseeko/ftello for NDK 28
+          echo "=== Patching sweph for NDK 28 ==="
+          # 1. Fix fseeko/ftello compile error
           find ~/.pub-cache -name "swejpl.c" -exec sed -i 's/#define FSEEK fseeko/#define FSEEK fseek/g;s/#define FTELL ftello/#define FTELL ftell/g' {} \;
-          echo "Verify fseek fix:"
-          find ~/.pub-cache -name "swejpl.c" -exec grep -n "define FSEEK\|define FTELL" {} \;
 
-          # Add 16KB linker flag to sweph CMakeLists.txt
+          # 2. Force sweph build.gradle to use NDK 28 (it defaults to NDK 21)
+          for gradle_file in $(find ~/.pub-cache -path "*/sweph*/android/build.gradle"); do
+            sed -i "s/ndkVersion.*/ndkVersion '28.2.13676358'/" "$gradle_file"
+            echo "Patched NDK in: $gradle_file"
+            grep ndkVersion "$gradle_file"
+          done
+
+          # 3. Add BOTH 16KB linker flags (per Google docs) to CMakeLists.txt
           for cmake_file in $(find ~/.pub-cache -path "*/sweph*/CMakeLists.txt"); do
             echo "" >> "$cmake_file"
-            echo "# 16KB page size support" >> "$cmake_file"
-            echo 'set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384")' >> "$cmake_file"
-            echo "Patched: $cmake_file"
+            echo "# 16KB page size support (Google Play requirement)" >> "$cmake_file"
+            echo 'set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384")' >> "$cmake_file"
+            echo "Patched CMake: $cmake_file"
             tail -3 "$cmake_file"
           done
 
-          # Clean any cmake cache so flags are picked up fresh
+          # 4. Clean cmake cache so everything rebuilds fresh
           find ~/.pub-cache -path "*/sweph*/.cxx" -type d -exec rm -rf {} + 2>/dev/null || true
 
-          echo "=== Sweph patching complete ==="
+          echo "=== Done ==="
 
       - name: Pre-compute 3-year panchanga data
         run: |
