@@ -100,38 +100,33 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Fix sweph native libs for 16KB page alignment
+      - name: Fix sweph for NDK 28 + 16KB page alignment
         run: |
-          echo "=== Fixing sweph .so files for 16KB page alignment ==="
-          NDK_PATH="$ANDROID_HOME/ndk/28.2.13676358"
-          SWEPH_PATH=$(find ~/.pub-cache -path "*/sweph*/android" -type d | head -1)
-          echo "Sweph path: $SWEPH_PATH"
+          echo "=== Patching sweph source for NDK 28 compatibility ==="
+          # Fix 1: Replace fseeko/ftello with fseek/ftell in swejpl.c (safe for <2GB files)
+          SWEJPL=$(find ~/.pub-cache -path "*/sweph*/swejpl.c" | head -1)
+          if [ -n "$SWEJPL" ]; then
+            echo "Patching: $SWEJPL"
+            sed -i 's/#define FSEEK fseeko/#define FSEEK fseek/' "$SWEJPL"
+            sed -i 's/#define FTELL ftello/#define FTELL ftell/' "$SWEJPL"
+            grep -n "FSEEK\|FTELL" "$SWEJPL" | head -5
+          fi
 
-          # Find sweph CMakeLists.txt and add 16KB linker flag + fix fseeko/ftello
-          SWEPH_CMAKE=$(find ~/.pub-cache -path "*/sweph*" -name "CMakeLists.txt" | head -1)
+          # Fix 2: Add 16KB linker flag to sweph CMakeLists.txt
+          SWEPH_CMAKE=$(find ~/.pub-cache -path "*/sweph*/android/CMakeLists.txt" | head -1)
           if [ -n "$SWEPH_CMAKE" ]; then
-            echo "Found CMakeLists.txt: $SWEPH_CMAKE"
-            # Add 16KB page size linker flag
+            echo "Patching CMakeLists: $SWEPH_CMAKE"
             echo 'set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384")' >> "$SWEPH_CMAKE"
-            # Fix fseeko/ftello not found with NDK 28 on 32-bit
-            echo 'add_definitions(-D_FILE_OFFSET_BITS=64)' >> "$SWEPH_CMAKE"
-            echo 'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-implicit-function-declaration")' >> "$SWEPH_CMAKE"
-            echo "Patched sweph CMakeLists.txt"
-            cat "$SWEPH_CMAKE"
           fi
 
-          # Also patch sweph build.gradle to use NDK 28
-          SWEPH_GRADLE=$(find ~/.pub-cache -path "*/sweph*" -name "build.gradle" | head -1)
+          # Fix 3: Patch sweph build.gradle NDK version
+          SWEPH_GRADLE=$(find ~/.pub-cache -path "*/sweph*/android/build.gradle" | head -1)
           if [ -n "$SWEPH_GRADLE" ]; then
-            echo "Found sweph build.gradle: $SWEPH_GRADLE"
-            sed -i 's/ndkVersion.*/ndkVersion "28.2.13676358"/' "$SWEPH_GRADLE"
-            # Add cmake flag for 16KB support
-            sed -i '/externalNativeBuild/,/}/{s/cppFlags.*/cppFlags "-Wl,-z,max-page-size=16384"/}' "$SWEPH_GRADLE" || true
-            cat "$SWEPH_GRADLE"
+            echo "Patching build.gradle: $SWEPH_GRADLE"
+            sed -i "s/ndkVersion.*/ndkVersion '28.2.13676358'/" "$SWEPH_GRADLE"
           fi
 
-          # Force all plugins to use 16KB alignment via gradle properties
-          echo "android.bundle.enableUncompressedNativeLibs=true" >> android/gradle.properties
+          echo "=== Sweph patching complete ==="
 
       - name: Pre-compute 3-year panchanga data
         run: |
