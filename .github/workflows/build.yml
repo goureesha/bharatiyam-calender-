@@ -106,15 +106,16 @@ jobs:
           # 1. Fix fseeko/ftello compile error
           find ~/.pub-cache -name "swejpl.c" -exec sed -i 's/#define FSEEK fseeko/#define FSEEK fseek/g;s/#define FTELL ftello/#define FTELL ftell/g' {} \;
 
-          # 2. Force sweph build.gradle to use NDK 28 (it defaults to NDK 21)
-          for gradle_file in $(find ~/.pub-cache -path "*/sweph*/android/build.gradle"); do
-            sed -i "s/ndkVersion.*/ndkVersion '28.2.13676358'/" "$gradle_file"
-            echo "Patched NDK in: $gradle_file"
-            grep ndkVersion "$gradle_file"
-          done
+          # 2. Force sweph build.gradle to use NDK 28 (exclude example dir)
+          SWEPH_GRADLE=$(find ~/.pub-cache -path "*/sweph-*/android/build.gradle" -not -path "*/example/*" | head -1)
+          if [ -n "$SWEPH_GRADLE" ]; then
+            sed -i "/ndkVersion/c\\    ndkVersion '28.2.13676358'" "$SWEPH_GRADLE"
+            echo "Patched: $SWEPH_GRADLE"
+            grep ndkVersion "$SWEPH_GRADLE"
+          fi
 
           # 3. Add BOTH 16KB linker flags (per Google docs) to CMakeLists.txt
-          for cmake_file in $(find ~/.pub-cache -path "*/sweph*/CMakeLists.txt"); do
+          for cmake_file in $(find ~/.pub-cache -path "*/sweph-*/CMakeLists.txt" -not -path "*/example/*"); do
             echo "" >> "$cmake_file"
             echo "# 16KB page size support (Google Play requirement)" >> "$cmake_file"
             echo 'set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384")' >> "$cmake_file"
