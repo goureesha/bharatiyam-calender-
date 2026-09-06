@@ -94,6 +94,8 @@ jobs:
               }
           }
           GRADLE_EOF
+          # Suppress sweph minSdk 16 error with NDK 28
+          echo "android.ndk.suppressMinSdkVersionError=21" >> android/gradle.properties
 
       - name: Get dependencies
         run: flutter pub get
