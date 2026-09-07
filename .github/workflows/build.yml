@@ -60,7 +60,6 @@ jobs:
           cp android/app/src/main/AndroidManifest.xml /tmp/AndroidManifest.xml
           cp android/app/bharatiyam-release.jks /tmp/bharatiyam-release.jks || true
           cp android/key.properties /tmp/key.properties || true
-          cp android/app/google-services.json /tmp/google-services.json || true
 
       - name: Generate platform files
         run: |
@@ -72,7 +71,6 @@ jobs:
           cp /tmp/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
           cp /tmp/bharatiyam-release.jks android/app/bharatiyam-release.jks || true
           cp /tmp/key.properties android/key.properties || true
-          cp /tmp/google-services.json android/app/google-services.json || true
           echo "=== SOURCE MANIFEST ==="
           cat android/app/src/main/AndroidManifest.xml
           grep "APPLICATION_ID" android/app/src/main/AndroidManifest.xml || { echo "FATAL: AdMob missing!"; exit 1; }
