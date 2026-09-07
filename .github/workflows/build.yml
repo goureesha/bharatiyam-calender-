@@ -100,32 +100,22 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Fix sweph for NDK 28 + 16KB page alignment
+      - name: Fix sweph for 16KB page alignment (safe - keeps original NDK)
         run: |
-          echo "=== Patching sweph for NDK 28 ==="
-          # 1. Fix fseeko/ftello compile error
-          find ~/.pub-cache -name "swejpl.c" -exec sed -i 's/#define FSEEK fseeko/#define FSEEK fseek/g;s/#define FTELL ftello/#define FTELL ftell/g' {} \;
-
-          # 2. Force sweph build.gradle to use NDK 28 (exclude example dir)
-          SWEPH_GRADLE=$(find ~/.pub-cache -path "*/sweph-*/android/build.gradle" -not -path "*/example/*" | head -1)
-          if [ -n "$SWEPH_GRADLE" ]; then
-            sed -i "/ndkVersion/c\\    ndkVersion '28.2.13676358'" "$SWEPH_GRADLE"
-            echo "Patched: $SWEPH_GRADLE"
-            grep ndkVersion "$SWEPH_GRADLE"
+          echo "=== Adding 16KB linker flags to sweph (keeping original NDK 21) ==="
+          # Only add 16KB linker flags — do NOT change NDK version or source code
+          SWEPH_CMAKE=$(find ~/.pub-cache -path "*/sweph-*/android/CMakeLists.txt" -not -path "*/example/*" | head -1)
+          if [ -n "$SWEPH_CMAKE" ]; then
+            echo "" >> "$SWEPH_CMAKE"
+            echo "# 16KB page size support (Google Play requirement)" >> "$SWEPH_CMAKE"
+            echo 'set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384")' >> "$SWEPH_CMAKE"
+            echo "Patched: $SWEPH_CMAKE"
+            tail -3 "$SWEPH_CMAKE"
+          else
+            echo "WARNING: sweph CMakeLists.txt not found!"
           fi
-
-          # 3. Add BOTH 16KB linker flags (per Google docs) to CMakeLists.txt
-          for cmake_file in $(find ~/.pub-cache -path "*/sweph-*/CMakeLists.txt" -not -path "*/example/*"); do
-            echo "" >> "$cmake_file"
-            echo "# 16KB page size support (Google Play requirement)" >> "$cmake_file"
-            echo 'set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384")' >> "$cmake_file"
-            echo "Patched CMake: $cmake_file"
-            tail -3 "$cmake_file"
-          done
-
-          # 4. Clean cmake cache so everything rebuilds fresh
+          # Clean cmake cache
           find ~/.pub-cache -path "*/sweph*/.cxx" -type d -exec rm -rf {} + 2>/dev/null || true
-
           echo "=== Done ==="
 
       - name: Pre-compute 3-year panchanga data
