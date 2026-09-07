@@ -19,7 +19,7 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Generate platform files
+      - name: Generate web platform files
         run: |
           flutter create --project-name bharatiyam_panchanga --org com.bharatiyam --platforms=web .
           rm -f test/widget_test.dart
@@ -51,49 +51,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
-      - name: Backup manifest + signing
+      - name: Verify AdMob in manifest
         run: |
-          cp android/app/src/main/AndroidManifest.xml /tmp/AndroidManifest.xml
-          cp android/app/bharatiyam-release.jks /tmp/bharatiyam-release.jks || true
-          cp android/key.properties /tmp/key.properties || true
-
-      - name: Generate platform files
-        run: |
-          flutter create --project-name bharatiyam_panchanga --org com.bharatiyam --platforms=android,web .
-          rm -f test/widget_test.dart
-
-      - name: Restore manifest + signing
-        run: |
-          cp /tmp/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
-          cp /tmp/bharatiyam-release.jks android/app/bharatiyam-release.jks || true
-          cp /tmp/key.properties android/key.properties || true
-          echo "=== SOURCE MANIFEST ==="
+          echo "=== Checking AndroidManifest.xml ==="
           cat android/app/src/main/AndroidManifest.xml
-          grep "APPLICATION_ID" android/app/src/main/AndroidManifest.xml || { echo "FATAL: AdMob missing!"; exit 1; }
-
-      - name: Setup SDK versions + signing
-        run: |
-          sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
-          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/' android/app/build.gradle.kts
-          sed -i 's/targetSdk = flutter.targetSdkVersion/targetSdk = 36/' android/app/build.gradle.kts
-          cat >> android/app/build.gradle.kts << 'SIGNING_EOF'
-
-          android.signingConfigs {
-              create("release") {
-                  storeFile = file("bharatiyam-release.jks")
-                  storePassword = "bharatiyam123"
-                  keyAlias = "bharatiyam"
-                  keyPassword = "bharatiyam123"
-              }
-          }
-          android.buildTypes.getByName("release") {
-              signingConfig = android.signingConfigs.getByName("release")
-          }
-          SIGNING_EOF
+          grep "APPLICATION_ID" android/app/src/main/AndroidManifest.xml || { echo "FATAL: AdMob App ID missing from manifest!"; exit 1; }
 
       - name: Get dependencies
         run: flutter pub get
@@ -104,18 +75,18 @@ jobs:
           flutter test test/generate_panchanga_data_test.dart --timeout 15m || echo "Data generation skipped"
           ls -la assets/ || true
 
-      - name: Patch all plugins to compileSdk 36
+      - name: Patch plugins to compileSdk 35
         run: |
           find ~/.pub-cache -name "build.gradle" -path "*/android/*" -type f | while read f; do
-            sed -i 's/compileSdkVersion 31/compileSdkVersion 36/g' "$f"
-            sed -i 's/compileSdkVersion 33/compileSdkVersion 36/g' "$f"
-            sed -i 's/compileSdkVersion 34/compileSdkVersion 36/g' "$f"
-            sed -i 's/compileSdk 31/compileSdk 36/g' "$f"
-            sed -i 's/compileSdk 33/compileSdk 36/g' "$f"
-            sed -i 's/compileSdk 34/compileSdk 36/g' "$f"
-            sed -i 's/compileSdk = 31/compileSdk = 36/g' "$f"
-            sed -i 's/compileSdk = 33/compileSdk = 36/g' "$f"
-            sed -i 's/compileSdk = 34/compileSdk = 36/g' "$f"
+            sed -i 's/compileSdkVersion 31/compileSdkVersion 35/g' "$f"
+            sed -i 's/compileSdkVersion 33/compileSdkVersion 35/g' "$f"
+            sed -i 's/compileSdkVersion 34/compileSdkVersion 35/g' "$f"
+            sed -i 's/compileSdk 31/compileSdk 35/g' "$f"
+            sed -i 's/compileSdk 33/compileSdk 35/g' "$f"
+            sed -i 's/compileSdk 34/compileSdk 35/g' "$f"
+            sed -i 's/compileSdk = 31/compileSdk = 35/g' "$f"
+            sed -i 's/compileSdk = 33/compileSdk = 35/g' "$f"
+            sed -i 's/compileSdk = 34/compileSdk = 35/g' "$f"
           done
 
       - name: Generate App Icons
