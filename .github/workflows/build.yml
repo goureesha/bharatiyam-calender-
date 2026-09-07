@@ -55,14 +55,50 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Verify manifest
+      - name: Backup manifest + signing
         run: |
-          echo "=== AndroidManifest.xml ==="
+          cp android/app/src/main/AndroidManifest.xml /tmp/AndroidManifest.xml
+          cp android/app/bharatiyam-release.jks /tmp/bharatiyam-release.jks || true
+          cp android/key.properties /tmp/key.properties || true
+          cp android/app/google-services.json /tmp/google-services.json || true
+
+      - name: Generate platform files
+        run: |
+          flutter create --project-name bharatiyam_panchanga --org com.bharatiyam --platforms=android,web .
+          rm -f test/widget_test.dart
+
+      - name: Restore manifest + signing
+        run: |
+          cp /tmp/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+          cp /tmp/bharatiyam-release.jks android/app/bharatiyam-release.jks || true
+          cp /tmp/key.properties android/key.properties || true
+          cp /tmp/google-services.json android/app/google-services.json || true
+          echo "=== SOURCE MANIFEST ==="
           cat android/app/src/main/AndroidManifest.xml
           grep "APPLICATION_ID" android/app/src/main/AndroidManifest.xml || { echo "FATAL: AdMob missing!"; exit 1; }
+
+      - name: Setup SDK versions + signing
+        run: |
+          sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
+          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/' android/app/build.gradle.kts
+          sed -i 's/targetSdk = flutter.targetSdkVersion/targetSdk = 36/' android/app/build.gradle.kts
+          cat >> android/app/build.gradle.kts << 'SIGNING_EOF'
+
+          android.signingConfigs {
+              create("release") {
+                  storeFile = file("bharatiyam-release.jks")
+                  storePassword = "bharatiyam123"
+                  keyAlias = "bharatiyam"
+                  keyPassword = "bharatiyam123"
+              }
+          }
+          android.buildTypes.getByName("release") {
+              signingConfig = android.signingConfigs.getByName("release")
+          }
+          SIGNING_EOF
+
+      - name: Get dependencies
+        run: flutter pub get
 
       - name: Pre-compute 3-year panchanga data
         run: |
@@ -87,11 +123,18 @@ jobs:
       - name: Generate App Icons
         run: dart run flutter_launcher_icons
 
-      - name: Build APK (split per ABI)
+      - name: Build APK
         run: flutter build apk --split-per-abi --release
 
-      - name: Build AAB (App Bundle)
+      - name: Build AAB
         run: flutter build appbundle --release
+
+      - name: Verify AdMob in FINAL APK
+        run: |
+          echo "=== Checking FINAL APK manifest ==="
+          cd build/app/outputs/flutter-apk/
+          APK=$(ls app-arm64-v8a-release.apk 2>/dev/null || ls *.apk | head -1)
+          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools/ | tail -1)/aapt dump xmltree "$APK" AndroidManifest.xml | grep -A2 "APPLICATION_ID" || echo "WARNING: AdMob not found in final APK!"
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
