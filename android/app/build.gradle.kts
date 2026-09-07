@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId = "com.bharatiyam.bharatiyam_panchanga"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
@@ -39,6 +39,13 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
+    // 16KB page size support (required for Android 15+ / Google Play)
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
         }
     }
 }
