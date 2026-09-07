@@ -6,26 +6,33 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class AdService {
   /// Notifies widgets when AdMob is ready
   static final ValueNotifier<bool> initialized = ValueNotifier(false);
+  static String _status = 'not started';
 
-  // ── TEMPORARY: using test IDs to verify integration works ──
-  // Once test ads show, switch back to real IDs:
-  // Banner real:        ca-app-pub-9748660125901669/3248306368
-  // Interstitial real:  ca-app-pub-9748660125901669/9430571330
+  // Google's official test ad IDs (work on any device)
   static const String _bannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
   static const String _interstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
+
+  // Real IDs (switch back after test ads work):
+  // static const String _bannerAdUnitId = 'ca-app-pub-9748660125901669/3248306368';
+  // static const String _interstitialAdUnitId = 'ca-app-pub-9748660125901669/9430571330';
 
   static InterstitialAd? _interstitialAd;
   static int _loadAttempts = 0;
 
+  static String get status => _status;
+
   /// Initialize AdMob SDK
   static Future<void> initialize() async {
     if (initialized.value) return;
+    _status = 'initializing...';
     try {
       await MobileAds.instance.initialize();
       initialized.value = true;
-      debugPrint('AdMob initialized successfully');
+      _status = 'SDK ready ✓';
+      debugPrint('AdMob: initialized OK');
       _loadInterstitial();
     } catch (e) {
+      _status = 'init FAILED: $e';
       debugPrint('AdMob init failed: $e');
     }
   }
@@ -40,12 +47,10 @@ class AdService {
         onAdLoaded: (ad) {
           _interstitialAd = ad;
           _loadAttempts = 0;
-          debugPrint('Interstitial ad loaded');
         },
         onAdFailedToLoad: (error) {
           _loadAttempts++;
           _interstitialAd = null;
-          debugPrint('Interstitial load failed: ${error.message}');
           if (_loadAttempts < 3) {
             Future.delayed(const Duration(seconds: 10), _loadInterstitial);
           }
@@ -92,7 +97,7 @@ class AdService {
   }
 }
 
-/// Banner ad widget — listens for AdService initialization
+/// Banner ad widget — shows debug status when ads fail
 class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget({super.key});
 
@@ -103,6 +108,7 @@ class BannerAdWidget extends StatefulWidget {
 class _BannerAdWidgetState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
+  String _adStatus = 'waiting';
 
   @override
   void initState() {
@@ -110,6 +116,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     if (AdService.isSupported) {
       _loadAd();
     } else {
+      _adStatus = 'waiting for SDK: ${AdService.status}';
       AdService.initialized.addListener(_onAdServiceReady);
     }
   }
@@ -122,17 +129,19 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   }
 
   void _loadAd() {
+    if (mounted) setState(() => _adStatus = 'loading banner...');
     _bannerAd = BannerAd(
       adUnitId: AdService._bannerAdUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          debugPrint('Banner ad loaded');
-          if (mounted) setState(() => _isLoaded = true);
+          debugPrint('Banner ad loaded OK');
+          if (mounted) setState(() { _isLoaded = true; _adStatus = 'loaded ✓'; });
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('Banner ad failed: ${error.message}');
+          debugPrint('Banner ad FAILED: ${error.message}');
+          if (mounted) setState(() => _adStatus = 'FAILED: ${error.message}');
           ad.dispose();
         },
       ),
@@ -148,11 +157,22 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isLoaded || _bannerAd == null) return const SizedBox.shrink();
-    return SizedBox(
-      width: _bannerAd!.size.width.toDouble(),
-      height: _bannerAd!.size.height.toDouble(),
-      child: AdWidget(ad: _bannerAd!),
+    if (_isLoaded && _bannerAd != null) {
+      return SizedBox(
+        width: _bannerAd!.size.width.toDouble(),
+        height: _bannerAd!.size.height.toDouble(),
+        child: AdWidget(ad: _bannerAd!),
+      );
+    }
+    // DEBUG: show visible status so we know what's happening
+    return Container(
+      height: 50,
+      color: Colors.orange.withValues(alpha: 0.2),
+      alignment: Alignment.center,
+      child: Text(
+        'Ad: $_adStatus | SDK: ${AdService.status}',
+        style: const TextStyle(fontSize: 11, color: Colors.deepOrange),
+      ),
     );
   }
 }
