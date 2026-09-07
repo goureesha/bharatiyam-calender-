@@ -25,7 +25,7 @@ dependencies:
   firebase_core: any
   cloud_firestore: any
   image_picker: any
-  # google_mobile_ads: ^9.1.0  # Disabled until properly configured
+  google_mobile_ads: ^9.1.0
 
 dev_dependencies:
   flutter_test:

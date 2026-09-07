@@ -1,47 +1,140 @@
-/// Ad Service — Google AdMob ad management.
-/// Currently in STUB mode (no real AdMob SDK).
-/// To enable ads:
-/// 1. Uncomment google_mobile_ads in pubspec.yaml
-/// 2. Add your real AdMob App ID in AndroidManifest.xml
-/// 3. Replace this file with the real implementation
+/// Ad Service — Google AdMob interstitial + banner ads.
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdService {
   static bool _initialized = false;
 
-  // TODO: Replace with your actual AdMob Ad Unit IDs
-  static const String _realBannerAdUnitId = 'YOUR_BANNER_AD_UNIT_ID';
-  static const String _realInterstitialAdUnitId = 'YOUR_INTERSTITIAL_AD_UNIT_ID';
+  static const String _interstitialAdUnitId = kDebugMode
+      ? 'ca-app-pub-3940256099942544/1033173712'
+      : 'ca-app-pub-9748660125901669/9430571330';
 
-  /// Initialize (stub — does nothing until AdMob is configured)
+  static InterstitialAd? _interstitialAd;
+  static int _loadAttempts = 0;
+
+  /// Initialize AdMob SDK
   static Future<void> initialize() async {
-    // Ads disabled until real AdMob App ID is configured
-    debugPrint('AdMob stub: ads disabled (no real App ID configured)');
+    if (_initialized) return;
+    try {
+      await MobileAds.instance.initialize();
+      _initialized = true;
+      debugPrint('AdMob initialized');
+      _loadInterstitial();
+    } catch (e) {
+      debugPrint('AdMob init failed: $e');
+    }
   }
 
-  static bool get isSupported => false;
+  static bool get isSupported => _initialized;
 
-  /// Show interstitial (stub — just calls onAdDismissed immediately)
+  static void _loadInterstitial() {
+    InterstitialAd.load(
+      adUnitId: _interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          _interstitialAd = ad;
+          _loadAttempts = 0;
+        },
+        onAdFailedToLoad: (error) {
+          _loadAttempts++;
+          _interstitialAd = null;
+          if (_loadAttempts < 3) {
+            Future.delayed(const Duration(seconds: 10), _loadInterstitial);
+          }
+        },
+      ),
+    );
+  }
+
+  /// Show interstitial ad
   static void showInterstitial({VoidCallback? onAdDismissed}) {
-    onAdDismissed?.call();
+    if (_interstitialAd == null) {
+      onAdDismissed?.call();
+      return;
+    }
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        _interstitialAd = null;
+        _loadInterstitial();
+        onAdDismissed?.call();
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        ad.dispose();
+        _interstitialAd = null;
+        _loadInterstitial();
+        onAdDismissed?.call();
+      },
+    );
+    _interstitialAd!.show();
   }
 
-  /// Show with ad gate (stub — just calls onComplete immediately)
+  /// Show with ad gate — shows ad then calls onComplete
   static void showWithAdGate({
     required VoidCallback onComplete,
     BuildContext? context,
     VoidCallback? onBlocked,
     int timeoutSeconds = 8,
   }) {
-    onComplete();
+    if (_interstitialAd != null) {
+      showInterstitial(onAdDismissed: onComplete);
+    } else {
+      onComplete();
+    }
   }
 }
 
-/// Banner ad widget (stub — renders nothing)
-class BannerAdWidget extends StatelessWidget {
+/// Banner ad widget
+class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => const SizedBox.shrink();
+  State<BannerAdWidget> createState() => _BannerAdWidgetState();
+}
+
+class _BannerAdWidgetState extends State<BannerAdWidget> {
+  BannerAd? _bannerAd;
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (AdService.isSupported) _loadAd();
+  }
+
+  void _loadAd() {
+    _bannerAd = BannerAd(
+      adUnitId: kDebugMode
+          ? 'ca-app-pub-3940256099942544/6300978111'
+          : 'ca-app-pub-9748660125901669/3248306368',
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          if (mounted) setState(() => _isLoaded = true);
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+        },
+      ),
+    )..load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_isLoaded || _bannerAd == null) return const SizedBox.shrink();
+    return SizedBox(
+      width: _bannerAd!.size.width.toDouble(),
+      height: _bannerAd!.size.height.toDouble(),
+      child: AdWidget(ad: _bannerAd!),
+    );
+  }
 }
