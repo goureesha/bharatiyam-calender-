@@ -7,9 +7,12 @@ class AdService {
   /// Notifies widgets when AdMob is ready
   static final ValueNotifier<bool> initialized = ValueNotifier(false);
 
-  static const String _interstitialAdUnitId = kDebugMode
-      ? 'ca-app-pub-3940256099942544/1033173712'
-      : 'ca-app-pub-9748660125901669/9430571330';
+  // ── TEMPORARY: using test IDs to verify integration works ──
+  // Once test ads show, switch back to real IDs:
+  // Banner real:        ca-app-pub-9748660125901669/3248306368
+  // Interstitial real:  ca-app-pub-9748660125901669/9430571330
+  static const String _bannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
+  static const String _interstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
 
   static InterstitialAd? _interstitialAd;
   static int _loadAttempts = 0;
@@ -20,7 +23,7 @@ class AdService {
     try {
       await MobileAds.instance.initialize();
       initialized.value = true;
-      debugPrint('AdMob initialized');
+      debugPrint('AdMob initialized successfully');
       _loadInterstitial();
     } catch (e) {
       debugPrint('AdMob init failed: $e');
@@ -37,10 +40,12 @@ class AdService {
         onAdLoaded: (ad) {
           _interstitialAd = ad;
           _loadAttempts = 0;
+          debugPrint('Interstitial ad loaded');
         },
         onAdFailedToLoad: (error) {
           _loadAttempts++;
           _interstitialAd = null;
+          debugPrint('Interstitial load failed: ${error.message}');
           if (_loadAttempts < 3) {
             Future.delayed(const Duration(seconds: 10), _loadInterstitial);
           }
@@ -105,7 +110,6 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     if (AdService.isSupported) {
       _loadAd();
     } else {
-      // Listen for when AdMob becomes ready
       AdService.initialized.addListener(_onAdServiceReady);
     }
   }
@@ -119,13 +123,12 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   void _loadAd() {
     _bannerAd = BannerAd(
-      adUnitId: kDebugMode
-          ? 'ca-app-pub-3940256099942544/6300978111'
-          : 'ca-app-pub-9748660125901669/3248306368',
+      adUnitId: AdService._bannerAdUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
+          debugPrint('Banner ad loaded');
           if (mounted) setState(() => _isLoaded = true);
         },
         onAdFailedToLoad: (ad, error) {
