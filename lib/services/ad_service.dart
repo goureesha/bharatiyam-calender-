@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdService {
-  static bool _initialized = false;
+  /// Notifies widgets when AdMob is ready
+  static final ValueNotifier<bool> initialized = ValueNotifier(false);
 
   static const String _interstitialAdUnitId = kDebugMode
       ? 'ca-app-pub-3940256099942544/1033173712'
@@ -15,10 +16,10 @@ class AdService {
 
   /// Initialize AdMob SDK
   static Future<void> initialize() async {
-    if (_initialized) return;
+    if (initialized.value) return;
     try {
       await MobileAds.instance.initialize();
-      _initialized = true;
+      initialized.value = true;
       debugPrint('AdMob initialized');
       _loadInterstitial();
     } catch (e) {
@@ -26,7 +27,7 @@ class AdService {
     }
   }
 
-  static bool get isSupported => _initialized;
+  static bool get isSupported => initialized.value;
 
   static void _loadInterstitial() {
     InterstitialAd.load(
@@ -86,7 +87,7 @@ class AdService {
   }
 }
 
-/// Banner ad widget
+/// Banner ad widget — listens for AdService initialization
 class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget({super.key});
 
@@ -101,7 +102,19 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   @override
   void initState() {
     super.initState();
-    if (AdService.isSupported) _loadAd();
+    if (AdService.isSupported) {
+      _loadAd();
+    } else {
+      // Listen for when AdMob becomes ready
+      AdService.initialized.addListener(_onAdServiceReady);
+    }
+  }
+
+  void _onAdServiceReady() {
+    if (AdService.isSupported && mounted) {
+      AdService.initialized.removeListener(_onAdServiceReady);
+      _loadAd();
+    }
   }
 
   void _loadAd() {
@@ -116,6 +129,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
           if (mounted) setState(() => _isLoaded = true);
         },
         onAdFailedToLoad: (ad, error) {
+          debugPrint('Banner ad failed: ${error.message}');
           ad.dispose();
         },
       ),
@@ -124,6 +138,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   void dispose() {
+    AdService.initialized.removeListener(_onAdServiceReady);
     _bannerAd?.dispose();
     super.dispose();
   }
