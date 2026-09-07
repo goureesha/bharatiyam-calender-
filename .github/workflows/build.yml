@@ -70,53 +70,19 @@ jobs:
           cp /tmp/bharatiyam-release.jks android/app/bharatiyam-release.jks || true
           cp /tmp/key.properties android/key.properties || true
 
-      - name: Install NDK r28
+      - name: Setup Android
         run: |
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;28.2.13676358" || true
-
-      - name: Setup Android & 16KB page size support
-        run: |
-          # Permissions
+          # Permissions + AD_ID
           sed -i '/<application/i\    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />' android/app/src/main/AndroidManifest.xml
-          # App name + extractNativeLibs in one shot
-          sed -i 's|android:label="bharatiyam_panchanga"|android:label="ಪಂಚಾಂಗ"\n        android:extractNativeLibs="false"|' android/app/src/main/AndroidManifest.xml
-          # SDK versions + NDK + packaging config for 16KB
+          # App name only (NO extractNativeLibs)
+          sed -i 's|android:label="bharatiyam_panchanga"|android:label="ಪಂಚಾಂಗ"|' android/app/src/main/AndroidManifest.xml
+          # SDK versions
           sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
           sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/' android/app/build.gradle.kts
           sed -i 's/targetSdk = flutter.targetSdkVersion/targetSdk = 36/' android/app/build.gradle.kts
-          # Append NDK version + packaging config
-          cat >> android/app/build.gradle.kts << 'GRADLE_EOF'
-
-          android.ndkVersion = "28.2.13676358"
-          android.packaging {
-              jniLibs {
-                  useLegacyPackaging = false
-              }
-          }
-          GRADLE_EOF
-          # Suppress sweph minSdk 16 error with NDK 28
-          echo "android.ndk.suppressMinSdkVersionError=21" >> android/gradle.properties
 
       - name: Get dependencies
         run: flutter pub get
-
-      - name: Fix sweph for 16KB page alignment (safe - keeps original NDK)
-        run: |
-          echo "=== Adding 16KB linker flags to sweph (keeping original NDK 21) ==="
-          # Only add 16KB linker flags — do NOT change NDK version or source code
-          SWEPH_CMAKE=$(find ~/.pub-cache -path "*/sweph-*/android/CMakeLists.txt" -not -path "*/example/*" | head -1)
-          if [ -n "$SWEPH_CMAKE" ]; then
-            echo "" >> "$SWEPH_CMAKE"
-            echo "# 16KB page size support (Google Play requirement)" >> "$SWEPH_CMAKE"
-            echo 'set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384")' >> "$SWEPH_CMAKE"
-            echo "Patched: $SWEPH_CMAKE"
-            tail -3 "$SWEPH_CMAKE"
-          else
-            echo "WARNING: sweph CMakeLists.txt not found!"
-          fi
-          # Clean cmake cache
-          find ~/.pub-cache -path "*/sweph*/.cxx" -type d -exec rm -rf {} + 2>/dev/null || true
-          echo "=== Done ==="
 
       - name: Pre-compute 3-year panchanga data
         run: |
@@ -163,16 +129,6 @@ jobs:
 
       - name: Build AAB (App Bundle)
         run: flutter build appbundle --release
-
-      - name: Verify 16KB alignment
-        run: |
-          echo "=== Checking .so alignment in AAB ==="
-          cd build/app/outputs/bundle/release/
-          unzip -o app-release.aab -d aab_extract || true
-          find aab_extract -name "*.so" | while read so; do
-            echo "--- $so ---"
-            readelf -l "$so" 2>/dev/null | grep -E "LOAD|ALIGN" || true
-          done
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
