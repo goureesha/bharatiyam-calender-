@@ -437,6 +437,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
+          // ── Ad after Sunrise/Sunset ──
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4),
+            child: BannerAdWidget(),
+          ),
+
           // ── Samvatsara / Shaka / Calendar ──
           AppCard(
             child: Column(
@@ -523,6 +529,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
+          // ── Ad after Panchangam ──
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4),
+            child: BannerAdWidget(),
+          ),
+
           // ── Ashubha Kala ──
           if (_kalas != null)
             AppCard(
@@ -574,6 +586,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             }),
+
+          // ── Ad after Muhurta ──
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4),
+            child: BannerAdWidget(),
+          ),
+
           // ── Moon & Sun details ──
           AppCard(
             child: Column(
@@ -592,6 +611,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // ── Shraddha Details ──
           _buildShraddhaCard(d),
+
+          // ── Ad before Full Details ──
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4),
+            child: BannerAdWidget(),
+          ),
 
           // ── View Full Details button ──
           Padding(
