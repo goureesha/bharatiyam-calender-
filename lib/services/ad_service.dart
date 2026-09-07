@@ -6,33 +6,28 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class AdService {
   /// Notifies widgets when AdMob is ready
   static final ValueNotifier<bool> initialized = ValueNotifier(false);
-  static String _status = 'not started';
 
-  // Google's official test ad IDs (work on any device)
-  static const String _bannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
-  static const String _interstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
+  // Test IDs for debug, real IDs for release
+  static const String _bannerAdUnitId = kDebugMode
+      ? 'ca-app-pub-3940256099942544/6300978111'
+      : 'ca-app-pub-9748660125901669/3248306368';
 
-  // Real IDs (switch back after test ads work):
-  // static const String _bannerAdUnitId = 'ca-app-pub-9748660125901669/3248306368';
-  // static const String _interstitialAdUnitId = 'ca-app-pub-9748660125901669/9430571330';
+  static const String _interstitialAdUnitId = kDebugMode
+      ? 'ca-app-pub-3940256099942544/1033173712'
+      : 'ca-app-pub-9748660125901669/9430571330';
 
   static InterstitialAd? _interstitialAd;
   static int _loadAttempts = 0;
 
-  static String get status => _status;
-
   /// Initialize AdMob SDK
   static Future<void> initialize() async {
     if (initialized.value) return;
-    _status = 'initializing...';
     try {
       await MobileAds.instance.initialize();
       initialized.value = true;
-      _status = 'SDK ready ✓';
-      debugPrint('AdMob: initialized OK');
+      debugPrint('AdMob initialized');
       _loadInterstitial();
     } catch (e) {
-      _status = 'init FAILED: $e';
       debugPrint('AdMob init failed: $e');
     }
   }
@@ -97,7 +92,7 @@ class AdService {
   }
 }
 
-/// Banner ad widget — shows debug status when ads fail
+/// Banner ad widget — listens for AdService initialization
 class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget({super.key});
 
@@ -108,7 +103,6 @@ class BannerAdWidget extends StatefulWidget {
 class _BannerAdWidgetState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
-  String _adStatus = 'waiting';
 
   @override
   void initState() {
@@ -116,7 +110,6 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     if (AdService.isSupported) {
       _loadAd();
     } else {
-      _adStatus = 'waiting for SDK: ${AdService.status}';
       AdService.initialized.addListener(_onAdServiceReady);
     }
   }
@@ -129,19 +122,16 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   }
 
   void _loadAd() {
-    if (mounted) setState(() => _adStatus = 'loading banner...');
     _bannerAd = BannerAd(
       adUnitId: AdService._bannerAdUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          debugPrint('Banner ad loaded OK');
-          if (mounted) setState(() { _isLoaded = true; _adStatus = 'loaded ✓'; });
+          if (mounted) setState(() => _isLoaded = true);
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('Banner ad FAILED: ${error.message}');
-          if (mounted) setState(() => _adStatus = 'FAILED: ${error.message}');
+          debugPrint('Banner ad failed: ${error.message}');
           ad.dispose();
         },
       ),
@@ -157,22 +147,11 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoaded && _bannerAd != null) {
-      return SizedBox(
-        width: _bannerAd!.size.width.toDouble(),
-        height: _bannerAd!.size.height.toDouble(),
-        child: AdWidget(ad: _bannerAd!),
-      );
-    }
-    // DEBUG: show visible status so we know what's happening
-    return Container(
-      height: 50,
-      color: Colors.orange.withValues(alpha: 0.2),
-      alignment: Alignment.center,
-      child: Text(
-        'Ad: $_adStatus | SDK: ${AdService.status}',
-        style: const TextStyle(fontSize: 11, color: Colors.deepOrange),
-      ),
+    if (!_isLoaded || _bannerAd == null) return const SizedBox.shrink();
+    return SizedBox(
+      width: _bannerAd!.size.width.toDouble(),
+      height: _bannerAd!.size.height.toDouble(),
+      child: AdWidget(ad: _bannerAd!),
     );
   }
 }
