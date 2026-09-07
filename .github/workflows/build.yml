@@ -71,8 +71,20 @@ jobs:
           cp /tmp/bharatiyam-release.jks android/app/bharatiyam-release.jks || true
           cp /tmp/key.properties android/key.properties || true
           cp /tmp/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
-          echo "=== Restored manifest ==="
+          # Belt-and-suspenders: ensure AdMob App ID is in manifest even if restore failed
+          if ! grep -q "com.google.android.gms.ads.APPLICATION_ID" android/app/src/main/AndroidManifest.xml; then
+            echo "WARNING: AdMob ID missing after restore! Adding it..."
+            sed -i 's|</application>|<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-9748660125901669~3232717270"/>\n</application>|' android/app/src/main/AndroidManifest.xml
+          fi
+          # Also fix app name if flutter create overwrote it
+          sed -i 's|android:label="bharatiyam_panchanga"|android:label="ಪಂಚಾಂಗ"|' android/app/src/main/AndroidManifest.xml
+
+      - name: Verify manifest has AdMob ID
+        run: |
+          echo "=== MANIFEST CONTENT ==="
           cat android/app/src/main/AndroidManifest.xml
+          echo "=== CHECKING FOR ADMOB ID ==="
+          grep "APPLICATION_ID" android/app/src/main/AndroidManifest.xml || { echo "FATAL: AdMob App ID missing!"; exit 1; }
 
       - name: Setup SDK versions
         run: |
