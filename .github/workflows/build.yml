@@ -74,8 +74,10 @@ jobs:
         run: |
           # Permissions + AD_ID
           sed -i '/<application/i\    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />' android/app/src/main/AndroidManifest.xml
-          # App name only (NO extractNativeLibs)
+          # App name
           sed -i 's|android:label="bharatiyam_panchanga"|android:label="ಪಂಚಾಂಗ"|' android/app/src/main/AndroidManifest.xml
+          # AdMob App ID (REQUIRED - without this google_mobile_ads crashes on startup)
+          sed -i '/<\/activity>/a\        <meta-data\n            android:name="com.google.android.gms.ads.APPLICATION_ID"\n            android:value="ca-app-pub-9748660125901669~3232717270"\/>' android/app/src/main/AndroidManifest.xml
           # SDK versions
           sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' android/app/build.gradle.kts
           sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 21/' android/app/build.gradle.kts
