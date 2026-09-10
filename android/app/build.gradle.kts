@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "com.bharatiyam.bharatiyam_panchanga"
     compileSdk = 36
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
