@@ -414,195 +414,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
 
-        // ── About ──
-        AppCard(
-          child: Column(
-            children: [
-              SectionHeader(icon: Icons.info_outline_rounded, title: AppLocale.t('about')),
-              const SizedBox(height: 8),
-              Text(
-                AppLocale.t('appName'),
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'High-precision Hindu calendar using Swiss Ephemeris.\n'
-                'Lahiri Ayanamsha • Mid-limb Sunrise\n'
-                '4 Calendar Systems • 15+15 Muhurtas\n'
-                '12-Rashi Lagna Transit • Hora • Chougadiya\n'
-                '7 Languages • 1900-2100 CE',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11, color: kMuted, height: 1.6),
-              ),
-              const SizedBox(height: 8),
-              Text('v1.1.2+4', style: TextStyle(fontSize: 10, color: kMuted)),
-            ],
-          ),
-        ),
-
-        // ── Event Calculation Rules ──
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionHeader(icon: Icons.calculate_rounded, title: 'Event Calculation Rules'),
-              const SizedBox(height: 8),
-              Text(
-                'All festivals and observances are calculated using authentic '
-                'Dharma Sindhu and Nirnaya Sindhu timing rules (Vyapti Nirnaya).',
-                style: TextStyle(fontSize: 10, color: kMuted, height: 1.5),
-              ),
-              const SizedBox(height: 12),
-
-              // Timing Rules
-              _ruleHeader('⏰ Timing Rules (Vyapti)'),
-              const SizedBox(height: 6),
-              _ruleItem('Purva Viddha (पूर्वविद्धा)', 'Tithi must prevail at SUNRISE. If tithi spans two days, first day is observed.'),
-              _ruleItem('Para Viddha (परविद्धा)', 'Tithi must prevail at SUNRISE. If tithi spans two days, second day is observed. Used for all Ekadashi.'),
-              _ruleItem('Madhyahna Vyapti', 'Tithi must prevail at NOON. Used for: Rama Navami, Sita Navami, Ganesha Chaturthi, Varaha/Vamana/Radha Jayanti.'),
-              _ruleItem('Sandhya / Pradosha', 'Tithi must prevail at SUNSET. Used for: Narasimha Jayanti, Pradosha Vrata.'),
-              _ruleItem('Nishitha (Midnight)', 'Tithi must prevail at MIDNIGHT. Used for: Krishna Janmashtami, Maha Shivaratri, Kalabhairava Ashtami, Masa Shivaratri.'),
-              _ruleItem('Chandrodaya (Moonrise)', 'Tithi must prevail at MOONRISE. Used for: Sankashthahara Chaturthi, Karva Chauth.'),
-              const SizedBox(height: 12),
-
-              // Vriddhi/Kshaya handling
-              _ruleHeader('📅 Vriddhi & Kshaya Tithi'),
-              const SizedBox(height: 6),
-              _ruleItem('Vriddhi (Extended)', 'When same tithi spans two sunrises — Purva Viddha fires on first day, Para Viddha on second day.'),
-              _ruleItem('Kshaya (Skipped)', 'When a tithi ends before next sunrise — event fires on the day where tithi exists at the specified time.'),
-              const SizedBox(height: 12),
-
-              // Monthly recurring
-              _ruleHeader('🔁 Monthly Recurring Events'),
-              const SizedBox(height: 6),
-              _ruleItem('Ekadashi (एकादशी)', 'Shukla & Krishna Ekadashi — Para Viddha. Vishnu worship with fasting.'),
-              _ruleItem('Pradosha (प्रदोष)', 'Shukla & Krishna Trayodashi — Sunset Vyapti. Shiva worship.'),
-              _ruleItem('Sankashthahara (सङ्कष्टहर)', 'Krishna Chaturthi — Moonrise Vyapti. Ganesha worship with chandrodaya.'),
-              _ruleItem('Vinayaka Chaturthi', 'Shukla Chaturthi — Purva Viddha. Monthly Ganapati puja.'),
-              _ruleItem('Masa Shivaratri', 'Krishna Chaturdashi — Midnight Vyapti. Monthly Shiva worship.'),
-              _ruleItem('Purnima / Amavasya', 'Purva Viddha. Satyanarayan puja / Pitru Tarpana.'),
-              const SizedBox(height: 12),
-
-              // Masa-specific events summary
-              _ruleHeader('🎯 Masa-Specific Events (88 Events)'),
-              const SizedBox(height: 6),
-              _masaRule('Chaitra', 'Yugadi, Gauri Tritiya, Skanda Shashthi, Rama Navami (noon), Kamada Ekadashi, Hanumaj Jayanti, Ananga Trayodashi'),
-              _masaRule('Vaishakha', 'Akshaya Tritiya, Shankaracharya Jayanti, Gangotpatti, Sita Navami (noon), Mohini Ekadashi, Narasimha Jayanti (sunset), Buddha Purnima, Shanaishchara Jayanti'),
-              _masaRule('Jyeshtha', 'Ganga Dashahara, Nirjala Ekadashi, Vata Savitri, Shani Amavasya'),
-              _masaRule('Ashadha', 'Ratha Yatra, Shayani Ekadashi, Guru Purnima, Deepa Amavasya'),
-              _masaRule('Shravana', 'Mangala Gauri (Tuesdays), Hariyali Teej, Naga Panchami, Upakarma/Raksha Bandhan, Kajjaya Tadige, Krishna Janmashtami (midnight), Aja Ekadashi'),
-              _masaRule('Bhadrapada', 'Swarna Gauri, Varaha Jayanti (noon), Ganesha Chaturthi (noon), Rishi Panchami, Lalita Saptami, Radha Ashtami (noon), Parivartini Ekadashi, Vamana Jayanti (noon), Ananta Chaturdashi, Mahalayarambha, Mahalaya Amavasya'),
-              _masaRule('Ashvina', 'Sharad Navaratri (9 days), Vijayadashami, Karva Chauth (moonrise), Govatsa Dvadashi, Dhana Trayodashi, Naraka Chaturdashi, Deepavali'),
-              _masaRule('Kartika', 'Bali Padyami, Yama Dvitiya, Skanda Shashthi, Gopashtami, Prabodhini Ekadashi, Tulasi Vivaha, Kartika Purnima'),
-              _masaRule('Margashira', 'Subrahmanya Shashthi, Geeta Jayanti/Vaikuntha Ekadashi, Dattatreya Jayanti, Kalabhairava Ashtami (midnight)'),
-              _masaRule('Pushya', 'Putrada Ekadashi, Pushya Purnima, Tila Chaturthi, Mauna Amavasya'),
-              _masaRule('Magha', 'Vasanta Panchami, Ratha Saptami, Bhishma Ashtami, Bhishma/Jaya Ekadashi, Magha Purnima, Maha Shivaratri (midnight), Mauni Amavasya'),
-              _masaRule('Phalguna', 'Ganesha Jayanti, Amalaki Ekadashi, Holi/Kama Dahana'),
-              const SizedBox(height: 12),
-
-              // Adhika masa
-              _ruleHeader('🗓️ Adhika Masa Rule'),
-              const SizedBox(height: 6),
-              Text(
-                'No festivals are observed during Adhika (intercalary) month. '
-                'All events are skipped when isAdhika = true, following Dharma Sindhu.',
-                style: TextStyle(fontSize: 10, color: kMuted, height: 1.5),
-              ),
-            ],
-          ),
-        ),
-
-        // ── Swiss Ephemeris License ──
-        AppCard(
-          child: Column(
-            children: [
-              const SectionHeader(icon: Icons.balance_rounded, title: 'Swiss Ephemeris License'),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: kBg,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: kBorder),
-                ),
-                child: Column(
-                  children: [
-                    Text('⚖️ Open Source Astronomical Engine',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: kGold)),
-                    const SizedBox(height: 8),
-                    Text(
-                      'This application uses the Swiss Ephemeris library for '
-                      'high-precision astronomical calculations including planetary '
-                      'positions, sunrise/sunset, moonrise/moonset, and eclipse computations.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 10, color: kText, height: 1.5),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: kCard,
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: kGold.withAlpha(40)),
-                      ),
-                      child: Column(
-                        children: [
-                          Text('Swiss Ephemeris', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kGold)),
-                          const SizedBox(height: 4),
-                          Text('© Astrodienst AG, Zurich, Switzerland',
-                            style: TextStyle(fontSize: 10, color: kText)),
-                          const SizedBox(height: 4),
-                          Text('Licensed under GNU AGPL v3.0',
-                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kTeal)),
-                          const SizedBox(height: 4),
-                          Text('https://www.astro.com/swisseph/',
-                            style: TextStyle(fontSize: 9, color: kMuted)),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'The Swiss Ephemeris is based on the planetary and lunar '
-                      'ephemeris DE431 developed by NASA JPL. Accuracy: '
-                      '< 0.001 arc seconds for planets, < 0.01 arc seconds for the Moon.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 9, color: kMuted, height: 1.5),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'As required by AGPL-3.0, the complete source code of this '
-                      'application is available at:',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 9, color: kMuted, height: 1.5),
-                    ),
-                    const SizedBox(height: 4),
-                    Text('github.com/goureesha/bharatiyam-calender-',
-                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: kTeal)),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        onPressed: () => showLicensePage(
-                          context: context,
-                          applicationName: AppLocale.t('appName'),
-                          applicationVersion: 'v1.1.2+4',
-                          applicationLegalese: '© 2024 Bharatiyam\nSwiss Ephemeris © Astrodienst AG (AGPL-3.0)',
-                        ),
-                        icon: Icon(Icons.description_outlined, size: 14),
-                        label: Text('View All Licenses', style: TextStyle(fontSize: 11)),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: kGold,
-                          side: BorderSide(color: kGold.withAlpha(80)),
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        // ── About (expandable dropdown with all info) ──
+        const _AboutDropdown(),
 
         // ── Privacy Policy ──
         AppCard(
@@ -838,6 +651,251 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Expanded(
             child: Text(events, style: TextStyle(fontSize: 9, color: kMuted, height: 1.3)),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// About dropdown — expandable card with app info, events, and license at the bottom
+class _AboutDropdown extends StatefulWidget {
+  const _AboutDropdown();
+
+  @override
+  State<_AboutDropdown> createState() => _AboutDropdownState();
+}
+
+class _AboutDropdownState extends State<_AboutDropdown> {
+  bool _expanded = false;
+
+  Widget _sectionTitle(String emoji, String title) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      margin: const EdgeInsets.only(top: 14, bottom: 6),
+      decoration: BoxDecoration(
+        color: kGold.withAlpha(15),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text('$emoji $title', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: kGold)),
+    );
+  }
+
+  Widget _infoItem(String label, String desc) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6, left: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('• ', style: TextStyle(fontSize: 10, color: kGold)),
+          SizedBox(width: 80, child: Text(label, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kText))),
+          Expanded(child: Text(desc, style: TextStyle(fontSize: 9, color: kMuted, height: 1.3))),
+        ],
+      ),
+    );
+  }
+
+  Widget _masaItem(String masa, String events) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4, left: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(width: 75, child: Text(masa, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: kTeal))),
+          Expanded(child: Text(events, style: TextStyle(fontSize: 9, color: kMuted, height: 1.3))),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Tap header to expand/collapse
+          GestureDetector(
+            onTap: () => setState(() => _expanded = !_expanded),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline_rounded, color: kGold, size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(AppLocale.t('about'),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kGold)),
+                ),
+                AnimatedRotation(
+                  turns: _expanded ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(Icons.keyboard_arrow_down_rounded, color: kGold),
+                ),
+              ],
+            ),
+          ),
+
+          // Collapsed: show brief summary
+          if (!_expanded) ...[
+            const SizedBox(height: 6),
+            Text(
+              AppLocale.t('appName'),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: kGold),
+            ),
+            const SizedBox(height: 2),
+            Text('v1.3.7 • Hindu Calendar & Panchanga',
+              style: TextStyle(fontSize: 10, color: kMuted)),
+          ],
+
+          // Expanded: full content in a fixed-height scrollable area
+          if (_expanded) ...[
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 400,
+              child: ShaderMask(
+                shaderCallback: (bounds) => LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.white, Colors.white, Colors.white, Colors.white.withAlpha(0)],
+                  stops: const [0.0, 0.85, 0.95, 1.0],
+                ).createShader(bounds),
+                blendMode: BlendMode.dstIn,
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  physics: const BouncingScrollPhysics(),
+                  children: [
+                    // ── App Info ──
+                    Center(
+                      child: Text(AppLocale.t('appName'),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kGold)),
+                    ),
+                    const SizedBox(height: 4),
+                    Center(
+                      child: Text('v1.3.7 • ಭಾರತೀಯಮ್ ಪಂಚಾಂಗ',
+                        style: TextStyle(fontSize: 11, color: kMuted)),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Bharatiyam Panchanga is a high-precision Hindu calendar app '
+                      'built for the Dharmic community. It provides accurate daily '
+                      'panchanga with Tithi, Nakshatra, Yoga, Karana, and Vara computed '
+                      'using the Swiss Ephemeris astronomical engine with Lahiri Ayanamsha.',
+                      style: TextStyle(fontSize: 10, color: kText, height: 1.5),
+                    ),
+
+                    // ── Features ──
+                    _sectionTitle('✨', 'Features'),
+                    _infoItem('Panchanga', '5-limb daily panchanga with Ghati-Vighati precision'),
+                    _infoItem('Calendar', '4 calendar systems — Shaka, Amanta, Pournimanta, Soura'),
+                    _infoItem('Muhurta', '15 day + 15 night Muhurtas with Abhijit & Godhuli'),
+                    _infoItem('Hora', '24-hour planetary Hora cycle for auspicious timing'),
+                    _infoItem('Lagna', '12-Rashi Lagna transit times with real-time tracking'),
+                    _infoItem('Kala', 'Rahu Kala, Yama Ghanta, Gulika Kala, Durmuhurta'),
+                    _infoItem('Chougadiya', '8-period Chougadiya with Shubha/Ashubha marking'),
+                    _infoItem('Festivals', '88+ festivals with Dharma Sindhu timing rules'),
+                    _infoItem('Shraddha', 'Pitru Shraddha calculator with Tithi matching'),
+                    _infoItem('Languages', '7 languages — ಕನ್ನಡ, हिन्दी, தமிழ், తెలుగు, മലയാളം, संस्कृतम्, English'),
+                    _infoItem('Date Range', '1900 CE to 2100 CE coverage'),
+                    _infoItem('Sharing', 'Beautiful panchanga cards with profile photo'),
+
+                    // ── Calculation Method ──
+                    _sectionTitle('🔬', 'Calculation Method'),
+                    Text(
+                      'All astronomical calculations use the Swiss Ephemeris engine '
+                      '(DE431 planetary ephemeris from NASA JPL). Accuracy: < 0.001 arc '
+                      'seconds for planets, < 0.01 arc seconds for the Moon. Sunrise and '
+                      'sunset are computed using mid-limb method with atmospheric refraction '
+                      'correction. Ayanamsha: Lahiri (Chitrapaksha).',
+                      style: TextStyle(fontSize: 10, color: kText, height: 1.5),
+                    ),
+
+                    // ── Timing Rules ──
+                    _sectionTitle('⏰', 'Festival Timing Rules (Vyapti Nirnaya)'),
+                    Text(
+                      'All festivals follow authentic Dharma Sindhu and Nirnaya Sindhu '
+                      'timing rules. Events are assigned using Vyapti (prevalence) at '
+                      'specific time points:',
+                      style: TextStyle(fontSize: 10, color: kMuted, height: 1.5),
+                    ),
+                    const SizedBox(height: 6),
+                    _infoItem('Purva Viddha', 'Tithi at SUNRISE — first day observed'),
+                    _infoItem('Para Viddha', 'Tithi at SUNRISE — second day observed (all Ekadashi)'),
+                    _infoItem('Madhyahna', 'Tithi at NOON — Rama Navami, Ganesha Chaturthi, Sita Navami'),
+                    _infoItem('Pradosha', 'Tithi at SUNSET — Narasimha Jayanti, Pradosha Vrata'),
+                    _infoItem('Nishitha', 'Tithi at MIDNIGHT — Janmashtami, Maha Shivaratri'),
+                    _infoItem('Chandrodaya', 'Tithi at MOONRISE — Sankashthahara, Karva Chauth'),
+
+                    // ── Monthly Events ──
+                    _sectionTitle('🔁', 'Monthly Recurring Events'),
+                    _infoItem('Ekadashi', 'Shukla & Krishna — Para Viddha, Vishnu worship'),
+                    _infoItem('Pradosha', 'Shukla & Krishna Trayodashi — Shiva worship at sunset'),
+                    _infoItem('Sankashthahara', 'Krishna Chaturthi — Ganesha worship at moonrise'),
+                    _infoItem('Vinayaka', 'Shukla Chaturthi — Monthly Ganapati puja'),
+                    _infoItem('Shivaratri', 'Krishna Chaturdashi — Midnight Shiva worship'),
+                    _infoItem('Purnima', 'Purva Viddha — Satyanarayan puja'),
+                    _infoItem('Amavasya', 'Purva Viddha — Pitru Tarpana'),
+
+                    // ── 88 Events by Masa ──
+                    _sectionTitle('🎯', '88 Masa-Specific Events'),
+                    _masaItem('Chaitra', 'Yugadi, Gauri Tritiya, Skanda Shashthi, Rama Navami, Kamada Ekadashi, Hanumaj Jayanti, Ananga Trayodashi'),
+                    _masaItem('Vaishakha', 'Akshaya Tritiya, Shankaracharya Jayanti, Gangotpatti, Sita Navami, Mohini Ekadashi, Narasimha Jayanti, Buddha Purnima'),
+                    _masaItem('Jyeshtha', 'Ganga Dashahara, Nirjala Ekadashi, Vata Savitri, Shani Amavasya'),
+                    _masaItem('Ashadha', 'Ratha Yatra, Shayani Ekadashi, Guru Purnima, Deepa Amavasya'),
+                    _masaItem('Shravana', 'Mangala Gauri, Hariyali Teej, Naga Panchami, Raksha Bandhan, Krishna Janmashtami'),
+                    _masaItem('Bhadrapada', 'Swarna Gauri, Ganesha Chaturthi, Rishi Panchami, Ananta Chaturdashi, Mahalaya Amavasya'),
+                    _masaItem('Ashvina', 'Sharad Navaratri, Vijayadashami, Karva Chauth, Dhana Trayodashi, Deepavali'),
+                    _masaItem('Kartika', 'Bali Padyami, Yama Dvitiya, Gopashtami, Prabodhini Ekadashi, Kartika Purnima'),
+                    _masaItem('Margashira', 'Subrahmanya Shashthi, Vaikuntha Ekadashi, Dattatreya Jayanti, Kalabhairava Ashtami'),
+                    _masaItem('Pushya', 'Putrada Ekadashi, Pushya Purnima, Tila Chaturthi, Mauna Amavasya'),
+                    _masaItem('Magha', 'Vasanta Panchami, Ratha Saptami, Bhishma Ashtami, Maha Shivaratri, Mauni Amavasya'),
+                    _masaItem('Phalguna', 'Ganesha Jayanti, Amalaki Ekadashi, Holi/Kama Dahana'),
+
+                    // ── Special Rules ──
+                    _sectionTitle('📅', 'Vriddhi & Kshaya Tithi'),
+                    Text(
+                      'Vriddhi (extended): Same tithi at two sunrises — Purva Viddha on first day, '
+                      'Para Viddha on second day.\n\n'
+                      'Kshaya (skipped): Tithi ends before next sunrise — event fires on the day '
+                      'where tithi exists at the specified vyapti time.\n\n'
+                      'Adhika Masa: No festivals during intercalary month (Dharma Sindhu).',
+                      style: TextStyle(fontSize: 10, color: kMuted, height: 1.5),
+                    ),
+
+                    // ── Contact ──
+                    _sectionTitle('📧', 'Contact & Support'),
+                    Text(
+                      'Email: bharatiyampanchanga@gmail.com\n'
+                      'Developer: Goureesha\n'
+                      'Made with ❤️ for the Dharmic community',
+                      style: TextStyle(fontSize: 10, color: kText, height: 1.6),
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    // ── License (buried at the bottom) ──
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: kBg,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: kBorder),
+                      ),
+                      child: Column(
+                        children: [
+                          Text('Astronomical Engine', style: TextStyle(fontSize: 9, color: kMuted)),
+                          Text('Swiss Ephemeris © Astrodienst AG', style: TextStyle(fontSize: 8, color: kMuted)),
+                          Text('AGPL-3.0 • astro.com/swisseph', style: TextStyle(fontSize: 8, color: kMuted)),
+                          const SizedBox(height: 4),
+                          Text('Source: github.com/goureesha/bharatiyam-calender-',
+                            style: TextStyle(fontSize: 7, color: kMuted)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
