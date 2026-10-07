@@ -130,7 +130,7 @@ const Map<String, String> enStrings = {
   'chandraMasaAmanta': 'Lunar Month (Amanta)',
   'chandraMasaPournimanta': 'Lunar Month (Pournimanta)',
   'souraMasaGataDina': 'Solar Month Elapsed Days', 'dina': 'days',
-  'souraRutu': 'Solar Season', 'vaidikaRutu': 'Vedic Season',
+  'souraRutu': 'Solar Season', 'chandraRutu': 'Lunar Season',
   'udayadiGhati': 'Udayadi Ghati', 'shubhaMuhurta': 'Auspicious Muhurta',
   'abhijitMuhurta': 'Abhijit Muhurta', 'godhuliMuhurta': 'Godhuli Muhurta',
   'nextDaySuffix': '(Next Day)', 'udayaKala': 'Sunrise Time',

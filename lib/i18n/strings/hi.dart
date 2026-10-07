@@ -129,7 +129,7 @@ const Map<String, String> hiStrings = {
   'chandraMasaAmanta': 'चन्द्रमास (अमान्त)',
   'chandraMasaPournimanta': 'चन्द्रमास (पूर्णिमान्त)',
   'souraMasaGataDina': 'सौरमास गत दिन', 'dina': 'दिन',
-  'souraRutu': 'सौर ऋतु', 'vaidikaRutu': 'वैदिक ऋतु',
+  'souraRutu': 'सौर ऋतु', 'chandraRutu': 'चान्द्र ऋतु',
   'udayadiGhati': 'उदयादि घटी', 'shubhaMuhurta': 'शुभ मुहूर्त',
   'abhijitMuhurta': 'अभिजित् मुहूर्त', 'godhuliMuhurta': 'गोधूलि मुहूर्त',
   'nextDaySuffix': '(अगले दिन)', 'udayaKala': 'उदय काल',

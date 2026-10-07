@@ -93,8 +93,8 @@ class _ShareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Vaidika Rutu
-    const vaidikaMap = {
+    // Chandra Rutu (from Pournimanta Masa)
+    const chandraMap = {
       'cm0': 'ವಸಂತ', 'cm1': 'ವಸಂತ',
       'cm2': 'ಗ್ರೀಷ್ಮ', 'cm3': 'ಗ್ರೀಷ್ಮ',
       'cm4': 'ವರ್ಷಾ', 'cm5': 'ವರ್ಷಾ',
@@ -102,7 +102,8 @@ class _ShareCard extends StatelessWidget {
       'cm8': 'ಹೇಮಂತ', 'cm9': 'ಹೇಮಂತ',
       'cm10': 'ಶಿಶಿರ', 'cm11': 'ಶಿಶಿರ',
     };
-    final vaidikaRutu = vaidikaMap[d.pournimantaMasa] ?? '';
+    final pKey = d.pournimantaMasa.startsWith('adhika_') ? d.pournimantaMasa.replaceFirst('adhika_', '') : d.pournimantaMasa;
+    final chandraRutu = chandraMap[pKey] ?? '';
 
     // Next-day marker
     String nd(bool nextDay) => nextDay ? ' (+)' : '';
@@ -241,7 +242,7 @@ class _ShareCard extends StatelessWidget {
             _dualRow('ಸಂವತ್ಸರ', AppLocale.t(d.samvatsara), 'ವಾರ', AppLocale.t(d.vara)),
             _dualRow('ಅಮಾಂತ ಮಾಸ', AppLocale.t(d.amantaMasa), 'ಪೂರ್ಣಿಮಾಂತ ಮಾಸ', AppLocale.t(d.pournimantaMasa)),
             _dualRow('ಸೌರ ಮಾಸ', '${AppLocale.t(d.souraMasa)} (${d.souraMasaGataDina} ದಿನ)', 'ಪಕ್ಷ', d.paksha == 'shukla' ? 'ಶುಕ್ಲ ಪಕ್ಷ' : 'ಕೃಷ್ಣ ಪಕ್ಷ'),
-            _dualRow('ಋತು (ಸೌರ)', AppLocale.t(d.rutu), 'ಋತು (ವೈದಿಕ)', vaidikaRutu),
+            _dualRow('ಋತು (ಸೌರ)', AppLocale.t(d.rutu), 'ಋತು (ಚಾಂದ್ರ)', chandraRutu),
             _dualRow('ಅಯನ', AppLocale.t(d.ayana), 'ಅಮೃತ ಘಟಿ', d.amrutaPraghati.isNotEmpty ? d.amrutaPraghati : '--'),
             Builder(builder: (_) {
               final dayDurMin = ((d.sunsetJd - d.sunriseJd) * 24 * 60).round();

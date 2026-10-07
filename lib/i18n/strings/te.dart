@@ -145,7 +145,7 @@ const Map<String, String> teStrings = {
   'chandraMasaAmanta': 'చంద్రమాసం (అమాంతం)',
   'chandraMasaPournimanta': 'చంద్రమాసం (పూర్ణిమాంతం)',
   'souraMasaGataDina': 'సౌరమాస గత దినాలు', 'dina': 'దినాలు',
-  'souraRutu': 'సౌర ఋతువు', 'vaidikaRutu': 'వైదిక ఋతువు',
+  'souraRutu': 'సౌర ఋతువు', 'chandraRutu': 'చాంద్ర ఋతువు',
   'udayadiGhati': 'ఉదయాది ఘడియ', 'shubhaMuhurta': 'శుభ ముహూర్తం',
   'abhijitMuhurta': 'అభిజిత్ ముహూర్తం', 'godhuliMuhurta': 'గోధూళి ముహూర్తం',
   'nextDaySuffix': '(మరుసటి రోజు)', 'udayaKala': 'ఉదయ కాలం',

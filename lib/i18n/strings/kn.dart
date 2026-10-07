@@ -151,7 +151,7 @@ const Map<String, String> knStrings = {
   'chandraMasaAmanta': 'ಚಂದ್ರ ಮಾಸ (ಅಮಾಂತ)',
   'chandraMasaPournimanta': 'ಚಂದ್ರ ಮಾಸ (ಪೂರ್ಣಿಮಾಂತ)',
   'souraMasaGataDina': 'ಸೌರ ಮಾಸ ಗತ ದಿನ', 'dina': 'ದಿನ',
-  'souraRutu': 'ಸೌರ ಋತು', 'vaidikaRutu': 'ವೈದಿಕ ಋತು',
+  'souraRutu': 'ಸೌರ ಋತು', 'chandraRutu': 'ಚಾಂದ್ರ ಋತು',
   'udayadiGhati': 'ಉದಯಾದಿ ಘಟಿ', 'shubhaMuhurta': 'ಶುಭ ಮುಹೂರ್ತ',
   'abhijitMuhurta': 'ಅಭಿಜಿತ್ ಮುಹೂರ್ತ', 'godhuliMuhurta': 'ಗೋಧೂಳಿ ಮುಹೂರ್ತ',
   'nextDaySuffix': '(ಮರುದಿನ)', 'udayaKala': 'ಉದಯ ಕಾಲ',
