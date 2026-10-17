@@ -242,7 +242,7 @@ class _ShareCard extends StatelessWidget {
             _dualRow('ಸಂವತ್ಸರ', AppLocale.t(d.samvatsara), 'ವಾರ', AppLocale.t(d.vara)),
             _dualRow('ಅಮಾಂತ ಮಾಸ', AppLocale.t(d.amantaMasa), 'ಪೂರ್ಣಿಮಾಂತ ಮಾಸ', AppLocale.t(d.pournimantaMasa)),
             _dualRow('ಸೌರ ಮಾಸ', '${AppLocale.t(d.souraMasa)} (${d.souraMasaGataDina} ದಿನ)', 'ಪಕ್ಷ', d.paksha == 'shukla' ? 'ಶುಕ್ಲ ಪಕ್ಷ' : 'ಕೃಷ್ಣ ಪಕ್ಷ'),
-            _dualRow('ಋತು (ಸೌರ)', AppLocale.t(d.rutu), 'ಋತು (ಚಾಂದ್ರ)', chandraRutu),
+            _dualRow('ಋತು (ದೃಕ್)', AppLocale.t(d.rutu), 'ಋತು (ವೈದಿಕ)', chandraRutu),
             _dualRow('ಅಯನ', AppLocale.t(d.ayana), 'ಅಮೃತ ಘಟಿ', d.amrutaPraghati.isNotEmpty ? d.amrutaPraghati : '--'),
             Builder(builder: (_) {
               final dayDurMin = ((d.sunsetJd - d.sunriseJd) * 24 * 60).round();
