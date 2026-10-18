@@ -57282,7 +57282,7 @@ for(;;)switch(s){case 0:j=v.G
 if(j.firebase_core!=null){s=1
 break}o=A.bI(j.flutterfire_web_sdk_version)
 if(o==null)o=null
-n=o==null?"13.0.0":o
+n=o==null?"12.19.0":o
 j=new A.af1(p,p.ganT(),n)
 m=$.Pa().h(0,"core")
 s=m!=null?3:4
@@ -57293,7 +57293,7 @@ case 5:case 4:l=$.Pa()
 k=A.m(l).i("bU<2>")
 s=6
 return A.l(A.kC(new A.ev(new A.b2(new A.bU(l,k),new A.af0(m),k.i("b2<I.E>")),j,k.i("ev<I.E,an<~>>")),t.H),$async$vZ)
-case 6:$.aOa.n(0,"flutter-fire-core","5.0.0")
+case 6:$.aOa.n(0,"flutter-fire-core","4.15.0")
 $.aOa.aD(0,A.bgs())
 case 1:return A.u(q,r)}})
 return A.v($async$vZ,r)},
@@ -110724,7 +110724,7 @@ $0(){return A.BQ()},
 $S:0}
 A.aMv.prototype={
 $0(){var s,r,q,p,o,n,m,l=$.b3j()
-$.aOa.n(0,"flutter-fire-fst","7.0.0")
+$.aOa.n(0,"flutter-fire-fst","6.9.0")
 A.b6i("firestore")
 s=A.aU9(null,null)
 A.ex(s,$.aMX(),!0)
