@@ -37,19 +37,17 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _initDone = false;
   int _navIndex = 0;
 
-  /// Vaidika Rutu from Amanta (Amavasyanta) Masa
-  static String _vaidikaRutu(String aMasa) {
+  /// Vaidika Rutu from Pournimanta Masa
+  static String _vaidikaRutu(String pMasa) {
     const map = {
-      'cm0': 'rutu0', 'cm1': 'rutu0',       // Chaitra, Vaishakha → Vasanta
-      'cm2': 'rutu1', 'cm3': 'rutu1',       // Jyeshtha, Ashadha → Grishma
-      'cm4': 'rutu2', 'cm5': 'rutu2',       // Shravana, Bhadrapada → Varsha
-      'cm6': 'rutu3', 'cm7': 'rutu3',       // Ashwina, Kartika → Sharad
-      'cm8': 'rutu4', 'cm9': 'rutu4',       // Margashira, Pushya → Hemanta
-      'cm10': 'rutu5', 'cm11': 'rutu5',     // Magha, Phalguna → Shishira
+      'cm0': 'rutu0', 'cm1': 'rutu0',       // Chaitra, Vaishakha
+      'cm2': 'rutu1', 'cm3': 'rutu1',     // Jyeshtha, Ashadha
+      'cm4': 'rutu2', 'cm5': 'rutu2',       // Shravana, Bhadrapada
+      'cm6': 'rutu3', 'cm7': 'rutu3',         // Ashwina, Kartika
+      'cm8': 'rutu4', 'cm9': 'rutu4',     // Margashira, Pushya
+      'cm10': 'rutu5', 'cm11': 'rutu5',     // Magha, Phalguna
     };
-    // Handle adhika masa prefix
-    final key = aMasa.startsWith('adhika_') ? aMasa.replaceFirst('adhika_', '') : aMasa;
-    return AppLocale.t(map[key] ?? '');
+    return AppLocale.t(map[pMasa] ?? '');
   }
 
   @override
@@ -68,20 +66,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onLangChange() => setState(() {});
 
   Future<void> _init() async {
-    try {
-      await AppLocale.loadLang();
-      await LocationService.loadSavedLocation();
-      await PrecomputedData().load().timeout(const Duration(seconds: 10));
-      await Ephemeris.initSweph().timeout(const Duration(seconds: 10));
-      _initDone = true;
-      _compute();
-      // Load world cities in background (non-blocking)
-      LocationService.loadWorldCitiesData();
-    } catch (e) {
-      debugPrint('Init error: $e');
-      // Even on error, stop showing the loading spinner
-      if (mounted) setState(() => _loading = false);
-    }
+    await AppLocale.loadLang();
+    await LocationService.loadSavedLocation();
+    await PrecomputedData().load();
+    await Ephemeris.initSweph();
+    _initDone = true;
+    _compute();
+    // Load world cities in background (non-blocking)
+    LocationService.loadWorldCitiesData();
   }
 
   void _compute() {
@@ -464,8 +456,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 InfoRow(label: AppLocale.t('chandraMasaPournimanta'), value: AppLocale.t(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('souraMasa'), value: AppLocale.t(d.souraMasa)),
                 InfoRow(label: AppLocale.t('souraMasaGataDina'), value: '${d.souraMasaGataDina} ${AppLocale.t('dina')}'),
-                InfoRow(label: AppLocale.t('drikaRutu'), value: AppLocale.t(d.rutu)),
-                InfoRow(label: AppLocale.t('vaidikaRutu'), value: _vaidikaRutu(d.amantaMasa)),
+                InfoRow(label: AppLocale.t('souraRutu'), value: AppLocale.t(d.rutu)),
+                InfoRow(label: AppLocale.t('vaidikaRutu'), value: _vaidikaRutu(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('ayana'), value: AppLocale.t(d.ayana)),
               ],
             ),

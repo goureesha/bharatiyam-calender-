@@ -145,7 +145,7 @@ const Map<String, String> saStrings = {
   'chandraMasaAmanta': 'चन्द्रमासः (अमान्तः)',
   'chandraMasaPournimanta': 'चन्द्रमासः (पूर्णिमान्तः)',
   'souraMasaGataDina': 'सौरमासगतदिनानि', 'dina': 'दिनानि',
-  'drikaRutu': 'दृक्ऋतुः', 'vaidikaRutu': 'वैदिकऋतुः',
+  'souraRutu': 'सौरऋतुः', 'vaidikaRutu': 'वैदिकऋतुः',
   'udayadiGhati': 'उदयादिघटी', 'shubhaMuhurta': 'शुभमुहूर्तः',
   'abhijitMuhurta': 'अभिजित्मुहूर्तः', 'godhuliMuhurta': 'गोधूलिमुहूर्तः',
   'nextDaySuffix': '(परदिने)', 'udayaKala': 'उदयकालः',
