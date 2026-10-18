@@ -14,7 +14,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   sweph: ^4.1.0+2.10.3
-  shared_preferences: any
+  shared_preferences: ^2.5.6
   uuid: any
   pdf: ^3.11.3
   path_provider: any
@@ -22,8 +22,8 @@ dependencies:
   url_launcher: any
   geolocator: ^13.0.0
   intl: any
-  firebase_core: any
-  cloud_firestore: any
+  firebase_core: ^4.15.0
+  cloud_firestore: ^6.10.0
   image_picker: any
   google_mobile_ads: ^9.1.0
 
