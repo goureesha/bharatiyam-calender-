@@ -18,7 +18,7 @@ void main() async {
   _initFirebase();
 
   // Initialize AdMob — before runApp so it's ready when widgets build
-  try { await AdService.initialize(); } catch (_) {}
+  try { await AdService.initialize().timeout(const Duration(seconds: 5)); } catch (_) {}
 
   runApp(const BharatiyamPanchangaApp());
 }

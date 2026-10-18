@@ -68,14 +68,20 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onLangChange() => setState(() {});
 
   Future<void> _init() async {
-    await AppLocale.loadLang();
-    await LocationService.loadSavedLocation();
-    await PrecomputedData().load();
-    await Ephemeris.initSweph();
-    _initDone = true;
-    _compute();
-    // Load world cities in background (non-blocking)
-    LocationService.loadWorldCitiesData();
+    try {
+      await AppLocale.loadLang();
+      await LocationService.loadSavedLocation();
+      await PrecomputedData().load().timeout(const Duration(seconds: 10));
+      await Ephemeris.initSweph().timeout(const Duration(seconds: 10));
+      _initDone = true;
+      _compute();
+      // Load world cities in background (non-blocking)
+      LocationService.loadWorldCitiesData();
+    } catch (e) {
+      debugPrint('Init error: $e');
+      // Even on error, stop showing the loading spinner
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   void _compute() {
