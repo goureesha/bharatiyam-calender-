@@ -10,15 +10,17 @@ import 'widgets/common.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ThemeService.loadTheme();
-  await ProfileService.load();
-  await ProfileImageService.init();
+
+  // Each init gets a timeout — if anything hangs, app still launches
+  try { await ThemeService.loadTheme().timeout(const Duration(seconds: 5)); } catch (e) { debugPrint('ThemeService timeout: $e'); }
+  try { await ProfileService.load().timeout(const Duration(seconds: 5)); } catch (e) { debugPrint('ProfileService timeout: $e'); }
+  try { await ProfileImageService.init().timeout(const Duration(seconds: 5)); } catch (e) { debugPrint('ProfileImageService timeout: $e'); }
 
   // Firebase init — background with 3s timeout, never blocks app launch
   _initFirebase();
 
-  // Initialize AdMob — before runApp so it's ready when widgets build
-  try { await AdService.initialize(); } catch (_) {}
+  // Initialize AdMob — with timeout so it never blocks launch
+  try { await AdService.initialize().timeout(const Duration(seconds: 5)); } catch (e) { debugPrint('AdService timeout: $e'); }
 
   runApp(const BharatiyamPanchangaApp());
 }
