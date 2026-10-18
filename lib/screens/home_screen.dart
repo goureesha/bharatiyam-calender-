@@ -37,17 +37,19 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _initDone = false;
   int _navIndex = 0;
 
-  /// Vaidika Rutu from Pournimanta Masa
-  static String _vaidikaRutu(String pMasa) {
+  /// Chandra Rutu from Pournimanta Masa (changes at Purnima, not Sankranti)
+  static String _chandraRutu(String pMasa) {
     const map = {
-      'cm0': 'rutu0', 'cm1': 'rutu0',       // Chaitra, Vaishakha
-      'cm2': 'rutu1', 'cm3': 'rutu1',     // Jyeshtha, Ashadha
-      'cm4': 'rutu2', 'cm5': 'rutu2',       // Shravana, Bhadrapada
-      'cm6': 'rutu3', 'cm7': 'rutu3',         // Ashwina, Kartika
-      'cm8': 'rutu4', 'cm9': 'rutu4',     // Margashira, Pushya
-      'cm10': 'rutu5', 'cm11': 'rutu5',     // Magha, Phalguna
+      'cm0': 'rutu0', 'cm1': 'rutu0',       // Chaitra, Vaishakha → Vasanta
+      'cm2': 'rutu1', 'cm3': 'rutu1',       // Jyeshtha, Ashadha → Grishma
+      'cm4': 'rutu2', 'cm5': 'rutu2',       // Shravana, Bhadrapada → Varsha
+      'cm6': 'rutu3', 'cm7': 'rutu3',       // Ashwina, Kartika → Sharad
+      'cm8': 'rutu4', 'cm9': 'rutu4',       // Margashira, Pushya → Hemanta
+      'cm10': 'rutu5', 'cm11': 'rutu5',     // Magha, Phalguna → Shishira
     };
-    return AppLocale.t(map[pMasa] ?? '');
+    // Handle adhika masa prefix
+    final key = pMasa.startsWith('adhika_') ? pMasa.replaceFirst('adhika_', '') : pMasa;
+    return AppLocale.t(map[key] ?? '');
   }
 
   @override
@@ -457,7 +459,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 InfoRow(label: AppLocale.t('souraMasa'), value: AppLocale.t(d.souraMasa)),
                 InfoRow(label: AppLocale.t('souraMasaGataDina'), value: '${d.souraMasaGataDina} ${AppLocale.t('dina')}'),
                 InfoRow(label: AppLocale.t('souraRutu'), value: AppLocale.t(d.rutu)),
-                InfoRow(label: AppLocale.t('vaidikaRutu'), value: _vaidikaRutu(d.pournimantaMasa)),
+                InfoRow(label: AppLocale.t('chandraRutu'), value: _chandraRutu(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('ayana'), value: AppLocale.t(d.ayana)),
               ],
             ),

@@ -52,25 +52,27 @@ class SamvatsaraCalculator {
     };
   }
 
-  /// Calculate Rutu (season) from Sun's sidereal longitude.
-  /// Traditional mapping (per Surya Siddhanta):
-  ///   Mesha(0)=Vasanta, Vrishabha(1)=Grishma, Mithuna(2)=Grishma,
-  ///   Karka(3)=Varsha, Simha(4)=Varsha, Kanya(5)=Sharad,
-  ///   Tula(6)=Sharad, Vrischika(7)=Hemanta, Dhanu(8)=Hemanta,
-  ///   Makara(9)=Shishira, Kumbha(10)=Shishira, Meena(11)=Vasanta
+  /// Calculate Soura Rutu (solar season) from Sun's sidereal longitude.
+  /// Dharma Sindhu mapping (2 rashis per rutu):
+  ///   Mesha(0)+Vrishabha(1) = Vasanta
+  ///   Mithuna(2)+Karka(3)   = Grishma
+  ///   Simha(4)+Kanya(5)     = Varsha
+  ///   Tula(6)+Vrischika(7)  = Sharad
+  ///   Dhanu(8)+Makara(9)    = Hemanta
+  ///   Kumbha(10)+Meena(11)  = Shishira
   static const List<String> _rutuMap = [
     'rutu0', // 0  Mesha     → Vasanta
-    'rutu1', // 1  Vrishabha → Grishma
+    'rutu0', // 1  Vrishabha → Vasanta
     'rutu1', // 2  Mithuna   → Grishma
-    'rutu2', // 3  Karka     → Varsha
+    'rutu1', // 3  Karka     → Grishma
     'rutu2', // 4  Simha     → Varsha
-    'rutu3', // 5  Kanya     → Sharad
+    'rutu2', // 5  Kanya     → Varsha
     'rutu3', // 6  Tula      → Sharad
-    'rutu4', // 7  Vrischika → Hemanta
+    'rutu3', // 7  Vrischika → Sharad
     'rutu4', // 8  Dhanu     → Hemanta
-    'rutu5', // 9  Makara    → Shishira
+    'rutu4', // 9  Makara    → Hemanta
     'rutu5', // 10 Kumbha    → Shishira
-    'rutu0', // 11 Meena     → Vasanta
+    'rutu5', // 11 Meena     → Shishira
   ];
 
   static String calculateRutu(double sunDeg) {

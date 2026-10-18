@@ -145,7 +145,7 @@ const Map<String, String> mlStrings = {
   'chandraMasaAmanta': 'ചന്ദ്രമാസം (അമാന്തം)',
   'chandraMasaPournimanta': 'ചന്ദ്രമാസം (പൗർണ്ണമാന്തം)',
   'souraMasaGataDina': 'സൗരമാസ കഴിഞ്ഞ ദിനങ്ങൾ', 'dina': 'ദിനങ്ങൾ',
-  'souraRutu': 'സൗര ฤതു', 'vaidikaRutu': 'വൈദിക ഋതു',
+  'souraRutu': 'സൗര ฤതു', 'chandraRutu': 'ചാന്ദ്ര ഋതു',
   'udayadiGhati': 'ഉദയാദി നാഴിക', 'shubhaMuhurta': 'ശുഭ മുഹൂർത്തം',
   'abhijitMuhurta': 'അഭിജിത് മുഹൂർത്തം', 'godhuliMuhurta': 'ഗോധൂളി മുഹൂർത്തം',
   'nextDaySuffix': '(അടുത്ത ദിവസം)', 'udayaKala': 'ഉദയ കാലം',

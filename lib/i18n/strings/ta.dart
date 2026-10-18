@@ -145,7 +145,7 @@ const Map<String, String> taStrings = {
   'chandraMasaAmanta': 'சந்திர மாதம் (அமாந்தம்)',
   'chandraMasaPournimanta': 'சந்திர மாதம் (பௌர்ணிமாந்தம்)',
   'souraMasaGataDina': 'சௌர மாத கடந்த நாட்கள்', 'dina': 'நாட்கள்',
-  'souraRutu': 'சௌர ருது', 'vaidikaRutu': 'வைதிக ருது',
+  'souraRutu': 'சௌர ருது', 'chandraRutu': 'சாந்திர ருது',
   'udayadiGhati': 'உதயாதி நாழிகை', 'shubhaMuhurta': 'சுப முகூர்த்தம்',
   'abhijitMuhurta': 'அபிஜித் முகூர்த்தம்', 'godhuliMuhurta': 'கோதூளி முகூர்த்தம்',
   'nextDaySuffix': '(அடுத்த நாள்)', 'udayaKala': 'உதய காலம்',
