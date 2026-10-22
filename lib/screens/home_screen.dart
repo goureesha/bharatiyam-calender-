@@ -37,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _initDone = false;
   int _navIndex = 0;
 
-  /// Chandra Rutu from Pournimanta Masa (changes at Purnima, not Sankranti)
-  static String _chandraRutu(String pMasa) {
+  /// Vaidika Rutu from Amanta (Amavasyanta) Masa (changes at Amavasya, not Sankranti)
+  static String _vaidikaRutu(String aMasa) {
     const map = {
       'cm0': 'rutu0', 'cm1': 'rutu0',       // Chaitra, Vaishakha → Vasanta
       'cm2': 'rutu1', 'cm3': 'rutu1',       // Jyeshtha, Ashadha → Grishma
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'cm10': 'rutu5', 'cm11': 'rutu5',     // Magha, Phalguna → Shishira
     };
     // Handle adhika masa prefix
-    final key = pMasa.startsWith('adhika_') ? pMasa.replaceFirst('adhika_', '') : pMasa;
+    final key = aMasa.startsWith('adhika_') ? aMasa.replaceFirst('adhika_', '') : aMasa;
     return AppLocale.t(map[key] ?? '');
   }
 
@@ -458,8 +458,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 InfoRow(label: AppLocale.t('chandraMasaPournimanta'), value: AppLocale.t(d.pournimantaMasa)),
                 InfoRow(label: AppLocale.t('souraMasa'), value: AppLocale.t(d.souraMasa)),
                 InfoRow(label: AppLocale.t('souraMasaGataDina'), value: '${d.souraMasaGataDina} ${AppLocale.t('dina')}'),
-                InfoRow(label: AppLocale.t('souraRutu'), value: AppLocale.t(d.rutu)),
-                InfoRow(label: AppLocale.t('chandraRutu'), value: _chandraRutu(d.pournimantaMasa)),
+                InfoRow(label: AppLocale.t('drikaRutu'), value: AppLocale.t(d.rutu)),
+                InfoRow(label: AppLocale.t('vaidikaRutu'), value: _vaidikaRutu(d.amantaMasa)),
                 InfoRow(label: AppLocale.t('ayana'), value: AppLocale.t(d.ayana)),
               ],
             ),
